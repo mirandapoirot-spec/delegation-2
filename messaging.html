@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messagerie | MINJEC Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .messaging-container {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            height: 100vh;
+            background: var(--bg-dark);
+            background-image: var(--bg-gradient);
+        }
+
+        .conversations-sidebar {
+            background: rgba(2, 6, 23, 0.4);
+            backdrop-filter: blur(30px);
+            border-right: 1px solid var(--glass-border);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-header {
+            padding: 2rem 1.5rem;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            color: var(--text-main);
+            margin-top: 1rem;
+        }
+
+        .conversations-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+        }
+
+        .conversation-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 1rem;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 0.5rem;
+            position: relative;
+        }
+
+        .conversation-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .conversation-item.active {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(14, 165, 233, 0.1));
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .conversation-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--accent-primary);
+        }
+
+        .conversation-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .conversation-name {
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 4px;
+        }
+
+        .conversation-preview {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .conversation-time {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+        }
+
+        .unread-badge {
+            position: absolute;
+            bottom: 1rem;
+            right: 1rem;
+            background: var(--accent-primary);
+            color: white;
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .chat-area {
+            display: flex;
+            flex-direction: column;
+            background: rgba(2, 6, 23, 0.2);
+        }
+
+        .chat-header {
+            padding: 1.5rem 2rem;
+            background: rgba(2, 6, 23, 0.4);
+            backdrop-filter: blur(30px);
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .chat-user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .message {
+            display: flex;
+            gap: 12px;
+            max-width: 70%;
+            animation: slideUp 0.3s ease;
+        }
+
+        .message.sent {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+
+        .message-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .message-content {
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            padding: 1rem 1.2rem;
+            border-radius: 16px;
+            position: relative;
+        }
+
+        .message.sent .message-content {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(14, 165, 233, 0.2));
+            border-color: var(--accent-primary);
+        }
+
+        .message-text {
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+            line-height: 1.5;
+        }
+
+        .message-time {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        .chat-input-area {
+            padding: 1.5rem 2rem;
+            background: rgba(2, 6, 23, 0.4);
+            backdrop-filter: blur(30px);
+            border-top: 1px solid var(--glass-border);
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 1rem 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            color: var(--text-main);
+            resize: none;
+            max-height: 120px;
+        }
+
+        .send-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--accent-primary);
+            border: none;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .send-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.5);
+        }
+
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: var(--text-muted);
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.3;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .online-status {
+            width: 12px;
+            height: 12px;
+            background: #6b7280;
+            border-radius: 50%;
+            border: 2px solid var(--bg-dark);
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            transition: background 0.3s ease;
+        }
+
+        .online-status.online {
+            background: #10b981;
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+            animation: pulse-online 2s infinite;
+        }
+
+        @keyframes pulse-online {
+            0%, 100% {
+                box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+            }
+            50% {
+                box-shadow: 0 0 20px rgba(16, 185, 129, 0.8);
+            }
+        }
+
+        .avatar-wrapper {
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+    <div class="messaging-container">
+        <!-- Sidebar des conversations -->
+        <aside class="conversations-sidebar">
+            <div class="sidebar-header">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h2 style="font-size: 1.5rem; color: var(--text-main);">
+                        <i class="fa-solid fa-comments"></i> Messages
+                    </h2>
+                    <a href="index.html" class="btn-secondary" style="padding: 0.5rem 1rem;">
+                        <i class="fa-solid fa-home"></i>
+                    </a>
+                </div>
+                <input type="text" class="search-box" placeholder="Rechercher une conversation..." id="searchConversations">
+            </div>
+
+            <div class="conversations-list" id="conversationsList">
+                <!-- Les conversations seront chargées ici -->
+            </div>
+        </aside>
+
+        <!-- Zone de chat -->
+        <main class="chat-area">
+            <div id="chatContent">
+                <div class="empty-state">
+                    <i class="fa-solid fa-message"></i>
+                    <h3>Sélectionnez une conversation</h3>
+                    <p>Choisissez un contact pour commencer à discuter</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="assets/js/main.js"></script>
+    <script>
+        let currentUser = null;
+        let activeConversation = null;
+        let conversations = [];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (!currentUser) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            loadConversations();
+            initSearch();
+            
+            // Rafraîchir les messages toutes les 3 secondes
+            setInterval(refreshActiveConversation, 3000);
+        });
+
+        function loadConversations() {
+            // Charger ou initialiser les conversations
+            conversations = JSON.parse(localStorage.getItem('conversations')) || [];
+            
+            // Si pas de conversations, créer des exemples
+            if (conversations.length === 0) {
+                initializeSampleConversations();
+            }
+
+            renderConversations();
+        }
+
+        function initializeSampleConversations() {
+            const registeredUsers = JSON.parse(localStorage.getItem('registeredUsers')) || [];
+            
+            if (currentUser.role === 'super_admin' || currentUser.role === 'admin') {
+                // Admin voit les conversations avec tous les clients inscrits
+                const clients = registeredUsers.filter(u => u.role === 'client');
+                
+                // Si aucun client, créer un exemple
+                if (clients.length === 0) {
+                    clients.push({
+                        id: 'client-demo',
+                        name: 'Client Exemple',
+                        email: 'client@example.com',
+                        role: 'client',
+                        avatar: 'https://ui-avatars.com/api/?name=Client+Exemple&background=10b981&color=fff'
+                    });
+                }
+                
+                conversations = clients.map(client => {
+                    // Vérifier si une conversation existe déjà
+                    const existingConv = conversations.find(c => 
+                        c.participants.includes(client.email) && c.participants.includes(currentUser.email)
+                    );
+                    
+                    if (existingConv) return existingConv;
+                    
+                    return {
+                        id: `conv_${Date.now()}_${Math.random()}`,
+                        participants: [currentUser.email, client.email],
+                        participantsInfo: {
+                            [currentUser.email]: {
+                                name: currentUser.name,
+                                avatar: currentUser.avatar,
+                                role: currentUser.role
+                            },
+                            [client.email]: {
+                                name: client.name,
+                                avatar: client.avatar,
+                                role: client.role
+                            }
+                        },
+                        lastMessage: 'Démarrer la conversation',
+                        lastMessageTime: Date.now(),
+                        unreadCount: 0,
+                        messages: [{
+                            id: `msg_${Date.now()}`,
+                            sender: currentUser.email,
+                            text: `Bonjour ${client.name}, je suis disponible pour vous aider. Comment puis-je vous assister aujourd'hui ?`,
+                            timestamp: Date.now(),
+                            read: false
+                        }]
+                    };
+                });
+            } else {
+                // Client voit la conversation avec l'admin
+                const adminEmail = 'admin237@gmail.com';
+                
+                // Vérifier si une conversation existe déjà
+                const existingConv = conversations.find(c => 
+                    c.participants.includes(adminEmail) && c.participants.includes(currentUser.email)
+                );
+                
+                if (!existingConv) {
+                    conversations = [{
+                        id: `conv_${Date.now()}`,
+                        participants: [currentUser.email, adminEmail],
+                        participantsInfo: {
+                            [currentUser.email]: {
+                                name: currentUser.name,
+                                avatar: currentUser.avatar,
+                                role: currentUser.role
+                            },
+                            [adminEmail]: {
+                                name: 'Administrateur',
+                                avatar: 'https://ui-avatars.com/api/?name=Administrateur&background=38bdf8&color=fff',
+                                role: 'super_admin'
+                            }
+                        },
+                        lastMessage: 'Bienvenue! Comment puis-je vous aider?',
+                        lastMessageTime: Date.now(),
+                        unreadCount: 1,
+                        messages: [{
+                            id: `msg_${Date.now()}`,
+                            sender: adminEmail,
+                            text: 'Bonjour! Bienvenue sur le portail MINJEC. Je suis là pour répondre à toutes vos questions concernant les programmes, les projets et les opportunités disponibles. N\'hésitez pas à me contacter!',
+                            timestamp: Date.now(),
+                            read: false
+                        }]
+                    }];
+                }
+            }
+
+            localStorage.setItem('conversations', JSON.stringify(conversations));
+        }
+
+        function renderConversations() {
+            const list = document.getElementById('conversationsList');
+            
+            list.innerHTML = conversations.map(conv => {
+                const otherUserEmail = conv.participants.find(p => p !== currentUser.email);
+                const otherUser = conv.participantsInfo?.[otherUserEmail] || {
+                    name: 'Utilisateur',
+                    email: otherUserEmail,
+                    avatar: `https://ui-avatars.com/api/?name=User&size=100&background=38bdf8&color=fff`,
+                    role: 'client'
+                };
+
+                const timeAgo = formatTimeAgo(conv.lastMessageTime);
+                const isOnline = Math.random() > 0.5; // Simuler le statut en ligne
+                
+                return `
+                    <div class="conversation-item ${activeConversation?.id === conv.id ? 'active' : ''}" 
+                         onclick="openConversation('${conv.id}')">
+                        <div class="avatar-wrapper">
+                            <img src="${otherUser.avatar}" 
+                                 alt="${otherUser.name}" class="conversation-avatar">
+                            <div class="online-status ${isOnline ? 'online' : ''}"></div>
+                        </div>
+                        <div class="conversation-info">
+                            <div class="conversation-name">
+                                ${otherUser.name}
+                                ${otherUser.role === 'super_admin' ? '<i class="fa-solid fa-shield-halved" style="color: #38bdf8; font-size: 0.8rem; margin-left: 0.3rem;" title="Administrateur"></i>' : ''}
+                            </div>
+                            <div class="conversation-preview">${conv.lastMessage}</div>
+                        </div>
+                        <div class="conversation-time">${timeAgo}</div>
+                        ${conv.unreadCount > 0 ? `<div class="unread-badge">${conv.unreadCount}</div>` : ''}
+                    </div>
+                `;
+            }).join('');
+            
+            // Si aucune conversation active, ouvrir la première
+            if (!activeConversation && conversations.length > 0) {
+                openConversation(conversations[0].id);
+            }
+        }
+
+        function openConversation(convId) {
+            activeConversation = conversations.find(c => c.id === convId);
+            if (!activeConversation) return;
+
+            // Marquer comme lu
+            activeConversation.unreadCount = 0;
+            localStorage.setItem('conversations', JSON.stringify(conversations));
+
+            renderConversations();
+            renderChatArea();
+        }
+
+        function renderChatArea() {
+            const users = JSON.parse(localStorage.getItem('delegation_users')) || [];
+            const otherUserEmail = activeConversation.participants.find(p => p !== currentUser.email);
+            const otherUser = users.find(u => u.email === otherUserEmail) || {
+                name: 'Utilisateur',
+                email: otherUserEmail,
+                avatar: `https://ui-avatars.com/api/?name=User&size=100&background=38bdf8&color=fff`
+            };
+
+            const chatContent = document.getElementById('chatContent');
+            chatContent.innerHTML = `
+                <div class="chat-header">
+                    <div class="chat-user-info">
+                        <div class="avatar-wrapper">
+                            <img src="${otherUser.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(otherUser.name)}&size=100&background=38bdf8&color=fff`}" 
+                                 alt="${otherUser.name}" class="conversation-avatar">
+                            <div class="online-status"></div>
+                        </div>
+                        <div>
+                            <div style="font-weight: 600; color: var(--text-main);">${otherUser.name}</div>
+                            <div style="font-size: 0.85rem; color: var(--accent-primary);">En ligne</div>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 1rem;">
+                        <button class="btn-secondary" style="padding: 0.5rem 1rem;">
+                            <i class="fa-solid fa-phone"></i>
+                        </button>
+                        <button class="btn-secondary" style="padding: 0.5rem 1rem;">
+                            <i class="fa-solid fa-video"></i>
+                        </button>
+                        <button class="btn-secondary" style="padding: 0.5rem 1rem;">
+                            <i class="fa-solid fa-ellipsis-v"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="chat-messages" id="chatMessages">
+                    ${renderMessages()}
+                </div>
+
+                <div class="chat-input-area">
+                    <button class="btn-secondary" style="padding: 0.8rem;">
+                        <i class="fa-solid fa-paperclip"></i>
+                    </button>
+                    <textarea class="chat-input" id="messageInput" placeholder="Écrivez votre message..." rows="1"></textarea>
+                    <button class="send-btn" onclick="sendMessage()">
+                        <i class="fa-solid fa-paper-plane"></i>
+                    </button>
+                </div>
+            `;
+
+            // Auto-resize textarea
+            const textarea = document.getElementById('messageInput');
+            textarea.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = this.scrollHeight + 'px';
+            });
+
+            // Envoyer avec Enter
+            textarea.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+
+            // Scroll vers le bas
+            setTimeout(() => {
+                const messagesDiv = document.getElementById('chatMessages');
+                messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            }, 100);
+        }
+
+        function renderMessages() {
+            if (!activeConversation.messages || activeConversation.messages.length === 0) {
+                return `
+                    <div class="empty-state">
+                        <i class="fa-solid fa-comments"></i>
+                        <p>Aucun message pour le moment</p>
+                        <p style="font-size: 0.85rem;">Commencez la conversation!</p>
+                    </div>
+                `;
+            }
+
+            return activeConversation.messages.map(msg => {
+                const isSent = msg.sender === currentUser.email;
+                const users = JSON.parse(localStorage.getItem('delegation_users')) || [];
+                const sender = users.find(u => u.email === msg.sender) || currentUser;
+                
+                return `
+                    <div class="message ${isSent ? 'sent' : 'received'}">
+                        <img src="${sender.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(sender.name)}&size=100&background=38bdf8&color=fff`}" 
+                             alt="${sender.name}" class="message-avatar">
+                        <div class="message-content">
+                            <div class="message-text">${msg.text}</div>
+                            <div class="message-time">${formatTime(msg.timestamp)}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const text = input.value.trim();
+            
+            if (!text || !activeConversation) return;
+
+            const message = {
+                id: `msg_${Date.now()}`,
+                sender: currentUser.email,
+                text: text,
+                timestamp: Date.now()
+            };
+
+            activeConversation.messages.push(message);
+            activeConversation.lastMessage = text;
+            activeConversation.lastMessageTime = Date.now();
+
+            localStorage.setItem('conversations', JSON.stringify(conversations));
+
+            input.value = '';
+            input.style.height = 'auto';
+            
+            renderChatArea();
+        }
+
+        function refreshActiveConversation() {
+            if (activeConversation) {
+                conversations = JSON.parse(localStorage.getItem('conversations')) || [];
+                activeConversation = conversations.find(c => c.id === activeConversation.id);
+                
+                const messagesDiv = document.getElementById('chatMessages');
+                if (messagesDiv) {
+                    const wasAtBottom = messagesDiv.scrollHeight - messagesDiv.scrollTop === messagesDiv.clientHeight;
+                    messagesDiv.innerHTML = renderMessages();
+                    if (wasAtBottom) {
+                        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+                    }
+                }
+            }
+            renderConversations();
+        }
+
+        function initSearch() {
+            const searchInput = document.getElementById('searchConversations');
+            searchInput.addEventListener('input', (e) => {
+                const query = e.target.value.toLowerCase();
+                const users = JSON.parse(localStorage.getItem('delegation_users')) || [];
+                
+                const filtered = conversations.filter(conv => {
+                    const otherUserEmail = conv.participants.find(p => p !== currentUser.email);
+                    const otherUser = users.find(u => u.email === otherUserEmail);
+                    return otherUser && otherUser.name.toLowerCase().includes(query);
+                });
+
+                // Render filtered
+                const list = document.getElementById('conversationsList');
+                list.innerHTML = filtered.map(conv => {
+                    const otherUserEmail = conv.participants.find(p => p !== currentUser.email);
+                    const otherUser = users.find(u => u.email === otherUserEmail);
+                    const timeAgo = formatTimeAgo(conv.lastMessageTime);
+                    
+                    return `
+                        <div class="conversation-item ${activeConversation?.id === conv.id ? 'active' : ''}" 
+                             onclick="openConversation('${conv.id}')">
+                            <div class="avatar-wrapper">
+                                <img src="${otherUser.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(otherUser.name)}&size=100&background=38bdf8&color=fff`}" 
+                                     alt="${otherUser.name}" class="conversation-avatar">
+                                <div class="online-status"></div>
+                            </div>
+                            <div class="conversation-info">
+                                <div class="conversation-name">${otherUser.name}</div>
+                                <div class="conversation-preview">${conv.lastMessage}</div>
+                            </div>
+                            <div class="conversation-time">${timeAgo}</div>
+                            ${conv.unreadCount > 0 ? `<div class="unread-badge">${conv.unreadCount}</div>` : ''}
+                        </div>
+                    `;
+                }).join('');
+            });
+        }
+
+        function formatTimeAgo(timestamp) {
+            const now = Date.now();
+            const diff = now - timestamp;
+            const minutes = Math.floor(diff / 60000);
+            const hours = Math.floor(diff / 3600000);
+            const days = Math.floor(diff / 86400000);
+
+            if (minutes < 1) return 'Maintenant';
+            if (minutes < 60) return `${minutes}m`;
+            if (hours < 24) return `${hours}h`;
+            if (days < 7) return `${days}j`;
+            return new Date(timestamp).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
+        }
+
+        function formatTime(timestamp) {
+            return new Date(timestamp).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+        }
+    </script>
+</body>
+</html>

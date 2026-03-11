@@ -1,0 +1,207 @@
+<!DOCTYPE html> <!-- Déclaration du type de document standard HTML5 -->
+<html lang="fr"> <!-- Balise racine pour le contenu en français -->
+
+<head> <!-- Section en-tête pour les métadonnées et styles -->
+    <meta charset="UTF-8"> <!-- Encodage universel des caractères -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Support de l'affichage mobile -->
+    <title>Projets & Impact | MINJEC Portal</title> <!-- Titre de la page dans l'onglet -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Police Outfit (alternative premium) -->
+    <link rel="stylesheet" href="assets/css/style.css"> <!-- Styles globaux Aurora Portal -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Librairie d'icônes Font Awesome -->
+    <link rel="stylesheet" href="assets/css/spacing-fix.css">
+</head>
+
+<body> <!-- Début du corps de page -->
+
+    <div class="particles" id="particles"></div> <!-- Arrière-plan de particules animé (géré par main.js) -->
+    <nav class="navbar scrolled" id="navbar"> <!-- Barre de navigation fixée avec fond opaque -->
+        <div class="container nav-container"> <!-- Conteneur de navigation centré -->
+            <a href="index.html" class="nav-logo"> <!-- Logo simple MINJEC -->
+                <i class="fa-solid fa-layer-group" style="color: var(--accent-primary);"></i> MINJEC
+            </a>
+            <ul class="nav-links"> <!-- Liste des liens principaux -->
+                <li><a href="index.html" class="link-underline">Accueil</a></li>
+                <li><a href="projets.html" class="link-underline active">Projets</a></li> <!-- Page actuelle active -->
+                <li><a href="agora.html" class="link-underline">Agora</a></li> <!-- Plateforme d'échange -->
+                <li><a href="actualites.html" class="link-underline">Actualités</a></li>
+                <li><a href="contact.html" class="link-underline">Contact</a></li>
+            </ul>
+            <div style="display: flex; align-items: center; gap: 1.5rem;"> <!-- Groupe d'actions à droite -->
+                <button class="theme-toggle" id="themeToggle"> <!-- Alternateur de thème sombre/clair -->
+                    <i class="fa-solid fa-moon"></i>
+                    <i class="fa-solid fa-sun"></i>
+                </button>
+                <a href="login.html" class="btn-primary" style="padding: 0.5rem 1.5rem; font-size: 0.9rem;">
+                    <!-- Bouton de connexion -->
+                    Connexion
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="hero" style="min-height: 45vh; display: flex; align-items: center; text-align: center;">
+        <!-- Entête Héro de la page Projets -->
+        <div class="container">
+            <h1 class="reveal-up animated-gradient-text" style="font-size: 3.5rem; margin-bottom: 1.5rem;">Portefeuille
+                d'Innovation</h1> <!-- Titre principal avec dégradé animé -->
+            <p class="reveal-up" style="max-width: 800px; margin: 0 auto; font-size: 1.2rem; color: var(--text-muted);">
+                Découvrez les initiatives structurantes portées par l'excellence de la jeunesse du Ndé et propulsées par
+                l'écosystème MINJEC. <!-- Paragraphe de présentation des réussites -->
+            </p>
+        </div>
+    </header>
+
+    <main class="container"> <!-- Contenu principal (Grille des projets réussis) -->
+        <div class="grid-3 stagger-children" style="margin-bottom: 6rem;"> <!-- Grille de 3 projets phares -->
+            <!-- Projet 1 : E-Agri Ndé Hub -->
+            <div class="card card-hover-lift"
+                style="padding: 0; overflow: hidden; border-radius: 24px; border: 1px solid var(--glass-border); background: var(--bg-card);">
+                <!-- Carte avec fond sombre et bordure vitrée -->
+                <div
+                    style="height: 220px; background: linear-gradient(135deg, #10b98122, #10b98144); display: flex; align-items: center; justify-content: center;">
+                    <!-- Image de fond stylisée par un dégradé vert -->
+                    <i class="fa-solid fa-seedling" style="font-size: 4rem; color: var(--accent-primary);"></i>
+                    <!-- Icône plante (agriculture) -->
+                </div>
+                <div style="padding: 2rem;">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <span
+                            style="background: rgba(16, 185, 129, 0.1); color: var(--accent-primary); padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700;">AGRI-TECH</span>
+                        <!-- Badge catégorie -->
+                        <span style="font-size: 0.8rem; color: var(--text-muted);"><i
+                                class="fa-solid fa-check-double"></i> Certifié</span> <!-- Statut de certification -->
+                    </div>
+                    <h3 style="margin-bottom: 1rem; font-size: 1.4rem;">E-Agri Ndé Hub</h3> <!-- Titre du projet -->
+                    <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; margin-bottom: 2rem;">
+                        Unités intelligentes de production maraîchère utilisant l'intelligence artificielle pour la
+                        gestion hydrique. <!-- Description technique courte -->
+                    </p>
+                    <div
+                        style="border-top: 1px solid var(--glass-border); padding-top: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+                        <!-- Bloc de données financières/statut -->
+                        <div>
+                            <div style="font-size: 0.75rem; color: var(--text-muted);">Investissement</div>
+                            <div style="font-weight: 700; color: var(--text-main);">12.5M FCFA</div>
+                            <!-- Chiffre clé -->
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-size: 0.75rem; color: var(--text-muted);">Status</div>
+                            <div style="font-weight: 700; color: var(--accent-primary);">Opérationnel</div>
+                            <!-- État actuel -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Projet 2 : Gouvernance Locale 2.0 -->
+            <div class="card card-hover-lift"
+                style="padding: 0; overflow: hidden; border-radius: 24px; border: 1px solid var(--glass-border); background: var(--bg-card);">
+                <div
+                    style="height: 220px; background: linear-gradient(135deg, #0ea5e922, #0ea5e944); display: flex; align-items: center; justify-content: center;">
+                    <!-- Thème bleu pour le digital -->
+                    <i class="fa-solid fa-microchip" style="font-size: 4rem; color: var(--accent-secondary);"></i>
+                    <!-- Icône puce électronique -->
+                </div>
+                <div style="padding: 2rem;">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <span
+                            style="background: rgba(14, 165, 233, 0.1); color: var(--accent-secondary); padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700;">DIGITAL
+                            TRANSFORMATION</span> <!-- Badge catégorie -->
+                    </div>
+                    <h3 style="margin-bottom: 1rem; font-size: 1.4rem;">Gouvernance Locale 2.0</h3>
+                    <!-- Titre du projet -->
+                    <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; margin-bottom: 2rem;">
+                        Application décentralisée pour le monitoring participatif des projets d'infrastructure rurale.
+                        <!-- Description fonctionnelle -->
+                    </p>
+                    <div
+                        style="border-top: 1px solid var(--glass-border); padding-top: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <div style="font-size: 0.75rem; color: var(--text-muted);">Support</div>
+                            <div style="font-weight: 700; color: var(--text-main);">Technique & Logistique</div>
+                            <!-- Aide apportée -->
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-size: 0.75rem; color: var(--text-muted);">Status</div>
+                            <div style="font-weight: 700; color: var(--accent-secondary);">Déploiement</div>
+                            <!-- État actuel -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Projet 3 : Ndé Éco-Briques -->
+            <div class="card card-hover-lift"
+                style="padding: 0; overflow: hidden; border-radius: 24px; border: 1px solid var(--glass-border); background: var(--bg-card);">
+                <div
+                    style="height: 220px; background: linear-gradient(135deg, #a855f722, #a855f744); display: flex; align-items: center; justify-content: center;">
+                    <!-- Thème violet pour l'économie verte -->
+                    <i class="fa-solid fa-leaf" style="font-size: 4rem; color: var(--accent-tertiary);"></i>
+                    <!-- Icône feuille -->
+                </div>
+                <div style="padding: 2rem;">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <span
+                            style="background: rgba(168, 85, 247, 0.1); color: var(--accent-tertiary); padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700;">GREEN
+                            ECONOMY</span> <!-- Badge catégorie -->
+                    </div>
+                    <h3 style="margin-bottom: 1rem; font-size: 1.4rem;">Ndé Éco-Briques</h3> <!-- Titre du projet -->
+                    <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; margin-bottom: 2rem;">
+                        Transformation circulaire des déchets plastiques urbains en matériaux de construction durables
+                        et isolants. <!-- Description écologique -->
+                    </p>
+                    <div
+                        style="border-top: 1px solid var(--glass-border); padding-top: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <div style="font-size: 0.75rem; color: var(--text-muted);">Financement</div>
+                            <div style="font-weight: 700; color: var(--text-main);">7.8M FCFA</div>
+                            <!-- Montant financé -->
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-size: 0.75rem; color: var(--text-muted);">Status</div>
+                            <div style="font-weight: 700; color: #f59e0b;">En Incubation</div> <!-- État actuel -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section Appel à l'action final -->
+        <section class="reveal section-padding text-center"
+            style="background: var(--bg-card); border: 1px solid var(--glass-border); border-radius: 40px; padding: 5rem 2rem; margin-bottom: 8rem;">
+            <h2 class="animated-gradient-text" style="font-size: 3rem; margin-bottom: 1.5rem;">Prêt à changer la donne ?
+            </h2> <!-- Titre d'incitation -->
+            <p
+                style="max-width: 700px; margin: 0 auto 3rem; color: var(--text-muted); font-size: 1.1rem; line-height: 1.8;">
+                Inscrivez-vous sur le portail MINJEC pour soumettre votre dossier de candidature. Bénéficiez d'une
+                expertise stratégique et des financements de l'État pour propulser votre initiative.
+                <!-- Texte d'invitation -->
+            </p>
+            <div style="display: flex; justify-content: center; gap: 1.5rem;"> <!-- Groupe de boutons d'action -->
+                <a href="login.html" class="btn-primary" style="padding: 1rem 3rem;">Démarrer mon projet</a>
+                <!-- Action principale -->
+                <a href="contact.html" class="btn-secondary" style="padding: 1rem 3rem;">Parler à un expert</a>
+                <!-- Action de conseil -->
+            </div>
+        </section>
+    </main>
+
+    <footer style="padding: 5rem 0; border-top: 1px solid var(--glass-border); text-align: center;">
+        <!-- Pied de page allégé -->
+        <div class="container">
+            <p style="color: var(--text-muted); line-height: 1.6;">
+                &copy; 2026 MINJEC Portal • Délégation Jeunesse & Éducation Civique du Ndé<br>
+                Une initiative pour l'innovation numérique et citoyenne. <!-- Mentions finales -->
+            </p>
+        </div>
+    </footer>
+
+    <script src="assets/js/main.js"></script> <!-- Inclusion du noyau JavaScript global -->
+</body>
+
+</html> <!-- Fin du document projets -->

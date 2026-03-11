@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Gestion des Projets | Administration</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .page-container {
+            width: 100%;
+            max-width: 1400px;
+            padding: 2rem;
+            display: flex;
+            gap: 2rem;
+        }
+
+        /* Sidebar Styling (Same as Users) */
+        .sidebar {
+            width: 80px;
+            background: var(--bg-card);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2rem 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+            height: fit-content;
+            position: sticky;
+            top: 2rem;
+        }
+
+        .nav-item {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--text-muted);
+            border-radius: 12px;
+            transition: all 0.3s;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 1.2rem;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: white;
+            box-shadow: 0 4px 12px rgba(56, 189, 248, 0.3);
+        }
+
+        .content-area {
+            flex: 1;
+        }
+
+        /* Grid for cards */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .project-card {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+            background: rgba(30, 41, 59, 0.8);
+            border-color: var(--accent-primary);
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-attente {
+            background: rgba(168, 162, 158, 0.1);
+            color: #a8a29e;
+            border: 1px solid #a8a29e;
+        }
+
+        .status-valide {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+            border: 1px solid #10b981;
+        }
+
+        .status-refuse {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border: 1px solid #ef4444;
+        }
+
+        .card-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+        }
+
+        .project-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .project-meta {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .project-desc {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: auto;
+            border-top: 1px solid var(--border-color);
+            padding-top: 1rem;
+        }
+
+        .btn-action {
+            flex: 1;
+            padding: 0.75rem;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .btn-validate {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+        }
+
+        .btn-validate:hover {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn-reject {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+        }
+
+        .btn-reject:hover {
+            background: #ef4444;
+            color: white;
+        }
+
+        /* Filter Tab */
+        .filter-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 1rem;
+        }
+
+        .filter-tab {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 1rem;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .filter-tab.active {
+            color: var(--text-main);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .filter-tab:hover {
+            color: var(--accent-primary);
+        }
+    </style>
+    <link rel="stylesheet" href="assets/css/spacing-fix.css">
+</head>
+
+<body>
+
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- News Ticker -->
+    <div class="news-ticker">
+        <div class="ticker-content">
+            <span class="ticker-item"><i class="fa-solid fa-bullhorn"></i> Appel à projets PTS-JEUNES ouvert jusqu'au 15
+                Février !</span>
+            <span class="ticker-item"><i class="fa-solid fa-calendar-star"></i> Prochaine Fête de la Jeunesse :
+                J-9</span>
+            <span class="ticker-item"><i class="fa-solid fa-briefcase"></i> 5 nouvelles offres de stage à
+                Bangangté</span>
+        </div>
+    </div>
+
+    <div class="page-container">
+        <!-- Sidebar Navigation -->
+        <div class="sidebar glass-card">
+            <a href="admin-dashboard.html" class="nav-item" title="Tableau de bord">
+                <i class="fa-solid fa-chart-pie"></i>
+            </a>
+            <a href="users-management.html" class="nav-item" title="Utilisateurs">
+                <i class="fa-solid fa-users"></i>
+            </a>
+            <a href="projects-admin.html" class="nav-item active" title="Projets">
+                <i class="fa-solid fa-folder-open"></i>
+            </a>
+            <a href="#" class="nav-item" title="Paramètres">
+                <i class="fa-solid fa-gear"></i>
+            </a>
+            <div style="flex: 1"></div>
+            <a href="#" onclick="logout()" class="nav-item" title="Déconnexion">
+                <i class="fa-solid fa-right-from-bracket"></i>
+            </a>
+        </div>
+
+        <!-- Main Content -->
+        <div class="content-area glass-card fade-in">
+            <div style="margin-bottom: 2rem;">
+                <h1 style="font-size: 1.8rem;">Gestion des Projets</h1>
+                <p style="color: var(--text-muted);">Validez, refusez ou commentez les projets soumis.</p>
+            </div>
+
+            <div class="filter-tabs">
+                <button class="filter-tab active" onclick="filterProjects('all')">Tous</button>
+                <button class="filter-tab" onclick="filterProjects('en_attente')">En attente</button>
+                <button class="filter-tab" onclick="filterProjects('valide')">Validés</button>
+                <button class="filter-tab" onclick="filterProjects('refuse')">Refusés</button>
+            </div>
+
+            <div id="projectsGrid" class="projects-grid">
+                <!-- Projects injected here -->
+            </div>
+
+            <div id="emptyState" style="text-align: center; padding: 4rem; display: none;">
+                <i class="fa-solid fa-clipboard-check"
+                    style="font-size: 4rem; color: var(--border-color); margin-bottom: 1rem;"></i>
+                <p style="color: var(--text-muted);">Aucun projet ne correspond à ce filtre.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/data-loader.js"></script>
+    <script src="assets/js/projects-admin.js"></script>
+    <script>
+        function logout() {
+            localStorage.removeItem('currentUser');
+            window.location.href = 'login.html';
+        }
+    </script>
+</body>
+
+</html>

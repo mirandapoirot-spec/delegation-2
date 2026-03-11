@@ -1,0 +1,439 @@
+<!DOCTYPE html> <!-- Déclaration du type de document standard HTML5 -->
+<html lang="fr"> <!-- Balise racine pour le contenu en français -->
+
+<head> <!-- Section en-tête pour les métadonnées et styles -->
+    <meta charset="UTF-8"> <!-- Encodage universel des caractères -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Support de l'affichage mobile -->
+    <title>Ressources | Délégation Jeunesse</title> <!-- Titre de la page dans l'onglet -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Police Inter via Google Fonts -->
+    <link rel="stylesheet" href="assets/css/style.css"> <!-- Styles globaux Aurora Portal -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Librairie d'icônes Font Awesome -->
+    <style>
+        /* Styles CSS spécifiques à la page des ressources */
+        .resources-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .search-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        .search-box {
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            border: 1px solid var(--border-color);
+            border-radius: 25px;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            font-size: 1rem;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .category-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .category-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-primary);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .category-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--accent-primary);
+        }
+
+        .category-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .category-count {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .resources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .resource-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .resource-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-primary);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .resource-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .resource-icon {
+            font-size: 2rem;
+            color: var(--accent-primary);
+            margin-top: 0.2rem;
+        }
+
+        .resource-info {
+            flex: 1;
+        }
+
+        .resource-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            line-height: 1.4;
+        }
+
+        .resource-meta {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .resource-description {
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .resource-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .resource-type {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .type-document {
+            background: rgba(59, 130, 246, 0.1);
+            color: #3b82f6;
+        }
+
+        .type-video {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+        }
+
+        .type-guide {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+        }
+
+        .type-template {
+            background: rgba(245, 158, 11, 0.1);
+            color: #f59e0b;
+        }
+
+        .filter-section {
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        .filter-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1.5rem;
+            border: 1px solid var(--border-color);
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: white;
+            border-color: transparent;
+        }
+    </style>
+    <link rel="stylesheet" href="assets/css/spacing-fix.css">
+</head>
+
+<body> <!-- Début du corps de page -->
+    <div class="particles" id="particles"></div> <!-- Arrière-plan de particules animé (géré par main.js) -->
+
+    <nav class="navbar scrolled" id="navbar"> <!-- Barre de navigation fixée avec fond opaque -->
+        <div class="container nav-container"> <!-- Conteneur de navigation centré -->
+            <a href="index.html" class="nav-logo floating-slow"> <!-- Logo avec effet de flottement doux -->
+                <i class="fa-solid fa-layer-group rotate-slow"></i> MINJEC <!-- Icône rotative et texte logo -->
+            </a>
+            <ul class="nav-links" style="display: flex; align-items: center; gap: 1.2rem;">
+                <!-- Liste des liens principaux -->
+                <li><a href="index.html" class="link-underline">Accueil</a></li>
+                <li><a href="missions-organigramme.html" class="link-underline">Missions</a></li>
+                <li><a href="programmes.html" class="link-underline">Programmes</a></li>
+                <li><a href="projets.html" class="link-underline">Projets</a></li>
+                <li><a href="galerie.html" class="link-underline">Galerie</a></li>
+                <li><a href="agora.html" class="link-underline" data-t="agora">Agora</a></li>
+                <li><a href="actualites.html" class="link-underline">Actualités</a></li>
+                <li>
+                    <a href="#" class="link-underline active">Plus <i class="fa-solid fa-chevron-down"
+                            style="font-size: 0.7rem; margin-left: 3px;"></i></a> <!-- Sélecteur 'Plus' -->
+                    <div class="dropdown-menu"> <!-- Menu caché par défaut -->
+                        <a href="about.html" class="dropdown-item"><i class="fa-solid fa-info-circle"></i> À propos</a>
+                        <a href="associations.html" class="dropdown-item"><i class="fa-solid fa-users"></i>
+                            Associations</a>
+                        <a href="ressources.html" class="dropdown-item active"><i class="fa-solid fa-book"></i>
+                            Ressources</a>
+                        <a href="evenements.html" class="dropdown-item"><i class="fa-solid fa-calendar-days"></i>
+                            Événements</a>
+                        <a href="faq.html" class="dropdown-item"><i class="fa-solid fa-circle-question"></i> FAQ</a>
+                        <a href="contact.html" class="dropdown-item"><i class="fa-solid fa-envelope"></i> Contact</a>
+                        <a href="archives.html" class="dropdown-item"><i class="fa-solid fa-box-archive"></i>
+                            Archives</a>
+                    </div>
+                </li>
+            </ul>
+            <div style="display: flex; align-items: center; gap: 1.5rem;"> <!-- Groupe d'actions droite -->
+                <button class="theme-toggle" id="themeToggle" title="Changer de mode"><i class="fa-solid fa-moon"></i><i
+                        class="fa-solid fa-sun"></i></button>
+                <a href="login.html" class="btn-primary"><i class="fa-solid fa-user-lock"></i> Connexion</a>
+            </div>
+            <button class="mobile-menu-toggle" id="mobileMenuToggle"> <!-- Hamburger mobile -->
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <div class="resources-container" style="margin-top: 6rem;"> <!-- Principal conteneur de contenu -->
+        <div class="page-header reveal"> <!-- En-tête de page -->
+            <h1><i class="fa-solid fa-book"></i> Bibliothèque de Ressources</h1>
+            <p>Accédez à tous les documents, guides et outils pour réussir vos projets</p>
+        </div>
+
+        <div class="search-section reveal"> <!-- Zone de recherche -->
+            <h3 style="margin-bottom: 1rem;">Rechercher une ressource</h3>
+            <div class="search-box">
+                <i class="fa-solid fa-search search-icon"></i>
+                <input type="text" class="search-input" id="resourceSearch"
+                    placeholder="Rechercher par titre, catégorie ou mot-clé...">
+            </div>
+        </div>
+
+        <div class="categories-grid reveal stagger-children"> <!-- Grille des raccourcis de catégories -->
+            <div class="category-card" onclick="filterByCategory('documents')">
+                <div class="category-icon"><i class="fa-solid fa-file-text"></i></div>
+                <div class="category-title">Documents Officiels</div>
+                <div class="category-count">12 ressources</div>
+            </div>
+            <div class="category-card" onclick="filterByCategory('guides')">
+                <div class="category-icon"><i class="fa-solid fa-book-open"></i></div>
+                <div class="category-title">Guides Pratiques</div>
+                <div class="category-count">8 ressources</div>
+            </div>
+            <div class="category-card" onclick="filterByCategory('templates')">
+                <div class="category-icon"><i class="fa-solid fa-file-contract"></i></div>
+                <div class="category-title">Modèles & Templates</div>
+                <div class="category-count">15 ressources</div>
+            </div>
+            <div class="category-card" onclick="filterByCategory('videos')">
+                <div class="category-icon"><i class="fa-solid fa-play-circle"></i></div>
+                <div class="category-title">Vidéos Formation</div>
+                <div class="category-count">6 ressources</div>
+            </div>
+        </div>
+
+        <div class="filter-section reveal"> <!-- Filtres par boutons radio style -->
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="all">Toutes</button>
+                <button class="filter-btn" data-filter="documents">Documents</button>
+                <button class="filter-btn" data-filter="guides">Guides</button>
+                <button class="filter-btn" data-filter="templates">Templates</button>
+                <button class="filter-btn" data-filter="videos">Vidéos</button>
+            </div>
+        </div>
+
+        <div class="resources-grid reveal stagger-children"> <!-- Liste dynamique des ressources -->
+            <!-- Exemple Ressource 1 (Document PDF) -->
+            <div class="resource-card" data-category="documents">
+                <div class="resource-type type-document">Document</div>
+                <div class="resource-header">
+                    <div class="resource-icon"><i class="fa-solid fa-file-pdf"></i></div>
+                    <div class="resource-info">
+                        <h3 class="resource-title">Guide PTS-JEUNES 2026</h3>
+                        <div class="resource-meta"><span><i class="fa-solid fa-download"></i> 1.2k</span><span>PDF - 2.5
+                                MB</span></div>
+                    </div>
+                </div>
+                <p class="resource-description">Guide complet du Plan Triennal Spécial Jeunes : critères d'éligibilité
+                    et financement.</p>
+                <div class="resource-actions">
+                    <button class="btn-primary"
+                        onclick="showToast('Téléchargement du guide PTS-JEUNES...', 'success')"><i
+                            class="fa-solid fa-download"></i> Télécharger</button>
+                    <button class="btn-secondary" onclick="showToast('Aperçu du document...', 'info')"><i
+                            class="fa-solid fa-eye"></i> Aperçu</button>
+                </div>
+            </div>
+
+            <!-- Exemple Ressource 2 (Template Word) -->
+            <div class="resource-card" data-category="templates">
+                <div class="resource-type type-template">Template</div>
+                <div class="resource-header">
+                    <div class="resource-icon"><i class="fa-solid fa-file-word"></i></div>
+                    <div class="resource-info">
+                        <h3 class="resource-title">Modèle Business Plan</h3>
+                        <div class="resource-meta"><span><i class="fa-solid fa-download"></i> 856</span><span>DOCX - 1.8
+                                MB</span></div>
+                    </div>
+                </div>
+                <p class="resource-description">Template complet de business plan adapté aux projets jeunes du
+                    département.</p>
+                <div class="resource-actions">
+                    <button class="btn-primary" onclick="showToast('Téléchargement du modèle...', 'success')"><i
+                            class="fa-solid fa-download"></i> Télécharger</button>
+                    <button class="btn-secondary" onclick="showToast('Exemple de business plan...', 'info')"><i
+                            class="fa-solid fa-lightbulb"></i> Exemple</button>
+                </div>
+            </div>
+
+            <!-- Exemple Ressource 3 (Vidéo) -->
+            <div class="resource-card" data-category="videos">
+                <div class="resource-type type-video">Vidéo</div>
+                <div class="resource-header">
+                    <div class="resource-icon"><i class="fa-solid fa-play-circle"></i></div>
+                    <div class="resource-info">
+                        <h3 class="resource-title">Webinaire : Financer son Projet</h3>
+                        <div class="resource-meta"><span><i class="fa-solid fa-eye"></i> 3.4k</span><span>45 min</span>
+                        </div>
+                    </div>
+                </div>
+                <p class="resource-description">Webinaire complet sur les sources de financement pour les jeunes
+                    entrepreneurs.</p>
+                <div class="resource-actions">
+                    <button class="btn-primary" onclick="showToast('Lecture de la vidéo...', 'info')"><i
+                            class="fa-solid fa-play"></i> Regarder</button>
+                    <button class="btn-secondary" onclick="showToast('Support de présentation disponible', 'info')"><i
+                            class="fa-solid fa-file-powerpoint"></i> Support</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="search-section reveal" style="margin-top: 4rem;"> <!-- Bloc contribution -->
+            <h3><i class="fa-solid fa-plus-circle"></i> Contribuer aux ressources</h3>
+            <p style="color: var(--text-muted); margin-bottom: 2rem;">Vous avez des documents utiles ? Proposez vos
+                ressources à la délégation</p>
+            <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+                <a href="contact.html" class="btn-primary"><i class="fa-solid fa-upload"></i> Proposer une ressource</a>
+                <button class="btn-secondary" onclick="showToast('Newsletter ressources active', 'success')"><i
+                        class="fa-solid fa-bell"></i> Être notifié</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div> <!-- Conteneur pour alertes toast -->
+
+    <script src="assets/js/data-loader.js"></script> <!-- JS chargement données -->
+    <script src="assets/js/main.js"></script> <!-- JS global -->
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            const resources = document.querySelectorAll('.resource-card');
+
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    const filterValue = btn.getAttribute('data-filter');
+                    resources.forEach(resource => {
+                        const category = resource.getAttribute('data-category');
+                        if (filterValue === 'all' || filterValue === category) resource.style.display = 'block';
+                        else resource.style.display = 'none';
+                    });
+                });
+            });
+
+            const searchInput = document.getElementById('resourceSearch');
+            searchInput.addEventListener('input', (e) => {
+                const searchTerm = e.target.value.toLowerCase();
+                resources.forEach(resource => {
+                    const title = resource.querySelector('.resource-title').textContent.toLowerCase();
+                    const desc = resource.querySelector('.resource-description').textContent.toLowerCase();
+                    if (title.includes(searchTerm) || desc.includes(searchTerm)) resource.style.display = 'block';
+                    else resource.style.display = 'none';
+                });
+                if (searchTerm) {
+                    filterBtns.forEach(btn => btn.classList.remove('active'));
+                    document.querySelector('[data-filter="all"]').classList.add('active');
+                }
+            });
+        });
+
+        function filterByCategory(category) {
+            const filterBtn = document.querySelector(`[data-filter="${category}"]`);
+            if (filterBtn) filterBtn.click();
+        }
+    </script>
+</body>
+
+</html> <!-- Fin Ressources -->

@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carte des Projets | MINJEC Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        body {
+            background: var(--bg-dark);
+            background-image: var(--bg-gradient);
+            min-height: 100vh;
+        }
+
+        .map-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .map-grid {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+            height: 80vh;
+        }
+
+        .map-sidebar {
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .map-main {
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+            border-radius: 20px;
+        }
+
+        .filter-section {
+            margin-bottom: 2rem;
+        }
+
+        .filter-group {
+            margin-bottom: 1rem;
+        }
+
+        .filter-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-main);
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .filter-group select,
+        .filter-group input {
+            width: 100%;
+            padding: 0.6rem 0.8rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-main);
+            font-size: 0.85rem;
+        }
+
+        .stats-overview {
+            background: rgba(56, 189, 248, 0.1);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.8rem;
+        }
+
+        .stat-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        .stat-value {
+            color: var(--accent-primary);
+            font-weight: 600;
+        }
+
+        .project-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .project-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .project-item:hover {
+            border-color: var(--accent-primary);
+            transform: translateX(5px);
+        }
+
+        .project-item.selected {
+            border-color: var(--accent-primary);
+            background: rgba(56, 189, 248, 0.1);
+        }
+
+        .project-title {
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .project-location {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .project-amount {
+            color: var(--accent-primary);
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .legend {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(2, 6, 23, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 1rem;
+            z-index: 1000;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.8rem;
+        }
+
+        .legend-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .map-controls {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            z-index: 1000;
+        }
+
+        .map-control-btn {
+            width: 40px;
+            height: 40px;
+            background: rgba(2, 6, 23, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            color: var(--text-main);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .map-control-btn:hover {
+            background: var(--accent-primary);
+            color: white;
+        }
+
+        .project-popup {
+            max-width: 250px;
+        }
+
+        .popup-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .popup-info {
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 0.3rem;
+        }
+
+        .popup-amount {
+            font-weight: 600;
+            color: #10b981;
+        }
+
+        .cluster-icon {
+            background: rgba(56, 189, 248, 0.8);
+            border: 2px solid white;
+            border-radius: 50%;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .heatmap-toggle {
+            background: rgba(2, 6, 23, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            color: var(--text-main);
+            cursor: pointer;
+            font-size: 0.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .heatmap-toggle.active {
+            background: var(--accent-primary);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="map-container">
+        <header style="margin-bottom: 2rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h1 class="animated-gradient-text" style="font-size: 2.5rem; margin-bottom: 0.5rem;">
+                        <i class="fa-solid fa-map-location-dot"></i> Carte des Projets
+                    </h1>
+                    <p style="color: var(--text-muted);">Visualisez l'impact géographique des projets financés dans le Ndé</p>
+                </div>
+                <a href="index.html" class="btn-secondary">
+                    <i class="fa-solid fa-home"></i> Accueil
+                </a>
+            </div>
+        </header>
+
+        <div class="map-grid">
+            <!-- Sidebar -->
+            <aside class="map-sidebar">
+                <!-- Statistiques -->
+                <div class="stats-overview">
+                    <h3 style="color: var(--text-main); margin-bottom: 1rem; font-size: 1.1rem;">
+                        <i class="fa-solid fa-chart-pie"></i> Statistiques
+                    </h3>
+                    <div class="stat-item">
+                        <span class="stat-label">Total projets</span>
+                        <span class="stat-value" id="totalProjects">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Montant total</span>
+                        <span class="stat-value" id="totalAmount">0 FCFA</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Villes couvertes</span>
+                        <span class="stat-value" id="totalCities">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Secteurs actifs</span>
+                        <span class="stat-value" id="totalSectors">0</span>
+                    </div>
+                </div>
+
+                <!-- Filtres -->
+                <div class="filter-section">
+                    <h3 style="color: var(--text-main); margin-bottom: 1rem; font-size: 1.1rem;">
+                        <i class="fa-solid fa-filter"></i> Filtres
+                    </h3>
+                    
+                    <div class="filter-group">
+                        <label>Secteur d'activité</label>
+                        <select id="sectorFilter" onchange="applyFilters()">
+                            <option value="">Tous les secteurs</option>
+                            <option value="agriculture">Agriculture</option>
+                            <option value="technologie">Technologie</option>
+                            <option value="commerce">Commerce</option>
+                            <option value="artisanat">Artisanat</option>
+                            <option value="services">Services</option>
+                            <option value="education">Éducation</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label>Statut du projet</label>
+                        <select id="statusFilter" onchange="applyFilters()">
+                            <option value="">Tous les statuts</option>
+                            <option value="en_cours">En cours</option>
+                            <option value="termine">Terminé</option>
+                            <option value="suspendu">Suspendu</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label>Montant minimum (FCFA)</label>
+                        <input type="number" id="minAmountFilter" placeholder="0" onchange="applyFilters()">
+                    </div>
+
+                    <div class="filter-group">
+                        <label>Ville</label>
+                        <select id="cityFilter" onchange="applyFilters()">
+                            <option value="">Toutes les villes</option>
+                            <option value="Bangangté">Bangangté</option>
+                            <option value="Bazou">Bazou</option>
+                            <option value="Tonga">Tonga</option>
+                            <option value="Bafang">Bafang</option>
+                            <option value="Bangou">Bangou</option>
+                        </select>
+                    </div>
+
+                    <button class="btn-secondary" onclick="resetFilters()" style="width: 100%; margin-top: 1rem;">
+                        <i class="fa-solid fa-refresh"></i> Réinitialiser
+                    </button>
+                </div>
+
+                <!-- Liste des projets -->
+                <div>
+                    <h3 style="color: var(--text-main); margin-bottom: 1rem; font-size: 1.1rem;">
+                        <i class="fa-solid fa-list"></i> Projets (<span id="projectCount">0</span>)
+                    </h3>
+                    <div class="project-list" id="projectsList">
+                        <!-- Projets chargés dynamiquement -->
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Carte principale -->
+            <main class="map-main">
+                <div id="map"></div>
+                
+                <!-- Contrôles de la carte -->
+                <div class="map-controls">
+                    <div class="heatmap-toggle" id="heatmapToggle" onclick="toggleHeatmap()">
+                        <i class="fa-solid fa-fire"></i> Heatmap
+                    </div>
+                    <button class="map-control-btn" onclick="centerMap()" title="Centrer la carte">
+                        <i class="fa-solid fa-crosshairs"></i>
+                    </button>
+                    <button class="map-control-btn" onclick="toggleFullscreen()" title="Plein écran">
+                        <i class="fa-solid fa-expand"></i>
+                    </button>
+                    <button class="map-control-btn" onclick="exportMap()" title="Exporter">
+                        <i class="fa-solid fa-download"></i>
+                    </button>
+                </div>
+
+                <!-- Légende -->
+                <div class="legend">
+                    <h4 style="color: var(--text-main); margin-bottom: 0.8rem; font-size: 0.9rem;">Légende</h4>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #10b981;"></div>
+                        <span style="color: var(--text-main);">Agriculture</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #38bdf8;"></div>
+                        <span style="color: var(--text-main);">Technologie</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #f59e0b;"></div>
+                        <span style="color: var(--text-main);">Commerce</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #8b5cf6;"></div>
+                        <span style="color: var(--text-main);">Artisanat</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #ef4444;"></div>
+                        <span style="color: var(--text-main);">Services</span>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script>
+        let map;
+        let projectMarkers = [];
+        let allProjects = [];
+        let filteredProjects = [];
+        let markerClusterGroup;
+        let heatmapLayer;
+        let isHeatmapActive = false;
+
+        // Coordonnées du département du Ndé
+        const ndeCenter = [5.1419, 10.2906]; // Bangangté
+        
+        // Coordonnées des principales villes
+        const cityCoordinates = {
+            'Bangangté': [5.1419, 10.2906],
+            'Bazou': [5.0833, 10.4167],
+            'Tonga': [4.9167, 10.7333],
+            'Bafang': [5.1667, 10.1833],
+            'Bangou': [5.2167, 10.3500]
+        };
+
+        // Couleurs par secteur
+        const sectorColors = {
+            agriculture: '#10b981',
+            technologie: '#38bdf8',
+            commerce: '#f59e0b',
+            artisanat: '#8b5cf6',
+            services: '#ef4444',
+            education: '#06b6d4'
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (!currentUser) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            initMap();
+            loadProjects();
+            renderProjects();
+            updateStats();
+        });
+
+        function initMap() {
+            // Initialiser la carte
+            map = L.map('map').setView(ndeCenter, 10);
+
+            // Ajouter les tuiles de carte
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+
+            // Initialiser le groupe de clusters
+            markerClusterGroup = L.markerClusterGroup({
+                iconCreateFunction: function(cluster) {
+                    const count = cluster.getChildCount();
+                    return L.divIcon({
+                        html: `<div class="cluster-icon" style="width: ${30 + count * 2}px; height: ${30 + count * 2}px; line-height: ${30 + count * 2}px;">${count}</div>`,
+                        className: 'custom-cluster-icon',
+                        iconSize: [30 + count * 2, 30 + count * 2]
+                    });
+                }
+            });
+
+            map.addLayer(markerClusterGroup);
+        }
+
+        function loadProjects() {
+            // Charger les projets existants ou créer des exemples
+            allProjects = JSON.parse(localStorage.getItem('map_projects')) || [];
+            
+            if (allProjects.length === 0) {
+                createSampleProjects();
+            }
+            
+            filteredProjects = [...allProjects];
+        }
+
+        function createSampleProjects() {
+            const sampleProjects = [
+                {
+                    id: 'proj_1',
+                    title: 'Ferme Avicole Moderne',
+                    description: 'Élevage de poulets de chair avec techniques modernes',
+                    sector: 'agriculture',
+                    city: 'Bangangté',
+                    coordinates: [5.1419, 10.2906],
+                    amount: 2500000,
+                    status: 'en_cours',
+                    author: 'Marie Kamga',
+                    startDate: '2024-01-15',
+                    beneficiaries: 25
+                },
+                {
+                    id: 'proj_2',
+                    title: 'Plateforme E-commerce Local',
+                    description: 'Marketplace pour produits locaux du Ndé',
+                    sector: 'technologie',
+                    city: 'Bangangté',
+                    coordinates: [5.1450, 10.2950],
+                    amount: 1800000,
+                    status: 'termine',
+                    author: 'Samuel Fotso',
+                    startDate: '2023-08-10',
+                    beneficiaries: 150
+                },
+                {
+                    id: 'proj_3',
+                    title: 'Coopérative Agricole Bio',
+                    description: 'Production et commercialisation de légumes bio',
+                    sector: 'agriculture',
+                    city: 'Bazou',
+                    coordinates: [5.0833, 10.4167],
+                    amount: 3200000,
+                    status: 'en_cours',
+                    author: 'Paul Nkomo',
+                    startDate: '2024-02-01',
+                    beneficiaries: 45
+                },
+                {
+                    id: 'proj_4',
+                    title: 'Atelier de Couture',
+                    description: 'Formation et production textile locale',
+                    sector: 'artisanat',
+                    city: 'Tonga',
+                    coordinates: [4.9167, 10.7333],
+                    amount: 950000,
+                    status: 'termine',
+                    author: 'Françoise Mballa',
+                    startDate: '2023-11-20',
+                    beneficiaries: 30
+                },
+                {
+                    id: 'proj_5',
+                    title: 'Centre de Formation IT',
+                    description: 'Formation en informatique pour jeunes',
+                    sector: 'education',
+                    city: 'Bafang',
+                    coordinates: [5.1667, 10.1833],
+                    amount: 4500000,
+                    status: 'en_cours',
+                    author: 'Jean Tchounga',
+                    startDate: '2024-03-01',
+                    beneficiaries: 80
+                },
+                {
+                    id: 'proj_6',
+                    title: 'Boulangerie Communautaire',
+                    description: 'Production de pain et pâtisseries locales',
+                    sector: 'commerce',
+                    city: 'Bangou',
+                    coordinates: [5.2167, 10.3500],
+                    amount: 1200000,
+                    status: 'en_cours',
+                    author: 'Diane Fokou',
+                    startDate: '2024-01-10',
+                    beneficiaries: 20
+                },
+                {
+                    id: 'proj_7',
+                    title: 'Service de Livraison Moto',
+                    description: 'Livraison rapide en milieu urbain',
+                    sector: 'services',
+                    city: 'Bangangté',
+                    coordinates: [5.1400, 10.2880],
+                    amount: 800000,
+                    status: 'termine',
+                    author: 'Eric Kamdem',
+                    startDate: '2023-09-15',
+                    beneficiaries: 12
+                },
+                {
+                    id: 'proj_8',
+                    title: 'Transformation Manioc',
+                    description: 'Unité de transformation du manioc en farine',
+                    sector: 'agriculture',
+                    city: 'Bazou',
+                    coordinates: [5.0850, 10.4200],
+                    amount: 2800000,
+                    status: 'en_cours',
+                    author: 'Célestine Njoya',
+                    startDate: '2024-02-15',
+                    beneficiaries: 35
+                }
+            ];
+
+            allProjects = sampleProjects;
+            localStorage.setItem('map_projects', JSON.stringify(allProjects));
+        }
+
+        function renderProjects() {
+            // Vider les marqueurs existants
+            markerClusterGroup.clearLayers();
+            projectMarkers = [];
+
+            filteredProjects.forEach(project => {
+                const color = sectorColors[project.sector] || '#666';
+                
+                // Créer l'icône personnalisée
+                const icon = L.divIcon({
+                    className: 'custom-marker',
+                    html: `<div style="
+                        width: 20px; 
+                        height: 20px; 
+                        background: ${color}; 
+                        border: 3px solid white; 
+                        border-radius: 50%; 
+                        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+                    "></div>`,
+                    iconSize: [20, 20],
+                    iconAnchor: [10, 10]
+                });
+
+                // Créer le marqueur
+                const marker = L.marker(project.coordinates, { icon })
+                    .bindPopup(`
+                        <div class="project-popup">
+                            <div class="popup-title">${project.title}</div>
+                            <div class="popup-info"><i class="fa-solid fa-map-marker-alt"></i> ${project.city}</div>
+                            <div class="popup-info"><i class="fa-solid fa-user"></i> ${project.author}</div>
+                            <div class="popup-info"><i class="fa-solid fa-users"></i> ${project.beneficiaries} bénéficiaires</div>
+                            <div class="popup-amount">${formatAmount(project.amount)} FCFA</div>
+                            <div style="margin-top: 0.5rem;">
+                                <span style="background: ${color}; color: white; padding: 2px 8px; border-radius: 10px; font-size: 0.7rem;">
+                                    ${project.sector}
+                                </span>
+                            </div>
+                        </div>
+                    `);
+
+                projectMarkers.push(marker);
+                markerClusterGroup.addLayer(marker);
+            });
+
+            renderProjectsList();
+        }
+
+        function renderProjectsList() {
+            const list = document.getElementById('projectsList');
+            
+            if (filteredProjects.length === 0) {
+                list.innerHTML = `
+                    <div style="text-align: center; padding: 2rem; color: var(--text-muted);">
+                        <i class="fa-solid fa-search" style="font-size: 2rem; margin-bottom: 1rem; opacity: 0.3;"></i>
+                        <p>Aucun projet trouvé</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const html = filteredProjects.map(project => `
+                <div class="project-item" onclick="focusProject('${project.id}')">
+                    <div class="project-title">${project.title}</div>
+                    <div class="project-location">
+                        <i class="fa-solid fa-map-marker-alt"></i> ${project.city}
+                    </div>
+                    <div class="project-amount">${formatAmount(project.amount)} FCFA</div>
+                </div>
+            `).join('');
+
+            list.innerHTML = html;
+            document.getElementById('projectCount').textContent = filteredProjects.length;
+        }
+
+        function focusProject(projectId) {
+            const project = allProjects.find(p => p.id === projectId);
+            if (project) {
+                map.setView(project.coordinates, 15);
+                
+                // Highlight du projet dans la liste
+                document.querySelectorAll('.project-item').forEach(item => item.classList.remove('selected'));
+                event.currentTarget.classList.add('selected');
+                
+                // Ouvrir le popup du marqueur
+                const marker = projectMarkers.find(m => 
+                    m.getLatLng().lat === project.coordinates[0] && 
+                    m.getLatLng().lng === project.coordinates[1]
+                );
+                if (marker) {
+                    marker.openPopup();
+                }
+            }
+        }
+
+        function applyFilters() {
+            const sector = document.getElementById('sectorFilter').value;
+            const status = document.getElementById('statusFilter').value;
+            const minAmount = parseInt(document.getElementById('minAmountFilter').value) || 0;
+            const city = document.getElementById('cityFilter').value;
+
+            filteredProjects = allProjects.filter(project => {
+                return (!sector || project.sector === sector) &&
+                       (!status || project.status === status) &&
+                       (project.amount >= minAmount) &&
+                       (!city || project.city === city);
+            });
+
+            renderProjects();
+            updateStats();
+        }
+
+        function resetFilters() {
+            document.getElementById('sectorFilter').value = '';
+            document.getElementById('statusFilter').value = '';
+            document.getElementById('minAmountFilter').value = '';
+            document.getElementById('cityFilter').value = '';
+            
+            filteredProjects = [...allProjects];
+            renderProjects();
+            updateStats();
+        }
+
+        function updateStats() {
+            const totalAmount = filteredProjects.reduce((sum, p) => sum + p.amount, 0);
+            const cities = [...new Set(filteredProjects.map(p => p.city))];
+            const sectors = [...new Set(filteredProjects.map(p => p.sector))];
+
+            document.getElementById('totalProjects').textContent = filteredProjects.length;
+            document.getElementById('totalAmount').textContent = formatAmount(totalAmount);
+            document.getElementById('totalCities').textContent = cities.length;
+            document.getElementById('totalSectors').textContent = sectors.length;
+        }
+
+        function toggleHeatmap() {
+            const toggle = document.getElementById('heatmapToggle');
+            
+            if (isHeatmapActive) {
+                // Désactiver heatmap
+                if (heatmapLayer) {
+                    map.removeLayer(heatmapLayer);
+                }
+                toggle.classList.remove('active');
+                isHeatmapActive = false;
+            } else {
+                // Activer heatmap (simulation avec cercles)
+                heatmapLayer = L.layerGroup();
+                
+                filteredProjects.forEach(project => {
+                    const intensity = project.amount / 1000000; // Normaliser
+                    const circle = L.circle(project.coordinates, {
+                        radius: intensity * 2000,
+                        fillColor: sectorColors[project.sector],
+                        fillOpacity: 0.3,
+                        stroke: false
+                    });
+                    heatmapLayer.addLayer(circle);
+                });
+                
+                map.addLayer(heatmapLayer);
+                toggle.classList.add('active');
+                isHeatmapActive = true;
+            }
+        }
+
+        function centerMap() {
+            map.setView(ndeCenter, 10);
+        }
+
+        function toggleFullscreen() {
+            const mapElement = document.getElementById('map');
+            if (!document.fullscreenElement) {
+                mapElement.requestFullscreen();
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        function exportMap() {
+            // Simulation d'export
+            const data = {
+                projects: filteredProjects,
+                stats: {
+                    total: filteredProjects.length,
+                    amount: filteredProjects.reduce((sum, p) => sum + p.amount, 0),
+                    cities: [...new Set(filteredProjects.map(p => p.city))].length
+                },
+                exportDate: new Date().toISOString()
+            };
+
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `projets_carte_${Date.now()}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+
+            showToast('Carte exportée avec succès', 'success');
+        }
+
+        function formatAmount(amount) {
+            return new Intl.NumberFormat('fr-FR').format(amount);
+        }
+
+        function showToast(message, type) {
+            if (window.showToast) {
+                window.showToast(message, type);
+            } else {
+                alert(message);
+            }
+        }
+    </script>
+</body>
+</html>

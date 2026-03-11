@@ -1,0 +1,182 @@
+<!DOCTYPE html> <!-- Déclaration du type de document standard HTML5 -->
+<html lang="fr"> <!-- Balise racine pour le contenu en français -->
+
+<head> <!-- Section en-tête pour les métadonnées et styles -->
+    <meta charset="UTF-8"> <!-- Encodage universel des caractères -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Support de l'affichage mobile -->
+    <title>Missions & Organigramme | Délégation Jeunesse</title> <!-- Nom de la page dans l'onglet -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css"> <!-- Styles globaux Aurora Portal -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Styles CSS locaux pour la structure de l'organigramme */
+        .org-tree {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .org-level {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .org-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+            text-align: center;
+            width: 250px;
+            position: relative;
+        }
+
+        .org-card::after {
+            content: '';
+            position: absolute;
+            bottom: -2rem;
+            left: 50%;
+            width: 2px;
+            height: 2rem;
+            background: var(--border-color);
+        }
+
+        .org-level:last-child .org-card::after {
+            display: none;
+        }
+
+        .mission-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+    </style>
+    <link rel="stylesheet" href="assets/css/spacing-fix.css">
+</head>
+
+<body> <!-- Début du corps de page -->
+    <div class="particles" id="particles"></div> <!-- Arrière-plan animé -->
+
+    <nav class="navbar scrolled" id="navbar"> <!-- Barre de navigation fixée -->
+        <div class="container nav-container">
+            <a href="index.html" class="nav-logo floating-slow"><i class="fa-solid fa-layer-group rotate-slow"></i>
+                MINJEC</a>
+            <ul class="nav-links" style="display: flex; align-items: center; gap: 1.2rem;">
+                <li><a href="index.html" class="link-underline">Accueil</a></li>
+                <li><a href="missions-organigramme.html" class="link-underline active">Missions</a></li>
+                <li><a href="programmes.html" class="link-underline">Programmes</a></li>
+                <li><a href="projets.html" class="link-underline">Projets</a></li>
+                <li><a href="galerie.html" class="link-underline">Galerie</a></li>
+                <li><a href="agora.html" class="link-underline" data-t="agora">Agora</a></li>
+                <li><a href="actualites.html" class="link-underline">Actualités</a></li>
+                <li>
+                    <a href="#" class="link-underline">Plus <i class="fa-solid fa-chevron-down"
+                            style="font-size: 0.7rem; margin-left: 3px;"></i></a>
+                    <div class="dropdown-menu">
+                        <a href="about.html" class="dropdown-item"><i class="fa-solid fa-info-circle"></i> À propos</a>
+                        <a href="associations.html" class="dropdown-item"><i class="fa-solid fa-users"></i>
+                            Associations</a>
+                        <a href="ressources.html" class="dropdown-item"><i class="fa-solid fa-book"></i> Ressources</a>
+                        <a href="evenements.html" class="dropdown-item"><i class="fa-solid fa-calendar-days"></i>
+                            Événements</a>
+                        <a href="faq.html" class="dropdown-item"><i class="fa-solid fa-circle-question"></i> FAQ</a>
+                        <a href="contact.html" class="dropdown-item"><i class="fa-solid fa-envelope"></i> Contact</a>
+                        <a href="archives.html" class="dropdown-item"><i class="fa-solid fa-box-archive"></i>
+                            Archives</a>
+                    </div>
+                </li>
+            </ul>
+            <div style="display: flex; align-items: center; gap: 1.5rem;">
+                <button class="theme-toggle" id="themeToggle" title="Changer de mode"><i class="fa-solid fa-moon"></i><i
+                        class="fa-solid fa-sun"></i></button>
+                <div class="lang-toggle">
+                    <div class="lang-btn active" data-lang="fr">FR</div>
+                    <div class="lang-btn" data-lang="en">EN</div>
+                </div>
+                <a href="login.html" class="btn-primary btn-ripple pulse-glow"
+                    style="padding: 0.5rem 1.2rem; font-size: 0.9rem;"><i class="fa-solid fa-user-lock"></i>
+                    Connexion</a>
+            </div>
+            <button class="mobile-menu-toggle" id="mobileMenuToggle"><i class="fa-solid fa-bars"></i></button>
+        </div>
+    </nav>
+
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="index.html">Accueil</a><a href="missions-organigramme.html">Missions</a><a
+            href="programmes.html">Programmes</a>
+        <a href="projets.html">Projets</a><a href="galerie.html">Galerie</a><a href="actualites.html">Actualités</a>
+        <a href="login.html" class="btn-primary" style="margin-top: 1rem;">Connexion</a>
+    </div>
+    <div class="mobile-overlay" id="mobileOverlay"></div>
+
+    <header class="hero" style="min-height: 40vh; padding-top: 8rem;">
+        <div class="container text-center">
+            <h1 class="reveal animated-gradient-text">Missions & Organigramme</h1>
+            <p class="reveal" style="animation-delay: 0.2s;">Structure et engagements pour la jeunesse du Ndé.</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="reveal section-padding">
+            <h2 class="section-title">Nos Missions Fondamentales</h2>
+            <div class="mission-grid stagger-children">
+                <div class="glass-card"><i class="fa-solid fa-shield-halved"
+                        style="font-size: 2.5rem; color: var(--accent-primary); margin-bottom: 1.5rem;"></i>
+                    <h3>Éducation Civique</h3>
+                    <p>Promotion du patriotisme et de l'intégration nationale.</p>
+                </div>
+                <div class="glass-card"><i class="fa-solid fa-briefcase"
+                        style="font-size: 2.5rem; color: var(--accent-secondary); margin-bottom: 1.5rem;"></i>
+                    <h3>Insertion Sociale</h3>
+                    <p>Accompagnement à l'autonomisation socio-économique.</p>
+                </div>
+                <div class="glass-card"><i class="fa-solid fa-users"
+                        style="font-size: 2.5rem; color: #10b981; margin-bottom: 1.5rem;"></i>
+                    <h3>Vie Associative</h3>
+                    <p>Suivi des organisations et mouvements de jeunesse.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="reveal section-padding"
+            style="background: rgba(15, 23, 42, 0.3); border-radius: 30px; padding: 4rem 2rem;">
+            <h2 class="section-title">Structure Organisationnelle</h2>
+            <div class="org-tree">
+                <div class="org-level">
+                    <div class="org-card glow-border"><img
+                            src="https://ui-avatars.com/api/?name=Délégué&background=38bdf8&color=fff"
+                            style="width: 60px; border-radius: 50%; margin-bottom: 1rem;">
+                        <h4 style="color: var(--accent-primary);">Délégué Départemental</h4>
+                        <p style="font-size: 0.8rem; color: var(--text-muted);">Direction & Management</p>
+                    </div>
+                </div>
+                <div class="org-level">
+                    <div class="org-card">
+                        <h4 style="color: #818cf8;">Service Administratif</h4>
+                        <p style="font-size: 0.8rem; color: var(--text-muted);">Gestion & RH</p>
+                    </div>
+                    <div class="org-card">
+                        <h4 style="color: #10b981;">Service Technique</h4>
+                        <p style="font-size: 0.8rem; color: var(--text-muted);">Projets & Programmes</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer id="contact" class="reveal">
+        <div class="container">
+            <div style="text-align: center; color: var(--text-muted); padding-top: 2rem; font-size: 0.9rem;">&copy; 2026
+                Délégation Jeunesse Ndé. Tous droits réservés.</div>
+        </div>
+    </footer>
+
+    <script src="assets/js/main.js"></script>
+</body>
+
+</html> <!-- Fin Missions -->

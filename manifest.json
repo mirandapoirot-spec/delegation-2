@@ -1,0 +1,76 @@
+{
+  "_comment_1": "Ouverture du manifest PWA",
+  "name": "Délégation Jeunesse Bangangté",
+  "_comment_2": "Nom court pour l'affichage icône",
+  "short_name": "MINJEC",
+  "_comment_3": "Description du portail",
+  "description": "Plateforme officielle de la Délégation de la Jeunesse et de l'Éducation Civique de Bangangté",
+  "_comment_4": "Point d'entrée de l'application",
+  "start_url": "/",
+  "_comment_5": "Affichage plein écran",
+  "display": "standalone",
+  "_comment_6": "Couleur de fond du splash screen",
+  "background_color": "#0f172a",
+  "_comment_7": "Couleur de la barre d'état",
+  "theme_color": "#38bdf8",
+  "_comment_8": "Verrouillage en mode portrait",
+  "orientation": "portrait-primary",
+  "_comment_9": "Tags de catégorie",
+  "categories": ["government", "education", "productivity"],
+  "_comment_10": "Langue par défaut",
+  "lang": "fr",
+  "_comment_11": "Liste des icônes",
+  "icons": [
+    {
+      "_comment_12": "Icône basse résolution (SVG Base64)",
+      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiByeD0iMjQiIGZpbGw9IiMzOGJkZjgiLz4KPHN2ZyB4PSI0OCIgeT0iNDgiIHdpZHRoPSI5NiIgaGVpZ2h0PSI5NiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJ3aGl0ZSI+CjxwYXRoIGQ9Ik0xMiAyTDEzLjA5IDguMjZMMjAgOUwxMy4wOSAxNS43NEwxMiAyMkwxMC45MSAxNS43NEw0IDlMMTAuOTEgOC4yNkwxMiAyWiIvPgo8L3N2Zz4KPC9zdmc+",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    },
+    {
+      "_comment_13": "Icône haute résolution (SVG Base64)",
+      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDUxMiA1MTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiByeD0iNjQiIGZpbGw9IiMzOGJkZjgiLz4KPHN2ZyB4PSIxMjgiIHk9IjEyOCIgd2lkdGg9IjI1NiIgaGVpZ2h0PSIyNTYiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPgo8cGF0aCBkPSJNMTIgMkwxMy4wOSA4LjI2TDIwIDlMMTMuMDkgMTUuNzRMMTIgMjJMMTAuOTEgMTUuNzRMNCA5TDEwLjkxIDguMjZMMTIgMloiLz4KPC9zdmc+Cjwvc3ZnPg==",
+      "sizes": "512x512",
+      "type": "image/svg+xml"
+    }
+  ],
+  "_comment_14": "Captures d'écran",
+  "screenshots": [
+    {
+      "_comment_15": "Aperçu de l'écran principal",
+      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTI4MCIgaGVpZ2h0PSI3MjAiIHZpZXdCb3g9IjAgMCAxMjgwIDcyMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjEyODAiIGhlaWdodD0iNzIwIiBmaWxsPSIjMGYxNzJhIi8+Cjx0ZXh0IHg9IjY0MCIgeT0iMzYwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjMzhiZGY4IiBmb250LXNpemU9IjQ4IiBmb250LWZhbWlseT0iQXJpYWwiPk1JTkpFQyBCYW5nYW5ndMOpPC90ZXh0Pgo8L3N2Zz4=",
+      "sizes": "1280x720",
+      "type": "image/svg+xml",
+      "form_factor": "wide"
+    }
+  ],
+  "_comment_16": "Raccourcis clavier/application",
+  "shortcuts": [
+    {
+      "name": "Mes Projets",
+      "_comment_17": "Raccourci vers le dashboard",
+      "short_name": "Projets",
+      "description": "Accéder à mes projets",
+      "url": "/client-dashboard.html",
+      "icons": [
+        {
+          "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOTYiIGhlaWdodD0iOTYiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzM4YmRmOCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDJMMTMuMDkgOC4yNkwyMCA5TDEzLjA5IDE1Ljc0TDEyIDIyTDEwLjkxIDE1Ljc0TDQgOUwxMC45MSA4LjI2TDEyIDJaIi8+Cjwvc3ZnPg==",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Actualités",
+      "_comment_18": "Raccourci vers les news",
+      "short_name": "News",
+      "description": "Dernières actualités",
+      "url": "/actualites.html",
+      "icons": [
+        {
+          "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOTYiIGhlaWdodD0iOTYiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzM4YmRmOCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDJMMTMuMDkgOC4yNkwyMCA5TDEzLjA5IDE1Ljc0TDEyIDIyTDEwLjkxIDE1Ljc0TDQgOUwxMC45MSA4LjI2TDEyIDJaIi8+Cjwvc3ZnPg==",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ]
+}

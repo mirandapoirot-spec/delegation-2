@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Soumettre un Projet | Délégation</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .page-container {
+            width: 100%;
+            max-width: 800px;
+            padding: 2rem;
+            margin: 0 auto;
+        }
+
+        .form-section {
+            background: rgba(15, 23, 42, 0.4);
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            color: var(--text-main);
+            font-size: 1rem;
+            transition: all 0.3s;
+            font-family: var(--font-main);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
+        }
+
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+            gap: 1rem;
+        }
+
+        .back-btn {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+    </style>
+    <link rel="stylesheet" href="assets/css/spacing-fix.css">
+</head>
+
+<body>
+
+    <div class="toast-container" id="toastContainer"></div>
+
+
+    <div class="page-container fade-in">
+        <div class="header-actions">
+            <a href="client-dashboard.html" class="back-btn">
+                <i class="fa-solid fa-arrow-left"></i>
+            </a>
+            <h1>Nouveau Projet</h1>
+        </div>
+
+        <div class="glass-card">
+            <form id="projectForm">
+                <div class="form-section">
+                    <h3 style="margin-bottom: 1.5rem; color: var(--accent-secondary);">Informations Générales</h3>
+
+                    <div class="form-group">
+                        <label class="form-label">Titre du projet <span style="color: #ef4444">*</span></label>
+                        <input type="text" id="projectTitle" class="form-control"
+                            placeholder="Ex: Construction forages solaires" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Catégorie</label>
+                        <select id="projectCategory" class="form-control">
+                            <option value="infrastructure">Infrastructure</option>
+                            <option value="education">Éducation / Formation</option>
+                            <option value="sante">Santé</option>
+                            <option value="agriculture">Agriculture</option>
+                            <option value="technologie">Technologie</option>
+                            <option value="autre">Autre</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Description détaillée <span style="color: #ef4444">*</span></label>
+                        <textarea id="projectDescription" class="form-control"
+                            placeholder="Décrivez les objectifs, les bénéficiaires et l'impact attendu..."
+                            required></textarea>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3 style="margin-bottom: 1.5rem; color: var(--accent-secondary);">Budget et Délais</h3>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label class="form-label">Budget Estimé (FCFA)</label>
+                            <input type="number" id="projectBudget" class="form-control" placeholder="0">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Durée estimée (Mois)</label>
+                            <input type="number" id="projectDuration" class="form-control" placeholder="Ex: 6">
+                        </div>
+                    </div>
+                </div>
+
+                <div style="text-align: right;">
+                    <a href="client-dashboard.html" class="btn-secondary"
+                        style="margin-right: 1rem; border: none; color: var(--text-muted); cursor: pointer;">Annuler</a>
+                    <button type="submit" class="btn-primary" style="width: auto; padding: 1rem 2rem;">
+                        Soumettre le dossier <i class="fa-solid fa-paper-plane" style="margin-left: 8px;"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="assets/js/data-loader.js"></script>
+
+    <script src="assets/js/main.js"></script>
+    <script>
+        document.getElementById('projectForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            // Get simple values
+            const title = document.getElementById('projectTitle').value;
+            const category = document.getElementById('projectCategory').value;
+            const description = document.getElementById('projectDescription').value;
+            const budget = document.getElementById('projectBudget').value;
+            const duration = document.getElementById('projectDuration').value;
+
+            // Get Current User
+            const userJson = localStorage.getItem('currentUser');
+            if (!userJson) {
+                window.location.href = 'login.html';
+                return;
+            }
+            const user = JSON.parse(userJson);
+
+            // Create Project Object
+            const newProject = {
+                id: Date.now().toString(),
+                userId: user.id,
+                authorName: user.name,
+                title: title,
+                category: category,
+                description: description,
+                budget: budget,
+                duration: duration,
+                status: 'en_attente', // en_attente, valide, refuse
+                date: new Date().toLocaleDateString('fr-FR')
+            };
+
+            // Save to LocalStorage
+            let projects = JSON.parse(localStorage.getItem('delegation_projects')) || [];
+            projects.push(newProject);
+            localStorage.setItem('delegation_projects', JSON.stringify(projects));
+
+            // Feedback & Redirect
+            const btn = this.querySelector('button[type="submit"]');
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Envoi...';
+
+            setTimeout(() => {
+                window.location.href = 'client-dashboard.html?project_submitted=true';
+            }, 1000);
+        });
+
+        // Simple Toast reuse if needed inside script, but redirection handles it better for now.
+    </script>
+</body>
+
+</html>

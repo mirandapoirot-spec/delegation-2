@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parrainage & Mentorat | MINJEC Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background: var(--bg-dark);
+            background-image: var(--bg-gradient);
+            min-height: 100vh;
+        }
+
+        .mentorship-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .hero-section {
+            text-align: center;
+            margin-bottom: 4rem;
+            padding: 3rem 2rem;
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+        }
+
+        .hero-title {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+
+        .role-selector {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .role-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 2px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            min-width: 250px;
+        }
+
+        .role-card:hover {
+            border-color: var(--accent-primary);
+            transform: translateY(-5px);
+        }
+
+        .role-card.selected {
+            border-color: var(--accent-primary);
+            background: rgba(56, 189, 248, 0.1);
+        }
+
+        .role-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, #10b981, #38bdf8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            margin: 0 auto 1rem;
+        }
+
+        .role-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+        }
+
+        .role-desc {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .main-content {
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2rem;
+        }
+
+        .sidebar-card {
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2rem;
+            height: fit-content;
+        }
+
+        .mentor-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s;
+        }
+
+        .mentor-card:hover {
+            border-color: var(--accent-primary);
+            transform: translateX(5px);
+        }
+
+        .mentor-header {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .mentor-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--accent-primary);
+        }
+
+        .mentor-info {
+            flex: 1;
+        }
+
+        .mentor-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 0.3rem;
+        }
+
+        .mentor-title {
+            color: var(--accent-primary);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .mentor-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+        }
+
+        .stars {
+            color: #fbbf24;
+        }
+
+        .mentor-skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+
+        .skill-tag {
+            padding: 0.3rem 0.8rem;
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .mentor-stats {
+            display: flex;
+            gap: 1.5rem;
+            margin: 1rem 0;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .mentor-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .filter-section {
+            margin-bottom: 2rem;
+        }
+
+        .filter-row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .filter-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-main);
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .filter-group select,
+        .filter-group input {
+            width: 100%;
+            padding: 0.6rem 0.8rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-main);
+            font-size: 0.85rem;
+        }
+
+        .matching-score {
+            background: linear-gradient(135deg, #10b981, #38bdf8);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+        }
+
+        .mentor-card {
+            position: relative;
+        }
+
+        .mentorship-request {
+            background: rgba(56, 189, 248, 0.1);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .request-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .request-status {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .status-pending {
+            background: rgba(251, 191, 36, 0.2);
+            color: #fbbf24;
+        }
+
+        .status-accepted {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+        }
+
+        .status-declined {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            overflow-y: auto;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 2rem;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideUp 0.3s ease;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-main);
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            color: var(--text-main);
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-muted);
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.3;
+        }
+    </style>
+</head>
+<body>
+    <div class="mentorship-container">
+        <!-- Hero Section -->
+        <div class="hero-section">
+            <h1 class="hero-title animated-gradient-text">
+                <i class="fa-solid fa-handshake"></i> Parrainage & Mentorat
+            </h1>
+            <p class="hero-subtitle">
+                Connectez-vous avec des mentors expérimentés ou partagez votre expertise avec la nouvelle génération
+            </p>
+
+            <div class="role-selector">
+                <div class="role-card" onclick="selectRole('mentee')" id="menteeCard">
+                    <div class="role-icon">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                    </div>
+                    <div class="role-title">Je cherche un mentor</div>
+                    <div class="role-desc">Bénéficiez de l'expérience et des conseils d'entrepreneurs confirmés</div>
+                </div>
+
+                <div class="role-card" onclick="selectRole('mentor')" id="mentorCard">
+                    <div class="role-icon">
+                        <i class="fa-solid fa-user-tie"></i>
+                    </div>
+                    <div class="role-title">Je veux être mentor</div>
+                    <div class="role-desc">Partagez votre expertise et accompagnez les jeunes entrepreneurs</div>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 1rem; justify-content: center;">
+                <button class="btn-primary" onclick="openProfileModal()">
+                    <i class="fa-solid fa-user-plus"></i> Créer mon profil
+                </button>
+                <a href="index.html" class="btn-secondary">
+                    <i class="fa-solid fa-home"></i> Accueil
+                </a>
+            </div>
+        </div>
+
+        <!-- Content Grid -->
+        <div class="content-grid">
+            <!-- Main Content -->
+            <main>
+                <div class="main-content">
+                    <!-- Filters -->
+                    <div class="filter-section" id="filtersSection" style="display: none;">
+                        <h3 style="color: var(--text-main); margin-bottom: 1rem;">
+                            <i class="fa-solid fa-filter"></i> Filtres de recherche
+                        </h3>
+                        <div class="filter-row">
+                            <div class="filter-group">
+                                <label>Domaine d'expertise</label>
+                                <select id="domainFilter">
+                                    <option value="">Tous les domaines</option>
+                                    <option value="tech">Technologie</option>
+                                    <option value="agriculture">Agriculture</option>
+                                    <option value="commerce">Commerce</option>
+                                    <option value="artisanat">Artisanat</option>
+                                    <option value="services">Services</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label>Expérience</label>
+                                <select id="experienceFilter">
+                                    <option value="">Toute expérience</option>
+                                    <option value="junior">1-3 ans</option>
+                                    <option value="senior">3-7 ans</option>
+                                    <option value="expert">7+ ans</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label>Localisation</label>
+                                <select id="locationFilter">
+                                    <option value="">Toutes les villes</option>
+                                    <option value="bangangte">Bangangté</option>
+                                    <option value="bazou">Bazou</option>
+                                    <option value="tonga">Tonga</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mentors List -->
+                    <div id="mentorsSection" style="display: none;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                            <h3 style="color: var(--text-main);">
+                                <i class="fa-solid fa-users"></i> Mentors disponibles
+                            </h3>
+                            <div style="color: var(--text-muted); font-size: 0.9rem;" id="mentorsCount">
+                                0 mentors trouvés
+                            </div>
+                        </div>
+                        <div id="mentorsList">
+                            <!-- Mentors chargés dynamiquement -->
+                        </div>
+                    </div>
+
+                    <!-- My Mentorships -->
+                    <div id="mentorshipsSection" style="display: none;">
+                        <h3 style="color: var(--text-main); margin-bottom: 2rem;">
+                            <i class="fa-solid fa-handshake"></i> Mes relations de mentorat
+                        </h3>
+                        <div id="mentorshipsList">
+                            <!-- Relations chargées dynamiquement -->
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <!-- Sidebar -->
+            <aside>
+                <div class="sidebar-card">
+                    <h4 style="color: var(--text-main); margin-bottom: 1rem;">
+                        <i class="fa-solid fa-chart-simple"></i> Statistiques
+                    </h4>
+                    <div style="display: flex; flex-direction: column; gap: 0.8rem;">
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="color: var(--text-muted); font-size: 0.85rem;">Mentors actifs</span>
+                            <span style="color: var(--accent-primary); font-weight: 600;" id="activeMentors">0</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="color: var(--text-muted); font-size: 0.85rem;">Relations actives</span>
+                            <span style="color: var(--accent-primary); font-weight: 600;" id="activeRelations">0</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="color: var(--text-muted); font-size: 0.85rem;">Taux de réussite</span>
+                            <span style="color: #10b981; font-weight: 600;">87%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar-card" style="margin-top: 1.5rem;">
+                    <h4 style="color: var(--text-main); margin-bottom: 1rem;">
+                        <i class="fa-solid fa-lightbulb"></i> Conseils
+                    </h4>
+                    <div style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.6;">
+                        <p style="margin-bottom: 1rem;">
+                            <strong style="color: var(--text-main);">Pour les mentorés:</strong>
+                            Soyez précis sur vos objectifs et préparez vos questions à l'avance.
+                        </p>
+                        <p>
+                            <strong style="color: var(--text-main);">Pour les mentors:</strong>
+                            Partagez votre expérience avec bienveillance et patience.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="sidebar-card" style="margin-top: 1.5rem;">
+                    <h4 style="color: var(--text-main); margin-bottom: 1rem;">
+                        <i class="fa-solid fa-star"></i> Top Mentors
+                    </h4>
+                    <div id="topMentors">
+                        <!-- Top mentors -->
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <!-- Modal Profil -->
+    <div class="modal" id="profileModal">
+        <div class="modal-content">
+            <h3 style="color: var(--text-main); margin-bottom: 1.5rem;">
+                <i class="fa-solid fa-user-plus"></i> Créer mon profil
+            </h3>
+            
+            <form id="profileForm">
+                <div class="form-group">
+                    <label>Je suis</label>
+                    <select id="profileRole" required>
+                        <option value="">Sélectionner un rôle</option>
+                        <option value="mentee">À la recherche d'un mentor</option>
+                        <option value="mentor">Prêt à être mentor</option>
+                        <option value="both">Les deux</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Domaine principal</label>
+                    <select id="profileDomain" required>
+                        <option value="">Sélectionner un domaine</option>
+                        <option value="tech">Technologie & Innovation</option>
+                        <option value="agriculture">Agriculture & Agro-alimentaire</option>
+                        <option value="commerce">Commerce & Vente</option>
+                        <option value="artisanat">Artisanat & Création</option>
+                        <option value="services">Services & Consulting</option>
+                        <option value="education">Éducation & Formation</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Niveau d'expérience</label>
+                    <select id="profileExperience" required>
+                        <option value="">Sélectionner le niveau</option>
+                        <option value="beginner">Débutant (0-1 an)</option>
+                        <option value="junior">Junior (1-3 ans)</option>
+                        <option value="senior">Senior (3-7 ans)</option>
+                        <option value="expert">Expert (7+ ans)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Compétences (séparées par des virgules)</label>
+                    <input type="text" id="profileSkills" placeholder="Ex: Marketing digital, Gestion de projet, Leadership">
+                </div>
+
+                <div class="form-group">
+                    <label>Objectifs / Ce que je peux apporter</label>
+                    <textarea id="profileBio" placeholder="Décrivez vos objectifs ou ce que vous pouvez apporter en tant que mentor..." required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Localisation</label>
+                    <select id="profileLocation" required>
+                        <option value="">Sélectionner une ville</option>
+                        <option value="bangangte">Bangangté</option>
+                        <option value="bazou">Bazou</option>
+                        <option value="tonga">Tonga</option>
+                        <option value="bafang">Bafang</option>
+                        <option value="other">Autre</option>
+                    </select>
+                </div>
+
+                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                    <button type="button" class="btn-secondary" onclick="closeProfileModal()" style="flex: 1;">
+                        Annuler
+                    </button>
+                    <button type="submit" class="btn-primary" style="flex: 1;">
+                        <i class="fa-solid fa-save"></i> Créer le profil
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Demande de Mentorat -->
+    <div class="modal" id="requestModal">
+        <div class="modal-content">
+            <h3 style="color: var(--text-main); margin-bottom: 1.5rem;">
+                <i class="fa-solid fa-paper-plane"></i> Demande de mentorat
+            </h3>
+            
+            <form id="requestForm">
+                <div class="form-group">
+                    <label>Sujet de la demande</label>
+                    <input type="text" id="requestSubject" placeholder="Ex: Aide pour développer mon projet agricole" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Message personnalisé</label>
+                    <textarea id="requestMessage" placeholder="Présentez-vous et expliquez pourquoi vous souhaitez ce mentorat..." required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Durée souhaitée</label>
+                    <select id="requestDuration" required>
+                        <option value="">Sélectionner une durée</option>
+                        <option value="1month">1 mois</option>
+                        <option value="3months">3 mois</option>
+                        <option value="6months">6 mois</option>
+                        <option value="ongoing">Relation continue</option>
+                    </select>
+                </div>
+
+                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                    <button type="button" class="btn-secondary" onclick="closeRequestModal()" style="flex: 1;">
+                        Annuler
+                    </button>
+                    <button type="submit" class="btn-primary" style="flex: 1;">
+                        <i class="fa-solid fa-paper-plane"></i> Envoyer la demande
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="assets/js/main.js"></script>
+    <script>
+        let currentUser = null;
+        let userRole = null;
+        let mentors = [];
+        let mentorships = [];
+        let selectedMentorId = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (!currentUser) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            loadMentors();
+            loadMentorships();
+            updateStats();
+
+            document.getElementById('profileForm').addEventListener('submit', createProfile);
+            document.getElementById('requestForm').addEventListener('submit', sendRequest);
+        });
+
+        function selectRole(role) {
+            userRole = role;
+            
+            // Update UI
+            document.querySelectorAll('.role-card').forEach(card => card.classList.remove('selected'));
+            document.getElementById(role + 'Card').classList.add('selected');
+
+            // Show appropriate sections
+            if (role === 'mentee') {
+                document.getElementById('filtersSection').style.display = 'block';
+                document.getElementById('mentorsSection').style.display = 'block';
+                document.getElementById('mentorshipsSection').style.display = 'none';
+                loadAndRenderMentors();
+            } else {
+                document.getElementById('filtersSection').style.display = 'none';
+                document.getElementById('mentorsSection').style.display = 'none';
+                document.getElementById('mentorshipsSection').style.display = 'block';
+                renderMentorships();
+            }
+        }
+
+        function loadMentors() {
+            mentors = JSON.parse(localStorage.getItem('mentors')) || [];
+            
+            if (mentors.length === 0) {
+                createSampleMentors();
+            }
+        }
+
+        function createSampleMentors() {
+            const sampleMentors = [
+                {
+                    id: 'mentor_1',
+                    name: 'Dr. Pauline Nkomo',
+                    title: 'Entrepreneure Agricole',
+                    domain: 'agriculture',
+                    experience: 'expert',
+                    location: 'bangangte',
+                    skills: ['Agriculture biologique', 'Gestion coopérative', 'Marketing agricole'],
+                    bio: 'Fondatrice de 3 coopératives agricoles, spécialisée dans l\'agriculture durable et l\'autonomisation des femmes rurales.',
+                    rating: 4.9,
+                    mentees: 15,
+                    successRate: 92,
+                    avatar: 'https://ui-avatars.com/api/?name=Pauline+Nkomo&size=100&background=10b981&color=fff'
+                },
+                {
+                    id: 'mentor_2',
+                    name: 'Samuel Fotso',
+                    title: 'Développeur Senior',
+                    domain: 'tech',
+                    experience: 'senior',
+                    location: 'bangangte',
+                    skills: ['Développement web', 'Mobile apps', 'Startup tech'],
+                    bio: 'CTO d\'une startup tech, passionné par l\'innovation et le transfert de compétences aux jeunes développeurs.',
+                    rating: 4.7,
+                    mentees: 22,
+                    successRate: 88,
+                    avatar: 'https://ui-avatars.com/api/?name=Samuel+Fotso&size=100&background=38bdf8&color=fff'
+                },
+                {
+                    id: 'mentor_3',
+                    name: 'Marie Tchounga',
+                    title: 'Consultante Business',
+                    domain: 'commerce',
+                    experience: 'expert',
+                    location: 'bazou',
+                    skills: ['Business plan', 'Stratégie marketing', 'Levée de fonds'],
+                    bio: 'Consultante avec 10 ans d\'expérience, spécialisée dans l\'accompagnement de jeunes entrepreneurs.',
+                    rating: 4.8,
+                    mentees: 18,
+                    successRate: 90,
+                    avatar: 'https://ui-avatars.com/api/?name=Marie+Tchounga&size=100&background=f59e0b&color=fff'
+                }
+            ];
+
+            mentors = sampleMentors;
+            localStorage.setItem('mentors', JSON.stringify(mentors));
+        }
+
+        function loadMentorships() {
+            mentorships = JSON.parse(localStorage.getItem('mentorships')) || [];
+        }
+
+        function loadAndRenderMentors() {
+            const domain = document.getElementById('domainFilter')?.value || '';
+            const experience = document.getElementById('experienceFilter')?.value || '';
+            const location = document.getElementById('locationFilter')?.value || '';
+
+            let filteredMentors = mentors;
+
+            if (domain) filteredMentors = filteredMentors.filter(m => m.domain === domain);
+            if (experience) filteredMentors = filteredMentors.filter(m => m.experience === experience);
+            if (location) filteredMentors = filteredMentors.filter(m => m.location === location);
+
+            document.getElementById('mentorsCount').textContent = `${filteredMentors.length} mentor${filteredMentors.length > 1 ? 's' : ''} trouvé${filteredMentors.length > 1 ? 's' : ''}`;
+
+            if (filteredMentors.length === 0) {
+                document.getElementById('mentorsList').innerHTML = `
+                    <div class="empty-state">
+                        <i class="fa-solid fa-user-slash"></i>
+                        <h3>Aucun mentor trouvé</h3>
+                        <p>Essayez de modifier vos critères de recherche</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const html = filteredMentors.map(mentor => {
+                const matchingScore = calculateMatchingScore(mentor);
+                
+                return `
+                    <div class="mentor-card">
+                        <div class="matching-score">${matchingScore}% compatible</div>
+                        <div class="mentor-header">
+                            <img src="${mentor.avatar}" alt="${mentor.name}" class="mentor-avatar">
+                            <div class="mentor-info">
+                                <div class="mentor-name">${mentor.name}</div>
+                                <div class="mentor-title">${mentor.title}</div>
+                                <div class="mentor-rating">
+                                    <div class="stars">
+                                        ${'★'.repeat(Math.floor(mentor.rating))}${'☆'.repeat(5 - Math.floor(mentor.rating))}
+                                    </div>
+                                    <span>${mentor.rating}/5</span>
+                                    <span>(${mentor.mentees} mentorés)</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mentor-skills">
+                            ${mentor.skills.map(skill => `<span class="skill-tag">${skill}</span>`).join('')}
+                        </div>
+                        
+                        <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; margin: 1rem 0;">
+                            ${mentor.bio}
+                        </p>
+                        
+                        <div class="mentor-stats">
+                            <div class="stat-item">
+                                <i class="fa-solid fa-trophy"></i>
+                                <span>${mentor.successRate}% de réussite</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fa-solid fa-map-marker-alt"></i>
+                                <span>${mentor.location}</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fa-solid fa-clock"></i>
+                                <span>Disponible</span>
+                            </div>
+                        </div>
+                        
+                        <div class="mentor-actions">
+                            <button class="btn-primary" onclick="requestMentorship('${mentor.id}')" style="flex: 1;">
+                                <i class="fa-solid fa-paper-plane"></i> Demander un mentorat
+                            </button>
+                            <button class="btn-secondary" onclick="viewProfile('${mentor.id}')">
+                                <i class="fa-solid fa-eye"></i> Voir profil
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            document.getElementById('mentorsList').innerHTML = html;
+        }
+
+        function calculateMatchingScore(mentor) {
+            // Algorithme simple de matching basé sur les critères
+            let score = 70; // Score de base
+            
+            // Bonus pour la localisation
+            if (mentor.location === 'bangangte') score += 10;
+            
+            // Bonus pour l'expérience
+            if (mentor.experience === 'expert') score += 15;
+            else if (mentor.experience === 'senior') score += 10;
+            
+            // Bonus pour le rating
+            if (mentor.rating >= 4.8) score += 5;
+            
+            return Math.min(100, score);
+        }
+
+        function renderMentorships() {
+            const userMentorships = mentorships.filter(m => 
+                m.menteeId === currentUser.email || m.mentorId === currentUser.email
+            );
+
+            if (userMentorships.length === 0) {
+                document.getElementById('mentorshipsList').innerHTML = `
+                    <div class="empty-state">
+                        <i class="fa-solid fa-handshake"></i>
+                        <h3>Aucune relation de mentorat</h3>
+                        <p>Vos relations de mentorat apparaîtront ici</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const html = userMentorships.map(mentorship => {
+                const isMentor = mentorship.mentorId === currentUser.email;
+                const otherPerson = isMentor ? mentorship.menteeName : mentorship.mentorName;
+                
+                return `
+                    <div class="mentorship-request">
+                        <div class="request-header">
+                            <div>
+                                <strong style="color: var(--text-main);">${mentorship.subject}</strong>
+                                <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.3rem;">
+                                    ${isMentor ? 'Mentoré' : 'Mentor'}: ${otherPerson}
+                                </div>
+                            </div>
+                            <span class="request-status status-${mentorship.status}">
+                                ${mentorship.status === 'pending' ? 'En attente' : 
+                                  mentorship.status === 'accepted' ? 'Accepté' : 'Refusé'}
+                            </span>
+                        </div>
+                        <p style="color: var(--text-muted); font-size: 0.9rem; margin: 0.5rem 0;">
+                            ${mentorship.message}
+                        </p>
+                        <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+                            ${mentorship.status === 'accepted' ? `
+                                <button class="btn-primary" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
+                                    <i class="fa-solid fa-comments"></i> Discuter
+                                </button>
+                            ` : ''}
+                            <button class="btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
+                                <i class="fa-solid fa-eye"></i> Détails
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            document.getElementById('mentorshipsList').innerHTML = html;
+        }
+
+        function openProfileModal() {
+            document.getElementById('profileModal').classList.add('active');
+        }
+
+        function closeProfileModal() {
+            document.getElementById('profileModal').classList.remove('active');
+            document.getElementById('profileForm').reset();
+        }
+
+        function createProfile(e) {
+            e.preventDefault();
+
+            const profile = {
+                userId: currentUser.email,
+                userName: currentUser.name,
+                role: document.getElementById('profileRole').value,
+                domain: document.getElementById('profileDomain').value,
+                experience: document.getElementById('profileExperience').value,
+                skills: document.getElementById('profileSkills').value.split(',').map(s => s.trim()),
+                bio: document.getElementById('profileBio').value,
+                location: document.getElementById('profileLocation').value,
+                createdAt: Date.now()
+            };
+
+            // Sauvegarder le profil
+            localStorage.setItem('mentorship_profile', JSON.stringify(profile));
+
+            closeProfileModal();
+            showToast('Profil créé avec succès!', 'success');
+
+            // Rediriger selon le rôle
+            if (profile.role === 'mentee' || profile.role === 'both') {
+                selectRole('mentee');
+            } else {
+                selectRole('mentor');
+            }
+        }
+
+        function requestMentorship(mentorId) {
+            selectedMentorId = mentorId;
+            document.getElementById('requestModal').classList.add('active');
+        }
+
+        function closeRequestModal() {
+            document.getElementById('requestModal').classList.remove('active');
+            document.getElementById('requestForm').reset();
+        }
+
+        function sendRequest(e) {
+            e.preventDefault();
+
+            const mentor = mentors.find(m => m.id === selectedMentorId);
+            
+            const request = {
+                id: `mentorship_${Date.now()}`,
+                mentorId: selectedMentorId,
+                mentorName: mentor.name,
+                menteeId: currentUser.email,
+                menteeName: currentUser.name,
+                subject: document.getElementById('requestSubject').value,
+                message: document.getElementById('requestMessage').value,
+                duration: document.getElementById('requestDuration').value,
+                status: 'pending',
+                createdAt: Date.now()
+            };
+
+            mentorships.push(request);
+            localStorage.setItem('mentorships', JSON.stringify(mentorships));
+
+            closeRequestModal();
+            showToast('Demande envoyée avec succès!', 'success');
+        }
+
+        function viewProfile(mentorId) {
+            alert('Profil du mentor: ' + mentorId);
+        }
+
+        function updateStats() {
+            document.getElementById('activeMentors').textContent = mentors.length;
+            document.getElementById('activeRelations').textContent = mentorships.filter(m => m.status === 'accepted').length;
+        }
+
+        function showToast(message, type) {
+            if (window.showToast) {
+                window.showToast(message, type);
+            } else {
+                alert(message);
+            }
+        }
+
+        // Event listeners pour les filtres
+        document.addEventListener('change', (e) => {
+            if (e.target.id.includes('Filter')) {
+                loadAndRenderMentors();
+            }
+        });
+    </script>
+</body>
+</html>

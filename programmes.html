@@ -1,0 +1,288 @@
+<!DOCTYPE html> <!-- Déclaration du type de document standard HTML5 -->
+<html lang="fr"> <!-- Balise racine pour le contenu en français -->
+
+<head> <!-- Section en-tête pour les métadonnées et styles -->
+    <meta charset="UTF-8"> <!-- Encodage universel des caractères -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Support de l'affichage mobile -->
+    <title>Programmes Jeunesse | Délégation</title> <!-- Titre de la page dans l'onglet -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Police Inter via Google Fonts -->
+    <link rel="stylesheet" href="assets/css/style.css"> <!-- Styles globaux Aurora Portal -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Librairie d'icônes Font Awesome -->
+    <link rel="stylesheet" href="assets/css/spacing-fix.css">
+</head>
+
+<body> <!-- Début du corps de page -->
+
+    <div class="particles" id="particles"></div> <!-- Arrière-plan de particules animé (géré par main.js) -->
+
+    <nav class="navbar scrolled" id="navbar"> <!-- Barre de navigation fixée avec fond opaque -->
+        <div class="container nav-container"> <!-- Conteneur de navigation centré -->
+            <a href="index.html" class="nav-logo floating-slow"> <!-- Logo avec effet de flottement doux -->
+                <i class="fa-solid fa-layer-group rotate-slow"></i> MINJEC <!-- Icône rotative et texte logo -->
+            </a>
+            <ul class="nav-links" style="display: flex; align-items: center; gap: 1.2rem;">
+                <!-- Liste des liens principaux -->
+                <li><a href="index.html" class="link-underline" data-t="accueil">Accueil</a></li>
+                <!-- Lien vers l'accueil -->
+                <li><a href="missions-organigramme.html" class="link-underline" data-t="missions">Missions</a></li>
+                <!-- Lien vers missions -->
+                <li><a href="programmes.html" class="link-underline active" data-t="programmes">Programmes</a></li>
+                <!-- Lien actif actuel -->
+                <li><a href="projets.html" class="link-underline">Projets</a></li> <!-- Lien vers projets -->
+                <li><a href="galerie.html" class="link-underline">Galerie</a></li>
+                <li><a href="agora.html" class="link-underline" data-t="agora">Agora</a></li> <!-- Lien vers galerie -->
+                <li><a href="actualites.html" class="link-underline" data-t="actualites">Actualités</a></li>
+                <!-- Lien vers blog -->
+                <li> <!-- Élément pour menu déroulant 'Plus' -->
+                    <a href="#" class="link-underline">Plus <i class="fa-solid fa-chevron-down"
+                            style="font-size: 0.7rem; margin-left: 3px;"></i></a> <!-- Sélecteur 'Plus' -->
+                    <div class="dropdown-menu"> <!-- Menu caché par défaut -->
+                        <a href="about.html" class="dropdown-item"><i class="fa-solid fa-info-circle"></i> À propos</a>
+                        <a href="associations.html" class="dropdown-item"><i class="fa-solid fa-users"></i>
+                            Associations</a> <!-- Lien associations -->
+                        <a href="ressources.html" class="dropdown-item"><i class="fa-solid fa-book"></i> Ressources</a>
+                        <!-- Lien ressources -->
+                        <a href="evenements.html" class="dropdown-item"><i class="fa-solid fa-calendar-days"></i>
+                            Événements</a> <!-- Lien événements -->
+                        <a href="faq.html" class="dropdown-item"><i class="fa-solid fa-circle-question"></i> FAQ</a>
+                        <!-- Lien FAQ -->
+                        <a href="contact.html" class="dropdown-item"><i class="fa-solid fa-envelope"></i> Contact</a>
+                        <!-- Lien contact -->
+                        <a href="archives.html" class="dropdown-item"><i class="fa-solid fa-box-archive"></i>
+                            Archives</a> <!-- Lien archives historiques -->
+                    </div>
+                </li>
+            </ul>
+            <div style="display: flex; align-items: center; gap: 1.5rem;"> <!-- Groupe de commandes de droite -->
+                <!-- Theme Toggle (Bouton pour alterner mode sombre/clair) -->
+                <button class="theme-toggle" id="themeToggle" title="Changer de mode">
+                    <i class="fa-solid fa-moon"></i>
+                    <i class="fa-solid fa-sun"></i>
+                </button>
+
+                <!-- Language Toggle (Sélecteur de langue FR/EN) -->
+                <div class="lang-toggle">
+                    <div class="lang-btn active" data-lang="fr">FR</div>
+                    <div class="lang-btn" data-lang="en">EN</div>
+                </div>
+
+                <!-- Notification Bell (Gère les notifications système) -->
+                <div class="notif-wrapper" id="notifWrapper">
+                    <i class="fa-solid fa-bell" style="font-size: 1.2rem; color: var(--text-muted);"></i>
+                    <div class="notif-badge-dot" id="notifBadge"></div>
+
+                    <div class="notif-dropdown" id="notifDropdown">
+                        <div class="notif-header">
+                            <span style="font-weight: 600;">Notifications</span>
+                            <span style="font-size: 0.8rem; color: var(--accent-primary); cursor: pointer;">Tout marquer
+                                lu</span>
+                        </div>
+                        <div class="notif-list" id="notifList">
+                            <!-- Contenu généré dynamiquement par JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <a href="login.html" class="btn-primary btn-ripple pulse-glow"
+                    style="padding: 0.5rem 1.2rem; font-size: 0.9rem;"> <!-- Bouton de connexion avec effets Aurora -->
+                    <i class="fa-solid fa-user-lock"></i> Connexion
+                </a>
+            </div>
+            <button class="mobile-menu-toggle" id="mobileMenuToggle"> <!-- Bouton Hamburger pour mobile -->
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <div class="mobile-menu" id="mobileMenu"> <!-- Panneau de navigation spécifique au mobile -->
+        <a href="index.html">Accueil</a>
+        <a href="missions-organigramme.html">Missions</a>
+        <a href="programmes.html">Programmes</a>
+        <a href="projets.html">Projets</a>
+        <a href="galerie.html">Galerie</a>
+        <a href="actualites.html">Actualités</a>
+        <a href="associations.html">Associations</a>
+        <a href="ressources.html">Ressources</a>
+        <a href="evenements.html">Événements</a>
+        <a href="faq.html">FAQ</a>
+        <a href="contact.html">Contact</a>
+        <a href="archives.html">Archives</a>
+        <a href="login.html" class="btn-primary" style="margin-top: 1rem;">Connexion</a>
+    </div>
+    <div class="mobile-overlay" id="mobileOverlay"></div> <!-- Voile de fond pour fermeture du menu mobile -->
+
+    <header class="hero" style="min-height: 40vh; padding-top: 8rem;"> <!-- Entête de section Programmes -->
+        <div class="container text-center">
+            <h1 class="reveal animated-gradient-text">Programmes & Accompagnement</h1>
+            <!-- Titre stylisé par dégradé animé -->
+            <p class="reveal">Découvrez les initiatives gouvernementales pour booster votre avenir.</p>
+            <!-- Sous-titre introductif -->
+        </div>
+    </header>
+
+    <main class="container"> <!-- Contenu principal (Grille des offres) -->
+        <div class="grid-3 stagger-children" style="margin-top: -2rem;">
+            <!-- Grille de 3 colonnes pour les programmes clés -->
+            <!-- PTS-JEUNES (Plan Triennal Spécial Jeunes) -->
+            <div class="card card-hover-lift glow-border" style="display: flex; flex-direction: column;">
+                <!-- Carte avec effet de levage -->
+                <div
+                    style="background: rgba(56, 189, 248, 0.1); padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem; text-align: center;">
+                    <i class="fa-solid fa-rocket" style="font-size: 3rem; color: var(--accent-primary);"></i>
+                    <!-- Icône fusée (décollage projet) -->
+                </div>
+                <h3>PTS-JEUNES</h3> <!-- Titre du programme -->
+                <p style="color: var(--text-muted); flex-grow: 1;">Le Plan Triennal Spécial Jeunes pour le financement
+                    et l'accompagnement des projets entrepreneuriaux dans les domaines porteurs.</p>
+                <!-- Description résumé -->
+                <button class="btn-primary" style="margin-top: 1.5rem;">En savoir plus</button> <!-- Bouton d'action -->
+            </div>
+
+            <!-- Service National (Volet Citoyen) -->
+            <div class="card card-hover-lift glow-border"> <!-- Carte avec bordure lumineuse -->
+                <div
+                    style="background: rgba(129, 140, 248, 0.1); padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem; text-align: center;">
+                    <i class="fa-solid fa-flag" style="font-size: 3rem; color: var(--accent-secondary);"></i>
+                    <!-- Icône drapeau (patriotisme) -->
+                </div>
+                <h3>Service Civique</h3> <!-- Titre du programme -->
+                <p style="color: var(--text-muted);">Formation civique, patriotique et pré-militaire pour les jeunes
+                    camerounais afin de cultiver les valeurs de paix et d'unité.</p> <!-- Description valeurs -->
+                <button class="btn-primary" style="margin-top: 1.5rem;">Rejoindre</button> <!-- Bouton d'action -->
+            </div>
+
+            <!-- Observatoire (ONJ) -->
+            <div class="card card-hover-lift glow-border">
+                <div
+                    style="background: rgba(16, 185, 129, 0.1); padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem; text-align: center;">
+                    <i class="fa-solid fa-chart-line" style="font-size: 3rem; color: #10b981;"></i>
+                    <!-- Icône graphique (opportunités) -->
+                </div>
+                <h3>ONJ</h3> <!-- Titre : Observatoire National de la Jeunesse -->
+                <p style="color: var(--text-muted);">L'Observatoire National de la Jeunesse : un guichet unique pour
+                    l'information sur toutes les opportunités d'insertion.</p> <!-- Description accès info -->
+                <button class="btn-primary" style="margin-top: 1.5rem;">Consulter</button> <!-- Bouton d'action -->
+            </div>
+        </div>
+
+        <!-- Section Information (Comment ça marche) -->
+        <section class="reveal section-padding">
+            <div class="glass-card" style="display: flex; align-items: center; gap: 3rem;">
+                <!-- Carte style verre avec disposition flex -->
+                <div style="flex: 1;"> <!-- Bloc texte (gauche) -->
+                    <h2 class="animated-gradient-text" style="font-size: 2rem;">Comment bénéficier d'un programme ?</h2>
+                    <!-- Question titre -->
+                    <p style="margin: 1.5rem 0; line-height: 1.8;">Vous devez être inscrit à l'Observatoire National de
+                        la Jeunesse. Le processus est simple, gratuit et ouvert à tous les jeunes résidant dans le
+                        département.</p> <!-- Explication pré-requis -->
+                    <ul style="list-style: none; margin-bottom: 2rem;"> <!-- Liste des critères d'éligibilité -->
+                        <li style="margin-bottom: 1rem;"><i class="fa-solid fa-check"
+                                style="color: #10b981; margin-right: 10px;"></i> Avoir entre 15 et 35 ans</li>
+                        <!-- Critère âge -->
+                        <li style="margin-bottom: 1rem;"><i class="fa-solid fa-check"
+                                style="color: #10b981; margin-right: 10px;"></i> Résider à Bangangté ou environs</li>
+                        <!-- Critère résidence -->
+                        <li><i class="fa-solid fa-check" style="color: #10b981; margin-right: 10px;"></i> Avoir une idée
+                            de projet ou un besoin de formation</li> <!-- Critère intention -->
+                    </ul>
+                    <a href="login.html" class="btn-primary icon-bounce">S'inscrire Maintenant</a>
+                    <!-- Bouton d'appel à l'action -->
+                </div>
+                <div style="flex: 1;" class="reveal-right"> <!-- Bloc image (droite) avec animation d'entrée -->
+                    <img src="https://ui-avatars.com/api/?name=Opportunités&size=500&background=1e293b&color=38bdf8"
+                        alt="Opportunités"
+                        style="width: 100%; border-radius: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.3);">
+                    <!-- Illustration symbolique -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer id="contact" class="reveal"> <!-- Pied de page -->
+        <div class="container">
+            <div class="footer-grid stagger-children"> <!-- Grille organisationnelle footer -->
+                <div class="footer-col reveal-left"> <!-- Colonne Identité Footer -->
+                    <h3 style="font-size: 1.5rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 10px;">
+                        <i class="fa-solid fa-layer-group rotate-slow" style="color: var(--accent-primary);"></i> MINJEC
+                    </h3>
+                    <p style="color: var(--text-muted); line-height: 1.6;">
+                        Délégation Départementale de la Jeunesse et de l'Éducation Civique du Ndé.
+                    </p>
+                </div>
+                <div class="footer-col"> <!-- Liens Rapides -->
+                    <h4>Liens Rapides</h4>
+                    <ul>
+                        <li><a href="index.html" class="link-underline">Accueil</a></li>
+                        <li><a href="missions-organigramme.html" class="link-underline">Missions & Organigramme</a></li>
+                        <li><a href="programmes.html" class="link-underline">Programmes Jeunesse</a></li>
+                        <li><a href="projets.html" class="link-underline">Projets & Succès</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col"> <!-- Liens Découverte -->
+                    <h4>Découvrir</h4>
+                    <ul>
+                        <li><a href="evenements.html" class="link-underline">Événements à venir</a></li>
+                        <li><a href="archives.html" class="link-underline">Archives</a></li>
+                        <li><a href="galerie.html" class="link-underline">Galerie Média</a></li>
+                <li><a href="agora.html" class="link-underline" data-t="agora">Agora</a></li>
+                        <li><a href="actualites.html" class="link-underline">Actualités / Blog</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col"> <!-- Infos Contact -->
+                    <h4>Contact</h4>
+                    <ul>
+                        <li><i class="fa-solid fa-location-dot" style="width: 20px; color: var(--accent-primary);"></i>
+                            Bangangté, Cameroun</li>
+                        <li><i class="fa-solid fa-phone" style="width: 20px; color: var(--accent-primary);"></i> +237
+                            600 00 00 00</li>
+                        <li><i class="fa-solid fa-envelope" style="width: 20px; color: var(--accent-primary);"></i>
+                            contact@minjec-nde.cm</li>
+                    </ul>
+                </div>
+                <div class="footer-col reveal-right"> <!-- Newsletter & Réseaux Sociaux -->
+                    <h4>Newsletter</h4>
+                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">Restez informé de tous
+                        les nouveaux appels à projets.</p>
+                    <form class="newsletter-form"> <!-- Formulaire rapide newsletter -->
+                        <input type="email" placeholder="votre@email.com" class="footer-input">
+                        <button type="submit" class="footer-btn-send"><i class="fa-solid fa-paper-plane"></i></button>
+                    </form>
+                    <h4 style="margin-top: 2rem;">Réseaux Sociaux</h4>
+                    <div style="display: flex; gap: 1rem;"> <!-- Barres d'icônes sociales -->
+                        <a href="#" class="icon-bounce"
+                            style="font-size: 1.5rem; transition: color 0.3s; color: var(--text-muted);"><i
+                                class="fa-brands fa-facebook"></i></a>
+                        <a href="#" class="icon-bounce"
+                            style="font-size: 1.5rem; transition: color 0.3s; color: var(--text-muted);"><i
+                                class="fa-brands fa-twitter"></i></a>
+                        <a href="#" class="icon-bounce"
+                            style="font-size: 1.5rem; transition: color 0.3s; color: var(--text-muted);"><i
+                                class="fa-brands fa-whatsapp"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div style="margin-top: 3rem; text-align: center;"> <!-- Bloc visuel secondaire (Social Wall) -->
+                <h4 style="color: var(--text-muted); margin-bottom: 1rem;">#JeunesseNdé sur Instagram</h4>
+                <div class="social-wall-mockup">
+                    <div class="wall-item"></div>
+                    <div class="wall-item"></div>
+                    <div class="wall-item"></div>
+                    <div class="wall-item"></div>
+                    <div class="wall-item"></div>
+                    <div class="wall-item"></div>
+                </div>
+            </div>
+            <div
+                style="text-align: center; color: var(--text-muted); border-top: 1px solid rgba(255,255,255,0.05); padding-top: 2rem; font-size: 0.9rem;">
+                &copy; 2026 Délégation Jeunesse Ndé. Tous droits réservés. <!-- Mentions copyright -->
+            </div>
+        </div>
+    </footer>
+
+
+    <script src="assets/js/main.js"></script> <!-- Inclusion du noyau JavaScript global -->
+</body>
+
+</html> <!-- Fin du document programmes -->

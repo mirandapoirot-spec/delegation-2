@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application Mobile | MINJEC Portal</title>
+    
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#38bdf8">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="MINJEC Portal">
+    <meta name="msapplication-TileColor" content="#38bdf8">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background: var(--bg-dark);
+            background-image: var(--bg-gradient);
+            min-height: 100vh;
+        }
+
+        .pwa-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .install-card {
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 3rem 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .phone-mockup {
+            width: 200px;
+            height: 400px;
+            background: linear-gradient(135deg, #1f2937, #374151);
+            border-radius: 30px;
+            margin: 0 auto 2rem;
+            position: relative;
+            border: 8px solid #4b5563;
+            overflow: hidden;
+        }
+
+        .phone-screen {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #10b981, #38bdf8);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            position: relative;
+        }
+
+        .phone-notch {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 20px;
+            background: #1f2937;
+            border-radius: 0 0 15px 15px;
+        }
+
+        .app-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .feature-card {
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .feature-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #10b981, #38bdf8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            margin: 0 auto 1rem;
+        }
+
+        .install-button {
+            background: linear-gradient(135deg, #10b981, #38bdf8);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: none;
+        }
+
+        .install-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(56, 189, 248, 0.4);
+        }
+
+        .install-button.show {
+            display: inline-block;
+        }
+
+        .install-steps {
+            background: rgba(56, 189, 248, 0.1);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+
+        .step-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+        }
+
+        .step-number {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--accent-primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .notification-demo {
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .notification-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: rgba(56, 189, 248, 0.1);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+        }
+
+        .notification-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--accent-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .offline-indicator {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: #ef4444;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            display: none;
+            z-index: 1000;
+        }
+
+        .offline-indicator.show {
+            display: block;
+        }
+
+        .online-indicator {
+            background: #10b981;
+        }
+    </style>
+</head>
+<body>
+    <div class="pwa-container">
+        <header style="margin-bottom: 2rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h1 class="animated-gradient-text" style="font-size: 2.5rem; margin-bottom: 0.5rem;">
+                        <i class="fa-solid fa-mobile-screen"></i> Application Mobile
+                    </h1>
+                    <p style="color: var(--text-muted);">Installez MINJEC Portal sur votre téléphone</p>
+                </div>
+                <a href="index.html" class="btn-secondary">
+                    <i class="fa-solid fa-home"></i> Accueil
+                </a>
+            </div>
+        </header>
+
+        <!-- Install Card -->
+        <div class="install-card">
+            <div class="phone-mockup">
+                <div class="phone-screen">
+                    <div class="phone-notch"></div>
+                    <div class="app-icon">
+                        <i class="fa-solid fa-layer-group"></i>
+                    </div>
+                    <h3 style="margin: 0 0 0.5rem 0;">MINJEC Portal</h3>
+                    <p style="margin: 0; font-size: 0.9rem; opacity: 0.8;">Délégation Jeunesse</p>
+                </div>
+            </div>
+
+            <h2 style="color: var(--text-main); margin-bottom: 1rem;">
+                Installez l'application sur votre téléphone
+            </h2>
+            <p style="color: var(--text-muted); margin-bottom: 2rem;">
+                Accédez rapidement à toutes les fonctionnalités, même hors ligne
+            </p>
+
+            <button class="install-button" id="installButton" onclick="installPWA()">
+                <i class="fa-solid fa-download"></i> Installer l'application
+            </button>
+
+            <div id="installStatus" style="margin-top: 1rem; color: var(--text-muted);">
+                Vérification de la compatibilité...
+            </div>
+        </div>
+
+        <!-- Features -->
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fa-solid fa-wifi"></i>
+                </div>
+                <h3 style="color: var(--text-main); margin-bottom: 0.5rem;">Mode Hors Ligne</h3>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">
+                    Consultez vos données même sans connexion internet
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fa-solid fa-bell"></i>
+                </div>
+                <h3 style="color: var(--text-main); margin-bottom: 0.5rem;">Notifications Push</h3>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">
+                    Recevez des alertes pour vos projets et messages
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fa-solid fa-rocket"></i>
+                </div>
+                <h3 style="color: var(--text-main); margin-bottom: 0.5rem;">Performance</h3>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">
+                    Chargement ultra-rapide et interface optimisée
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fa-solid fa-mobile-alt"></i>
+                </div>
+                <h3 style="color: var(--text-main); margin-bottom: 0.5rem;">Interface Native</h3>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">
+                    Expérience similaire à une application native
+                </p>
+            </div>
+        </div>
+
+        <!-- Installation Steps -->
+        <div class="install-steps">
+            <h3 style="color: var(--text-main); margin-bottom: 1.5rem;">
+                <i class="fa-solid fa-list-ol"></i> Comment installer
+            </h3>
+            
+            <div class="step-item">
+                <div class="step-number">1</div>
+                <div>
+                    <strong style="color: var(--text-main);">Ouvrez le menu de votre navigateur</strong>
+                    <div style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.3rem;">
+                        Appuyez sur les trois points (⋮) ou le menu
+                    </div>
+                </div>
+            </div>
+
+            <div class="step-item">
+                <div class="step-number">2</div>
+                <div>
+                    <strong style="color: var(--text-main);">Sélectionnez "Ajouter à l'écran d'accueil"</strong>
+                    <div style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.3rem;">
+                        Ou "Installer l'application" selon votre navigateur
+                    </div>
+                </div>
+            </div>
+
+            <div class="step-item">
+                <div class="step-number">3</div>
+                <div>
+                    <strong style="color: var(--text-main);">Confirmez l'installation</strong>
+                    <div style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.3rem;">
+                        L'icône apparaîtra sur votre écran d'accueil
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notifications Demo -->
+        <div class="notification-demo">
+            <h3 style="color: var(--text-main); margin-bottom: 1.5rem;">
+                <i class="fa-solid fa-bell"></i> Notifications Push
+            </h3>
+            
+            <div class="notification-item">
+                <div class="notification-icon">
+                    <i class="fa-solid fa-check"></i>
+                </div>
+                <div>
+                    <strong style="color: var(--text-main);">Projet validé</strong>
+                    <div style="color: var(--text-muted); font-size: 0.85rem;">
+                        Votre projet "Ferme Avicole" a été approuvé
+                    </div>
+                </div>
+            </div>
+
+            <div class="notification-item">
+                <div class="notification-icon">
+                    <i class="fa-solid fa-message"></i>
+                </div>
+                <div>
+                    <strong style="color: var(--text-main);">Nouveau message</strong>
+                    <div style="color: var(--text-muted); font-size: 0.85rem;">
+                        Vous avez reçu un message de votre mentor
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn-primary" onclick="requestNotificationPermission()" style="margin-top: 1rem;">
+                <i class="fa-solid fa-bell"></i> Activer les notifications
+            </button>
+        </div>
+    </div>
+
+    <!-- Offline Indicator -->
+    <div class="offline-indicator" id="offlineIndicator">
+        <i class="fa-solid fa-wifi-slash"></i> Mode hors ligne
+    </div>
+
+    <script>
+        let deferredPrompt;
+        let isInstalled = false;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            checkInstallability();
+            registerServiceWorker();
+            setupOfflineDetection();
+            checkNotificationPermission();
+        });
+
+        // PWA Installation
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            showInstallButton();
+        });
+
+        function checkInstallability() {
+            // Vérifier si l'app est déjà installée
+            if (window.matchMedia('(display-mode: standalone)').matches) {
+                isInstalled = true;
+                document.getElementById('installStatus').textContent = 'Application déjà installée ✓';
+                document.getElementById('installButton').style.display = 'none';
+                return;
+            }
+
+            // Vérifier le support PWA
+            if ('serviceWorker' in navigator && 'PushManager' in window) {
+                document.getElementById('installStatus').textContent = 'Prêt pour l\'installation';
+                if (deferredPrompt) {
+                    showInstallButton();
+                }
+            } else {
+                document.getElementById('installStatus').textContent = 'Navigateur non compatible';
+            }
+        }
+
+        function showInstallButton() {
+            document.getElementById('installButton').classList.add('show');
+        }
+
+        async function installPWA() {
+            if (!deferredPrompt) {
+                alert('Installation automatique non disponible. Utilisez le menu de votre navigateur.');
+                return;
+            }
+
+            const result = await deferredPrompt.prompt();
+            
+            if (result.outcome === 'accepted') {
+                document.getElementById('installStatus').textContent = 'Installation en cours...';
+                deferredPrompt = null;
+                document.getElementById('installButton').style.display = 'none';
+            }
+        }
+
+        // Service Worker Registration
+        async function registerServiceWorker() {
+            if ('serviceWorker' in navigator) {
+                try {
+                    const registration = await navigator.serviceWorker.register('/sw.js');
+                    console.log('Service Worker enregistré:', registration);
+                    
+                    // Écouter les mises à jour
+                    registration.addEventListener('updatefound', () => {
+                        const newWorker = registration.installing;
+                        newWorker.addEventListener('statechange', () => {
+                            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                showUpdateNotification();
+                            }
+                        });
+                    });
+                } catch (error) {
+                    console.error('Erreur Service Worker:', error);
+                }
+            }
+        }
+
+        function showUpdateNotification() {
+            if (confirm('Une nouvelle version est disponible. Voulez-vous la charger?')) {
+                window.location.reload();
+            }
+        }
+
+        // Offline Detection
+        function setupOfflineDetection() {
+            const indicator = document.getElementById('offlineIndicator');
+            
+            function updateOnlineStatus() {
+                if (navigator.onLine) {
+                    indicator.classList.remove('show');
+                    indicator.classList.add('online-indicator');
+                    indicator.innerHTML = '<i class="fa-solid fa-wifi"></i> Connexion rétablie';
+                    setTimeout(() => indicator.classList.remove('show'), 3000);
+                } else {
+                    indicator.classList.remove('online-indicator');
+                    indicator.innerHTML = '<i class="fa-solid fa-wifi-slash"></i> Mode hors ligne';
+                    indicator.classList.add('show');
+                }
+            }
+
+            window.addEventListener('online', updateOnlineStatus);
+            window.addEventListener('offline', updateOnlineStatus);
+            
+            // Vérification initiale
+            updateOnlineStatus();
+        }
+
+        // Notifications Push
+        function checkNotificationPermission() {
+            if ('Notification' in window) {
+                if (Notification.permission === 'granted') {
+                    document.querySelector('.notification-demo button').textContent = 'Notifications activées ✓';
+                    document.querySelector('.notification-demo button').disabled = true;
+                }
+            }
+        }
+
+        async function requestNotificationPermission() {
+            if (!('Notification' in window)) {
+                alert('Ce navigateur ne supporte pas les notifications');
+                return;
+            }
+
+            const permission = await Notification.requestPermission();
+            
+            if (permission === 'granted') {
+                document.querySelector('.notification-demo button').textContent = 'Notifications activées ✓';
+                document.querySelector('.notification-demo button').disabled = true;
+                
+                // Notification de test
+                new Notification('MINJEC Portal', {
+                    body: 'Notifications activées avec succès!',
+                    icon: '/assets/images/icon-192x192.png',
+                    badge: '/assets/images/badge-72x72.png'
+                });
+                
+                // Programmer des notifications de test
+                scheduleTestNotifications();
+            } else {
+                alert('Notifications refusées. Vous pouvez les activer dans les paramètres de votre navigateur.');
+            }
+        }
+
+        function scheduleTestNotifications() {
+            // Notification après 10 secondes
+            setTimeout(() => {
+                if (Notification.permission === 'granted') {
+                    new Notification('Nouveau message', {
+                        body: 'Vous avez reçu un nouveau message',
+                        icon: '/assets/images/icon-192x192.png'
+                    });
+                }
+            }, 10000);
+
+            // Notification quotidienne (simulation)
+            setInterval(() => {
+                if (Notification.permission === 'granted' && Math.random() > 0.7) {
+                    const messages = [
+                        'N\'oubliez pas de consulter vos projets',
+                        'Nouveau cours disponible en E-Learning',
+                        'Votre mentor vous a envoyé un message',
+                        'Mise à jour de statut de projet'
+                    ];
+                    
+                    const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+                    
+                    new Notification('MINJEC Portal', {
+                        body: randomMessage,
+                        icon: '/assets/images/icon-192x192.png'
+                    });
+                }
+            }, 60000); // Toutes les minutes (pour la démo)
+        }
+
+        // Gestion des événements PWA
+        window.addEventListener('appinstalled', () => {
+            console.log('PWA installée avec succès');
+            document.getElementById('installStatus').textContent = 'Application installée avec succès ✓';
+            isInstalled = true;
+        });
+
+        // Partage natif
+        function shareApp() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'MINJEC Portal',
+                    text: 'Découvrez le portail de la jeunesse du Ndé',
+                    url: window.location.origin
+                });
+            } else {
+                // Fallback
+                navigator.clipboard.writeText(window.location.origin);
+                alert('Lien copié dans le presse-papiers');
+            }
+        }
+
+        // Détection du mode standalone
+        if (window.matchMedia('(display-mode: standalone)').matches) {
+            console.log('Application lancée en mode standalone');
+            // Masquer certains éléments spécifiques au navigateur
+            document.body.classList.add('standalone-mode');
+        }
+    </script>
+</body>
+</html>
