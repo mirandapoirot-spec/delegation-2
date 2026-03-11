@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Générateur de Business Plan - MINJEC Portal</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .business-plan-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            min-height: 100vh;
+        }
+
+        .bp-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background: rgba(56, 189, 248, 0.1);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            border-radius: 20px;
+        }
+
+        .bp-header h1 {
+            color: #38bdf8;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .bp-header p {
+            color: #94a3b8;
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .bp-wizard {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .bp-sidebar {
+            width: 300px;
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            border-radius: 15px;
+            padding: 1.5rem;
+            height: fit-content;
+            position: sticky;
+            top: 2rem;
+        }
+
+        .bp-steps {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .bp-step {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid transparent;
+        }
+
+        .bp-step.active {
+            background: rgba(56, 189, 248, 0.2);
+            border-color: #38bdf8;
+            color: #38bdf8;
+        }
+
+        .bp-step.completed {
+            background: rgba(16, 185, 129, 0.2);
+            border-color: #10b981;
+            color: #10b981;
+        }
+
+        .bp-step:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .bp-step-number {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: rgba(56, 189, 248, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .bp-step.completed .bp-step-number {
+            background: #10b981;
+            color: white;
+        }
+
+        .bp-content {
+            flex: 1;
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            border-radius: 15px;
+            padding: 2rem;
+        }
+
+        .bp-section {
+            display: none;
+        }
+
+        .bp-section.active {
+            display: block;
+        }
+
+        .bp-section h2 {
+            color: #38bdf8;
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .bp-form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .bp-form-group label {
+            display: block;
+            color: #e2e8f0;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .bp-form-group input,
+        .bp-form-group textarea,
+        .bp-form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            border-radius: 8px;
+            color: #e2e8f0;
+            font-size: 1rem;
+        }
+
+        .bp-form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .bp-form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .bp-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(56, 189, 248, 0.3);
+        }
+
+        .bp-btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .bp-btn-primary {
+            background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+            color: white;
+        }
+
+        .bp-btn-secondary {
+            background: rgba(56, 189, 248, 0.2);
+            color: #38bdf8;
+            border: 1px solid #38bdf8;
+        }
+
+        .bp-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(56, 189, 248, 0.3);
+        }
+
+        .bp-progress {
+            width: 100%;
+            height: 6px;
+            background: rgba(56, 189, 248, 0.2);
+            border-radius: 3px;
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        .bp-progress-bar {
+            height: 100%;
+            background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+            border-radius: 3px;
+            transition: width 0.3s;
+            width: 12.5%;
+        }
+
+        .bp-tips {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .bp-tips h4 {
+            color: #10b981;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .bp-tips ul {
+            color: #94a3b8;
+            margin: 0;
+            padding-left: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .bp-wizard {
+                flex-direction: column;
+            }
+            
+            .bp-sidebar {
+                width: 100%;
+                position: static;
+            }
+            
+            .bp-form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <img src="assets/images/jeunesse-bangangte-mobilisation.png" alt="MINJEC Logo">
+                <span>MINJEC Portal</span>
+            </div>
+            <div class="nav-menu">
+                <a href="index.html" class="nav-link">
+                    <i class="fa-solid fa-home"></i> Accueil
+                </a>
+                <a href="projets.html" class="nav-link">
+                    <i class="fa-solid fa-rocket"></i> Projets
+                </a>
+                <div class="dropdown">
+                    <a href="#" class="nav-link dropdown-toggle">
+                        <i class="fa-solid fa-ellipsis-h"></i> Plus
+                    </a>
+                    <div class="dropdown-menu">
+                        <a href="business-plan.html" class="dropdown-item active">
+                            <i class="fa-solid fa-file-contract"></i> Business Plan
+                        </a>
+                        <a href="archives.html" class="dropdown-item">
+                            <i class="fa-solid fa-archive"></i> Archives
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="nav-user">
+                <div class="user-info">
+                    <span id="userName">Utilisateur</span>
+                    <div class="user-dropdown">
+                        <a href="login.html" onclick="logout()">
+                            <i class="fa-solid fa-sign-out-alt"></i> Déconnexion
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="business-plan-container">
+        <!-- Header -->
+        <div class="bp-header">
+            <h1><i class="fa-solid fa-file-contract"></i> Générateur de Business Plan</h1>
+            <p>Créez un business plan professionnel en quelques étapes simples. Notre assistant vous guide à travers chaque section pour développer un plan d'affaires complet et convaincant.</p>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="bp-progress">
+            <div class="bp-progress-bar" id="progressBar"></div>
+        </div>
+
+        <!-- Wizard -->
+        <div class="bp-wizard">
+            <!-- Sidebar -->
+            <div class="bp-sidebar">
+                <h3 style="color: #38bdf8; margin-bottom: 1.5rem;">
+                    <i class="fa-solid fa-list-check"></i> Étapes
+                </h3>
+                <ul class="bp-steps">
+                    <li class="bp-step active" data-step="1">
+                        <div class="bp-step-number">1</div>
+                        <div>
+                            <div style="font-weight: 600;">Informations Générales</div>
+                            <div style="font-size: 0.8rem; opacity: 0.7;">Nom, secteur, équipe</div>
+                        </div>
+                    </li>
+                    <li class="bp-step" data-step="2">
+                        <div class="bp-step-number">2</div>
+                        <div>
+                            <div style="font-weight: 600;">Résumé Exécutif</div>
+                            <div style="font-size: 0.8rem; opacity: 0.7;">Vision, mission, objectifs</div>
+                        </div>
+                    </li>
+                    <li class="bp-step" data-step="3">
+                        <div class="bp-step-number">3</div>
+                        <div>
+                            <div style="font-weight: 600;">Analyse de Marché</div>
+                            <div style="font-size: 0.8rem; opacity: 0.7;">Cible, concurrence</div>
+                        </div>
+                    </li>
+                    <li class="bp-step" data-step="4">
+                        <div class="bp-step-number">4</div>
+                        <div>
+                            <div style="font-weight: 600;">Produits/Services</div>
+                            <div style="font-size: 0.8rem; opacity: 0.7;">Offre, avantages</div>
+                        </div>
+                    </li>
+                    <li class="bp-step" data-step="5">
+                        <div class="bp-step-number">5</div>
+                        <div>
+                            <div style="font-weight: 600;">Stratégie Marketing</div>
+                            <div style="font-size: 0.8rem; opacity: 0.7;">Promotion, prix</div>
+                        </div>
+                    </li>
+                    <li class="bp-step" data-step="6">
+                        <div class="bp-step-number">6</div>
+                        <div>
+                            <div style="font-weight: 600;">Plan Opérationnel</div>
+                            <div style="font-size: 0.8rem; opacity: 0.7;">Processus, ressources</div>
+                        </div>
+                    </li>
+                    <li class="bp-step" data-step="7">
+                        <div class="bp-step-number">7</div>
+                        <div>
+                            <div style="font-weight: 600;">Projections Financières</div>
+                            <div style="font-size: 0.8rem; opacity: 0.7;">Budget, revenus</div>
+                        </div>
+                    </li>
+                    <li class="bp-step" data-step="8">
+                        <div class="bp-step-number">8</div>
+                        <div>
+                            <div style="font-weight: 600;">Finalisation</div>
+                            <div style="font-size: 0.8rem; opacity: 0.7;">Révision, export</div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Content -->
+            <div class="bp-content">
+                <!-- Step 1: Informations Générales -->
+                <div class="bp-section active" id="step1">
+                    <h2><i class="fa-solid fa-info-circle"></i> Informations Générales</h2>
+                    
+                    <div class="bp-tips">
+                        <h4><i class="fa-solid fa-lightbulb"></i> Conseils</h4>
+                        <ul>
+                            <li>Choisissez un nom d'entreprise mémorable et représentatif</li>
+                            <li>Sélectionnez le secteur qui correspond le mieux à votre activité</li>
+                            <li>Présentez votre équipe de manière professionnelle</li>
+                        </ul>
+                    </div>
+
+                    <div class="bp-form-group">
+                        <label for="companyName">Nom de l'entreprise *</label>
+                        <input type="text" id="companyName" placeholder="Ex: TechSolutions Cameroun" required>
+                    </div>
+
+                    <div class="bp-form-row">
+                        <div class="bp-form-group">
+                            <label for="sector">Secteur d'activité *</label>
+                            <select id="sector" required>
+                                <option value="">Sélectionnez un secteur</option>
+                                <option value="agriculture">Agriculture & Agro-alimentaire</option>
+                                <option value="technology">Technologie & Innovation</option>
+                                <option value="commerce">Commerce & Vente</option>
+                                <option value="artisanat">Artisanat & Création</option>
+                                <option value="services">Services & Consulting</option>
+                                <option value="education">Éducation & Formation</option>
+                                <option value="sante">Santé & Bien-être</option>
+                                <option value="transport">Transport & Logistique</option>
+                                <option value="tourisme">Tourisme & Hôtellerie</option>
+                                <option value="autre">Autre</option>
+                            </select>
+                        </div>
+                        <div class="bp-form-group">
+                            <label for="legalForm">Forme juridique</label>
+                            <select id="legalForm">
+                                <option value="">Sélectionnez une forme</option>
+                                <option value="ei">Entreprise Individuelle</option>
+                                <option value="sarl">SARL</option>
+                                <option value="sa">SA</option>
+                                <option value="sas">SAS</option>
+                                <option value="cooperative">Coopérative</option>
+                                <option value="association">Association</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="bp-form-row">
+                        <div class="bp-form-group">
+                            <label for="location">Localisation</label>
+                            <input type="text" id="location" placeholder="Ex: Bangangté, Région de l'Ouest">
+                        </div>
+                        <div class="bp-form-group">
+                            <label for="foundingDate">Date de création prévue</label>
+                            <input type="date" id="foundingDate">
+                        </div>
+                    </div>
+
+                    <div class="bp-form-group">
+                        <label for="founderName">Nom du fondateur/dirigeant *</label>
+                        <input type="text" id="founderName" placeholder="Votre nom complet" required>
+                    </div>
+
+                    <div class="bp-form-group">
+                        <label for="teamDescription">Description de l'équipe</label>
+                        <textarea id="teamDescription" placeholder="Présentez les membres clés de votre équipe, leurs compétences et expériences..."></textarea>
+                    </div>
+                </div>
+
+                <!-- Step 2: Résumé Exécutif -->
+                <div class="bp-section" id="step2">
+                    <h2><i class="fa-solid fa-bullseye"></i> Résumé Exécutif</h2>
+                    
+                    <div class="bp-tips">
+                        <h4><i class="fa-solid fa-lightbulb"></i> Conseils</h4>
+                        <ul>
+                            <li>Le résumé exécutif est la première impression de votre business plan</li>
+                            <li>Soyez concis mais convaincant</li>
+                            <li>Mettez en avant votre proposition de valeur unique</li>
+                        </ul>
+                    </div>
+
+                    <div class="bp-form-group">
+                        <label for="vision">Vision de l'entreprise *</label>
+                        <textarea id="vision" placeholder="Décrivez votre vision à long terme pour l'entreprise..." required></textarea>
+                    </div>
+
+                    <div class="bp-form-group">
+                        <label for="mission">Mission de l'entreprise *</label>
+                        <textarea id="mission" placeholder="Quelle est la mission de votre entreprise ? Quel problème résolvez-vous ?" required></textarea>
+                    </div>
+
+                    <div class="bp-form-group">
+                        <label for="valueProposition">Proposition de valeur unique *</label>
+                        <textarea id="valueProposition" placeholder="Qu'est-ce qui vous différencie de la concurrence ? Quelle valeur apportez-vous ?" required></textarea>
+                    </div>
+
+                    <div class="bp-form-group">
+                        <label for="objectives">Objectifs principaux (3 ans)</label>
+                        <textarea id="objectives" placeholder="Listez vos objectifs principaux pour les 3 prochaines années..."></textarea>
+                    </div>
+
+                    <div class="bp-form-group">
+                        <label for="keySuccessFactors">Facteurs clés de succès</label>
+                        <textarea id="keySuccessFactors" placeholder="Quels sont les éléments essentiels pour réussir dans votre domaine ?"></textarea>
+                    </div>
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div class="bp-buttons">
+                    <button class="bp-btn bp-btn-secondary" id="prevBtn" onclick="previousStep()" style="display: none;">
+                        <i class="fa-solid fa-arrow-left"></i> Précédent
+                    </button>
+                    <button class="bp-btn bp-btn-primary" id="nextBtn" onclick="nextStep()">
+                        Suivant <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="assets/js/navigation-update.js"></script>
+    <script>
+        // Business Plan Data
+        let businessPlanData = {
+            general: {},
+            executive: {},
+            market: {},
+            products: {},
+            marketing: {},
+            operations: {},
+            financial: {},
+            completed: false
+        };
+
+        let currentStep = 1;
+        const totalSteps = 8;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            loadUserInfo();
+            loadBusinessPlanData();
+            updateProgress();
+        });
+
+        function loadUserInfo() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (currentUser) {
+                document.getElementById('userName').textContent = currentUser.name;
+                document.getElementById('founderName').value = currentUser.name;
+            }
+        }
+
+        function loadBusinessPlanData() {
+            const saved = localStorage.getItem('businessPlanData');
+            if (saved) {
+                businessPlanData = JSON.parse(saved);
+                populateForm();
+            }
+        }
+
+        function saveBusinessPlanData() {
+            localStorage.setItem('businessPlanData', JSON.stringify(businessPlanData));
+        }
+
+        function populateForm() {
+            // Populate form fields based on saved data
+            Object.keys(businessPlanData.general).forEach(key => {
+                const element = document.getElementById(key);
+                if (element) element.value = businessPlanData.general[key];
+            });
+            
+            Object.keys(businessPlanData.executive).forEach(key => {
+                const element = document.getElementById(key);
+                if (element) element.value = businessPlanData.executive[key];
+            });
+        }
+
+        function collectCurrentStepData() {
+            if (currentStep === 1) {
+                businessPlanData.general = {
+                    companyName: document.getElementById('companyName').value,
+                    sector: document.getElementById('sector').value,
+                    legalForm: document.getElementById('legalForm').value,
+                    location: document.getElementById('location').value,
+                    foundingDate: document.getElementById('foundingDate').value,
+                    founderName: document.getElementById('founderName').value,
+                    teamDescription: document.getElementById('teamDescription').value
+                };
+            } else if (currentStep === 2) {
+                businessPlanData.executive = {
+                    vision: document.getElementById('vision').value,
+                    mission: document.getElementById('mission').value,
+                    valueProposition: document.getElementById('valueProposition').value,
+                    objectives: document.getElementById('objectives').value,
+                    keySuccessFactors: document.getElementById('keySuccessFactors').value
+                };
+            }
+            
+            saveBusinessPlanData();
+        }
+
+        function validateCurrentStep() {
+            if (currentStep === 1) {
+                const required = ['companyName', 'sector', 'founderName'];
+                return required.every(id => document.getElementById(id).value.trim() !== '');
+            } else if (currentStep === 2) {
+                const required = ['vision', 'mission', 'valueProposition'];
+                return required.every(id => document.getElementById(id).value.trim() !== '');
+            }
+            return true;
+        }
+
+        function nextStep() {
+            if (!validateCurrentStep()) {
+                showToast('Veuillez remplir tous les champs obligatoires', 'error');
+                return;
+            }
+
+            collectCurrentStepData();
+
+            if (currentStep < totalSteps) {
+                currentStep++;
+                showStep(currentStep);
+                updateProgress();
+                updateStepStatus();
+            }
+        }
+
+        function previousStep() {
+            collectCurrentStepData();
+            
+            if (currentStep > 1) {
+                currentStep--;
+                showStep(currentStep);
+                updateProgress();
+                updateStepStatus();
+            }
+        }
+
+        function showStep(step) {
+            // Hide all sections
+            document.querySelectorAll('.bp-section').forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // Show current section
+            const currentSection = document.getElementById(`step${step}`);
+            if (currentSection) {
+                currentSection.classList.add('active');
+            } else {
+                // Create remaining steps dynamically
+                createStep(step);
+            }
+
+            // Update navigation buttons
+            document.getElementById('prevBtn').style.display = step > 1 ? 'flex' : 'none';
+            document.getElementById('nextBtn').innerHTML = step === totalSteps ? 
+                'Finaliser <i class="fa-solid fa-check"></i>' : 
+                'Suivant <i class="fa-solid fa-arrow-right"></i>';
+        }
+
+        function createStep(step) {
+            const content = document.querySelector('.bp-content');
+            let stepHTML = '';
+
+            switch(step) {
+                case 3:
+                    stepHTML = createMarketAnalysisStep();
+                    break;
+                case 4:
+                    stepHTML = createProductsServicesStep();
+                    break;
+                case 5:
+                    stepHTML = createMarketingStrategyStep();
+                    break;
+                case 6:
+                    stepHTML = createOperationalPlanStep();
+                    break;
+                case 7:
+                    stepHTML = createFinancialProjectionsStep();
+                    break;
+                case 8:
+                    stepHTML = createFinalizationStep();
+                    break;
+            }
+
+            if (stepHTML) {
+                const stepDiv = document.createElement('div');
+                stepDiv.className = 'bp-section active';
+                stepDiv.id = `step${step}`;
+                stepDiv.innerHTML = stepHTML;
+                content.insertBefore(stepDiv, content.querySelector('.bp-buttons'));
+            }
+        }
+
+        function createMarketAnalysisStep() {
+            return `
+                <h2><i class="fa-solid fa-chart-line"></i> Analyse de Marché</h2>
+                
+                <div class="bp-tips">
+                    <h4><i class="fa-solid fa-lightbulb"></i> Conseils</h4>
+                    <ul>
+                        <li>Définissez précisément votre marché cible</li>
+                        <li>Analysez vos concurrents directs et indirects</li>
+                        <li>Identifiez les tendances du marché</li>
+                    </ul>
+                </div>
+
+                <div class="bp-form-group">
+                    <label for="targetMarket">Marché cible *</label>
+                    <textarea id="targetMarket" placeholder="Décrivez votre marché cible (taille, caractéristiques, besoins...)"></textarea>
+                </div>
+
+                <div class="bp-form-group">
+                    <label for="customerSegments">Segments de clientèle</label>
+                    <textarea id="customerSegments" placeholder="Identifiez et décrivez vos différents segments de clients..."></textarea>
+                </div>
+
+                <div class="bp-form-group">
+                    <label for="marketSize">Taille du marché</label>
+                    <input type="text" id="marketSize" placeholder="Ex: 50 000 personnes, 2 milliards FCFA">
+                </div>
+
+                <div class="bp-form-group">
+                    <label for="competitors">Analyse concurrentielle</label>
+                    <textarea id="competitors" placeholder="Listez vos principaux concurrents et analysez leurs forces/faiblesses..."></textarea>
+                </div>
+
+                <div class="bp-form-group">
+                    <label for="marketTrends">Tendances du marché</label>
+                    <textarea id="marketTrends" placeholder="Quelles sont les tendances actuelles et futures de votre marché ?"></textarea>
+                </div>
+            `;
+        }
+
+        function createProductsServicesStep() {
+            return `
+                <h2><i class="fa-solid fa-box"></i> Produits et Services</h2>
+                
+                <div class="bp-tips">
+                    <h4><i class="fa-solid fa-lightbulb"></i> Conseils</h4>
+                    <ul>
+                        <li>Décrivez clairement votre offre</li>
+                        <li>Mettez en avant vos avantages concurrentiels</li>
+                        <li>Expliquez votre processus de développement</li>
+                    </ul>
+                </div>
+
+                <div class="bp-form-group">
+                    <label for="productDescription">Description des produits/services *</label>
+                    <textarea id="productDescription" placeholder="Décrivez en détail vos produits ou services..."></textarea>
+                </div>
+
+                <div class="bp-form-group">
+                    <label for="competitiveAdvantages">Avantages concurrentiels</label>
+                    <textarea id="competitiveAdvantages" placeholder="Qu'est-ce qui vous différencie de la concurrence ?"></textarea>
+                </div>
+
+                <div class="bp-form-group">
+                    <label for="developmentStage">Stade de développement</label>
+                    <select id="developmentStage">
+                        <option value="">Sélectionnez un stade</option>
+                        <option value="concept">Concept/Idée</option>
+                        <option value="prototype">Prototype</option>
+                        <option value="testing">Phase de test</option>
+                        <option value="ready">Prêt à commercialiser</option>
+                        <option value="market">Déjà sur le marché</option>
+                    </select>
+                </div>
+
+                <div class="bp-form-group">
+                    <label for="futureProducts">Produits/services futurs</label>
+                    <textarea id="futureProducts" placeholder="Quels sont vos plans de développement futurs ?"></textarea>
+                </div>
+            `;
+        }
+
+        function createMarketingStrategyStep() {
+            return `
+                <h2><i class="fa-solid fa-bullhorn"></i> Stratégie Marketing</h2>
+                
+                <div class="bp-tips">
+                    <h4><i class="fa-solid fa-lightbulb"></i> Conseils</h4>
+                    <ul>
+                        <li>Définissez votre stratégie de prix</li>
+                        <li>Choisissez les bons canaux de distribution</li>
+                        <li>Planifiez vos actions de communication</li>
+                    </ul>
+                </div>
+
+                <div class="bp-form-group">
+                    <label for="pricingStrategy">Stratégie de prix</label>
+                    <textarea id="pricingStrategy" placeholder="Comment fixez-vous vos prix ? Quelle est votre stratégie tarifaire ?"></textarea>
+                </div>
+
+                <div class="bp-form-group">
+                    <label for="distributionChannels">Canaux de distribution</label>
+                    <textarea id="distributionChannels" placeholder="Comment allez-vous vendre et distribuer vos produits/services ?"></textarea>
+                </div>
+
+                <div class="bp-form-group">
+                    <label for="promotionStrategy">Stratégie de promotion</label>
+                    <textarea id="promotionStrategy" placeholder="Quelles actions marketing allez-vous mener ?"></textarea>
+                </div>
+
+                <div class="bp-form-group">
+                    <label for="marketingBudget">Budget marketing annuel</label>
+                    <input type="text" id="marketingBudget" placeholder="Ex: 2 000 000 FCFA">
+                </div>
+            `;
+        }
+
+        function createOperationalPlanStep() {
+            return `
+                <h2><i class="fa-solid fa-cogs"></i> Plan Opérationnel</h2>
+                
+                <div class="bp-tips">
+                    <h4><i class="fa-solid fa-lightbulb"></i> Conseils</h4>
+                    <ul>
+                        <li>Décrivez vos processus de production/service</li>
+                        <li>Identifiez vos besoins en ressources</li>
+                        <li>Planifiez votre organisation</li>
+                    </ul>
+                </div>
+
+                <div class="bp-form-group">
+                    <label for="operationalProcess">Processus opérationnels</label>
+                    <textarea id="operationalProcess" placeholder="Décrivez comment vous allez produire/livrer vos produits/services..."></textarea>
+                </div>
+
+                <div class="bp-form-group">
+                    <label for="facilities">Locaux et équipements</label>
+                    <textarea id="facilities" placeholder="Quels locaux et équipements vous faut-il ?"></textarea>
+                </div>
+
+                <div class="bp-form-group">
+                    <label for="suppliers">Fournisseurs et partenaires</label>
+                    <textarea id="suppliers" placeholder="Qui sont vos fournisseurs clés et partenaires stratégiques ?"></textarea>
+                </div>
+
+                <div class="bp-form-group">
+                    <label for="staffing">Plan de recrutement</label>
+                    <textarea id="staffing" placeholder="Combien d'employés prévoyez-vous ? Quels profils ?"></textarea>
+                </div>
+            `;
+        }
+
+        function createFinancialProjectionsStep() {
+            return `
+                <h2><i class="fa-solid fa-calculator"></i> Projections Financières</h2>
+                
+                <div class="bp-tips">
+                    <h4><i class="fa-solid fa-lightbulb"></i> Conseils</h4>
+                    <ul>
+                        <li>Soyez réaliste dans vos projections</li>
+                        <li>Prévoyez plusieurs scénarios</li>
+                        <li>Identifiez vos besoins de financement</li>
+                    </ul>
+                </div>
+
+                <div class="bp-form-group">
+                    <label for="startupCosts">Coûts de démarrage (FCFA)</label>
+                    <input type="number" id="startupCosts" placeholder="Ex: 5000000">
+                </div>
+
+                <div class="bp-form-group">
+                    <label for="monthlyExpenses">Charges mensuelles (FCFA)</label>
+                    <input type="number" id="monthlyExpenses" placeholder="Ex: 500000">
+                </div>
+
+                <div class="bp-form-group">
+                    <label for="projectedRevenue">Chiffre d'affaires prévu (1ère année)</label>
+                    <input type="number" id="projectedRevenue" placeholder="Ex: 12000000">
+                </div>
+
+                <div class="bp-form-group">
+                    <label for="fundingNeeds">Besoins de financement</label>
+                    <textarea id="fundingNeeds" placeholder="De combien avez-vous besoin ? Comment comptez-vous financer votre projet ?"></textarea>
+                </div>
+            `;
+        }
+
+        function createFinalizationStep() {
+            return `
+                <h2><i class="fa-solid fa-check-circle"></i> Finalisation</h2>
+                
+                <div class="bp-tips">
+                    <h4><i class="fa-solid fa-lightbulb"></i> Félicitations !</h4>
+                    <ul>
+                        <li>Votre business plan est presque terminé</li>
+                        <li>Relisez et ajustez si nécessaire</li>
+                        <li>Exportez votre plan dans le format souhaité</li>
+                    </ul>
+                </div>
+
+                <div style="background: rgba(30, 41, 59, 0.8); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 10px; padding: 2rem; margin: 2rem 0;">
+                    <h3 style="color: #38bdf8; margin-bottom: 1rem;"><i class="fa-solid fa-eye"></i> Aperçu de votre Business Plan</h3>
+                    <div id="businessPlanPreview" style="color: #94a3b8; line-height: 1.6;">
+                        <!-- Preview will be generated here -->
+                    </div>
+                </div>
+
+                <div class="bp-form-group">
+                    <label for="additionalNotes">Notes additionnelles</label>
+                    <textarea id="additionalNotes" placeholder="Ajoutez toute information complémentaire..."></textarea>
+                </div>
+
+                <h3 style="color: #38bdf8; margin: 2rem 0 1rem 0;">
+                    <i class="fa-solid fa-download"></i> Exporter votre Business Plan
+                </h3>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 2rem;">
+                    <div style="background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 10px; padding: 1.5rem; text-align: center; cursor: pointer; transition: all 0.3s;" onclick="exportBusinessPlan('html')">
+                        <i class="fa-solid fa-code" style="font-size: 2rem; color: #38bdf8; margin-bottom: 1rem;"></i>
+                        <h4 style="color: #38bdf8; margin-bottom: 0.5rem;">HTML</h4>
+                        <p style="color: #94a3b8; margin: 0;">Format web pour partage</p>
+                    </div>
+                    <div style="background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 10px; padding: 1.5rem; text-align: center; cursor: pointer; transition: all 0.3s;" onclick="exportBusinessPlan('txt')">
+                        <i class="fa-solid fa-file-text" style="font-size: 2rem; color: #38bdf8; margin-bottom: 1rem;"></i>
+                        <h4 style="color: #38bdf8; margin-bottom: 0.5rem;">Texte</h4>
+                        <p style="color: #94a3b8; margin: 0;">Format simple et universel</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        function updateProgress() {
+            const progress = (currentStep / totalSteps) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+        }
+
+        function updateStepStatus() {
+            document.querySelectorAll('.bp-step').forEach((step, index) => {
+                const stepNumber = index + 1;
+                step.classList.remove('active', 'completed');
+                
+                if (stepNumber === currentStep) {
+                    step.classList.add('active');
+                } else if (stepNumber < currentStep) {
+                    step.classList.add('completed');
+                    step.querySelector('.bp-step-number').innerHTML = '<i class="fa-solid fa-check"></i>';
+                } else {
+                    step.querySelector('.bp-step-number').textContent = stepNumber;
+                }
+            });
+        }
+
+        // Step navigation
+        document.querySelectorAll('.bp-step').forEach(step => {
+            step.addEventListener('click', () => {
+                const targetStep = parseInt(step.dataset.step);
+                if (targetStep <= currentStep || targetStep === currentStep + 1) {
+                    collectCurrentStepData();
+                    currentStep = targetStep;
+                    showStep(currentStep);
+                    updateProgress();
+                    updateStepStatus();
+                }
+            });
+        });
+
+        function exportBusinessPlan(format) {
+            collectCurrentStepData();
+            
+            if (format === 'html') {
+                generateHTMLExport();
+            } else if (format === 'txt') {
+                generateTextExport();
+            }
+        }
+
+        function generateHTMLExport() {
+            const htmlContent = generateBusinessPlanHTML();
+            const blob = new Blob([htmlContent], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `business-plan-${businessPlanData.general.companyName || 'entreprise'}.html`;
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            showToast('Business plan exporté avec succès !', 'success');
+        }
+
+        function generateTextExport() {
+            const textContent = generateBusinessPlanText();
+            const blob = new Blob([textContent], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `business-plan-${businessPlanData.general.companyName || 'entreprise'}.txt`;
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            showToast('Business plan exporté avec succès !', 'success');
+        }
+
+        function generateBusinessPlanHTML() {
+            const data = businessPlanData;
+            return `<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business Plan - ${data.general.companyName}</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; margin: 40px; color: #333; }
+        h1 { color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 10px; }
+        h2 { color: #34495e; margin-top: 30px; }
+        .section { margin-bottom: 30px; }
+        .highlight { background: #ecf0f1; padding: 15px; border-left: 4px solid #3498db; }
+    </style>
+</head>
+<body>
+    <h1>BUSINESS PLAN</h1>
+    <div class="highlight">
+        <h2>${data.general.companyName || 'Mon Entreprise'}</h2>
+        <p><strong>Secteur:</strong> ${data.general.sector || 'Non spécifié'}</p>
+        <p><strong>Fondateur:</strong> ${data.general.founderName || 'Non spécifié'}</p>
+        <p><strong>Localisation:</strong> ${data.general.location || 'Non spécifiée'}</p>
+    </div>
+    
+    <div class="section">
+        <h2>1. RÉSUMÉ EXÉCUTIF</h2>
+        <h3>Vision</h3>
+        <p>${data.executive.vision || 'À compléter'}</p>
+        <h3>Mission</h3>
+        <p>${data.executive.mission || 'À compléter'}</p>
+        <h3>Proposition de Valeur</h3>
+        <p>${data.executive.valueProposition || 'À compléter'}</p>
+    </div>
+    
+    <footer style="margin-top: 50px; text-align: center; color: #7f8c8d;">
+        <p>Business Plan généré par MINJEC Portal - ${new Date().toLocaleDateString()}</p>
+    </footer>
+</body>
+</html>`;
+        }
+
+        function generateBusinessPlanText() {
+            const data = businessPlanData;
+            return `BUSINESS PLAN
+${data.general.companyName || 'Mon Entreprise'}
+
+INFORMATIONS GÉNÉRALES
+======================
+Nom de l'entreprise: ${data.general.companyName || 'Non spécifié'}
+Secteur: ${data.general.sector || 'Non spécifié'}
+Fondateur: ${data.general.founderName || 'Non spécifié'}
+Localisation: ${data.general.location || 'Non spécifiée'}
+Date de création: ${data.general.foundingDate || 'Non spécifiée'}
+
+RÉSUMÉ EXÉCUTIF
+===============
+Vision: ${data.executive.vision || 'À compléter'}
+
+Mission: ${data.executive.mission || 'À compléter'}
+
+Proposition de valeur: ${data.executive.valueProposition || 'À compléter'}
+
+Objectifs: ${data.executive.objectives || 'À compléter'}
+
+---
+Business Plan généré par MINJEC Portal - ${new Date().toLocaleDateString()}`;
+        }
+
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 1rem 1.5rem;
+                background: ${type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#38bdf8'};
+                color: white;
+                border-radius: 8px;
+                z-index: 9999;
+                animation: slideIn 0.3s ease;
+            `;
+            toast.textContent = message;
+            
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+
+        function logout() {
+            localStorage.removeItem('currentUser');
+            window.location.href = 'login.html';
+        }
+
+        // Add CSS animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
