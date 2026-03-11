@@ -1,0 +1,470 @@
+<!DOCTYPE html> <!-- Déclaration du type de document standard HTML5 -->
+<html lang="fr"> <!-- Balise racine pour le contenu en français -->
+
+<head> <!-- Section en-tête pour les métadonnées et styles -->
+    <meta charset="UTF-8"> <!-- Encodage universel des caractères -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Support de l'affichage mobile -->
+    <title>Mes Favoris | Délégation Jeunesse</title> <!-- Titre de la page dans l'onglet -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Police Inter via Google Fonts -->
+    <link rel="stylesheet" href="assets/css/style.css"> <!-- Styles globaux Aurora Portal -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Librairie d'icônes Font Awesome -->
+    <style>
+        /* Styles CSS internes pour la gestion des favoris */
+        .favorites-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .favorites-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+        }
+
+        .favorites-stats {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+            text-align: center;
+            flex: 1;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .favorites-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            /* Grille adaptative pour les favoris */
+            gap: 2rem;
+        }
+
+        .favorite-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .favorite-card:hover {
+            transform: translateY(-5px);
+            /* Effet d'élévation au survol */
+            border-color: var(--accent-primary);
+            /* Bordure colorée au survol */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            /* Ombre portée douce */
+        }
+
+        .favorite-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .favorite-type {
+            background: var(--accent-primary);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .favorite-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .action-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: all 0.3s;
+        }
+
+        .action-btn:hover {
+            color: var(--accent-primary);
+            background: rgba(56, 189, 248, 0.1);
+            /* Fond léger au survol de l'action */
+        }
+
+        .favorite-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            line-height: 1.4;
+        }
+
+        .favorite-description {
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .favorite-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-muted);
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            color: var(--accent-primary);
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--border-color);
+            /* Ligne de séparation des onglets */
+        }
+
+        .filter-tab {
+            padding: 1rem 1.5rem;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .filter-tab.active {
+            color: var(--accent-primary);
+            /* Onglet actif en couleur accentuée */
+            border-bottom-color: var(--accent-primary);
+            /* Soulignement de l'onglet actif */
+        }
+
+        /* Styles responsifs pour petits écrans */
+        @media (max-width: 768px) {
+            .favorites-grid {
+                grid-template-columns: 1fr;
+                /* Passage sur une seule colonne */
+            }
+
+            .favorites-header {
+                flex-direction: column;
+                /* Entête empilée sur mobile */
+                gap: 1rem;
+                align-items: stretch;
+            }
+
+            .favorites-stats {
+                flex-direction: column;
+                /* Statistiques empilées sur mobile */
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="assets/css/spacing-fix.css">
+</head>
+
+<body> <!-- Début du corps de page -->
+    <div class="particles" id="particles"></div> <!-- Arrière-plan de particules animé -->
+
+    <!-- Barre de navigation -->
+    <nav class="navbar scrolled" id="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="nav-logo floating-slow">
+                <i class="fa-solid fa-layer-group rotate-slow"></i> MINJEC
+            </a>
+            <ul class="nav-links" style="display: flex; align-items: center; gap: 1.2rem;">
+                <li><a href="index.html" class="link-underline">Accueil</a></li>
+                <li><a href="programmes.html" class="link-underline">Programmes</a></li>
+                <li><a href="actualites.html" class="link-underline">Actualités</a></li>
+                <li><a href="favoris.html" class="link-underline active">Favoris</a></li> <!-- Page active -->
+            </ul>
+            <div style="display: flex; align-items: center; gap: 1.5rem;">
+                <button class="theme-toggle" id="themeToggle" title="Changer de mode">
+                    <i class="fa-solid fa-moon"></i>
+                    <i class="fa-solid fa-sun"></i>
+                </button>
+                <a href="login.html" class="btn-primary">
+                    <i class="fa-solid fa-user-lock"></i> Connexion
+                </a>
+            </div>
+            <button class="mobile-menu-toggle" id="mobileMenuToggle"> <!-- Hamburger mobile -->
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <div class="favorites-container" style="margin-top: 6rem;"> <!-- Conteneur principal sous navbar -->
+        <!-- En-tête de la section favoris -->
+        <div class="favorites-header reveal">
+            <div>
+                <h1><i class="fa-solid fa-heart"></i> Mes Favoris</h1>
+                <p>Retrouvez tous vos contenus sauvegardés</p>
+            </div>
+            <div style="display: flex; gap: 1rem;">
+                <button class="btn-secondary" onclick="clearAllFavorites()"> <!-- Action de masse : Tout supprimer -->
+                    <i class="fa-solid fa-trash"></i> Tout supprimer
+                </button>
+                <button class="btn-primary" onclick="exportFavorites()"> <!-- Action : Exporter en JSON -->
+                    <i class="fa-solid fa-download"></i> Exporter
+                </button>
+            </div>
+        </div>
+
+        <!-- Section des statistiques rapides -->
+        <div class="favorites-stats reveal">
+            <div class="stat-card">
+                <div class="stat-number" id="totalFavorites">0</div>
+                <div>Total Favoris</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="thisWeekFavorites">0</div>
+                <div>Cette Semaine</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="categoriesCount">0</div>
+                <div>Catégories</div>
+            </div>
+        </div>
+
+        <!-- Onglets de filtrage par type de contenu -->
+        <div class="filter-tabs reveal">
+            <button class="filter-tab active" data-filter="all">Tous</button>
+            <button class="filter-tab" data-filter="articles">Articles</button>
+            <button class="filter-tab" data-filter="events">Événements</button>
+            <button class="filter-tab" data-filter="resources">Ressources</button>
+            <button class="filter-tab" data-filter="programs">Programmes</button>
+        </div>
+
+        <!-- Grille dynamique des favoris (Gérée par JavaScript) -->
+        <div class="favorites-grid reveal stagger-children" id="favoritesGrid">
+            <!-- Les favoris seront injectés ici par la classe FavoritesManager -->
+        </div>
+
+        <!-- État vide (Affiché si aucun favori n'existe) -->
+        <div class="empty-state" id="emptyState" style="display: none;">
+            <i class="fa-solid fa-heart-crack"></i>
+            <h3>Aucun favori pour le moment</h3>
+            <p>Commencez à sauvegarder vos contenus préférés en cliquant sur l'icône cœur</p>
+            <a href="index.html" class="btn-primary" style="margin-top: 1rem;">
+                <i class="fa-solid fa-home"></i> Retour à l'accueil
+            </a>
+        </div>
+    </div>
+
+    <!-- Conteneur pour les notifications flottantes -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script src="assets/js/data-loader.js"></script> <!-- Chargement des données externes si besoin -->
+    <script src="assets/js/main.js"></script> <!-- Logique globale du site -->
+
+    <script>
+        /* Classe de gestion des favoris utilisant le LocalStorage */
+        class FavoritesManager {
+            constructor() {
+                // Récupération des favoris stockés ou tableau vide
+                this.favorites = JSON.parse(localStorage.getItem('user_favorites') || '[]');
+                this.init();
+            }
+
+            /* Initialisation de la vue */
+            init() {
+                this.updateStats();
+                this.renderFavorites();
+                this.initFilters();
+            }
+
+            /* Mise à jour des compteurs statistiques */
+            updateStats() {
+                const total = this.favorites.length;
+                const thisWeek = this.favorites.filter(fav => {
+                    const favDate = new Date(fav.savedAt);
+                    const weekAgo = new Date();
+                    weekAgo.setDate(weekAgo.getDate() - 7);
+                    return favDate > weekAgo;
+                }).length;
+
+                const categories = [...new Set(this.favorites.map(fav => fav.type))].length;
+
+                document.getElementById('totalFavorites').textContent = total;
+                document.getElementById('thisWeekFavorites').textContent = thisWeek;
+                document.getElementById('categoriesCount').textContent = categories;
+            }
+
+            /* Rendu HTML dynamique de la grille des favoris */
+            renderFavorites(filter = 'all') {
+                const grid = document.getElementById('favoritesGrid');
+                const emptyState = document.getElementById('emptyState');
+
+                let filteredFavorites = this.favorites;
+                if (filter !== 'all') {
+                    filteredFavorites = this.favorites.filter(fav => fav.type === filter);
+                }
+
+                // Affichage de l'état vide si nécessaire
+                if (filteredFavorites.length === 0) {
+                    grid.style.display = 'none';
+                    emptyState.style.display = 'block';
+                    return;
+                }
+
+                grid.style.display = 'grid';
+                emptyState.style.display = 'none';
+
+                // Génération des cartes de favoris
+                grid.innerHTML = filteredFavorites.map(favorite => `
+                    <div class="favorite-card" data-type="${favorite.type}">
+                        <div class="favorite-header">
+                            <span class="favorite-type">${this.getTypeLabel(favorite.type)}</span>
+                            <div class="favorite-actions">
+                                <button class="action-btn" onclick="shareFavorite('${favorite.id}')" title="Partager">
+                                    <i class="fa-solid fa-share"></i>
+                                </button>
+                                <button class="action-btn" onclick="removeFavorite('${favorite.id}')" title="Supprimer">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <h3 class="favorite-title">${favorite.title}</h3>
+                        <p class="favorite-description">${favorite.description}</p>
+                        <div class="favorite-meta">
+                            <span><i class="fa-solid fa-calendar"></i> ${this.formatDate(favorite.savedAt)}</span>
+                            <a href="${favorite.url}" class="btn-primary" style="padding: 0.5rem 1rem; font-size: 0.9rem;">
+                                Voir <i class="fa-solid fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            /* Traduction des types de contenu pour l'UI */
+            getTypeLabel(type) {
+                const labels = {
+                    'articles': 'Article',
+                    'events': 'Événement',
+                    'resources': 'Ressource',
+                    'programs': 'Programme',
+                    'news': 'Actualité'
+                };
+                return labels[type] || type;
+            }
+
+            /* Formatage localisé de la date */
+            formatDate(dateString) {
+                const date = new Date(dateString);
+                return date.toLocaleDateString('fr-FR', {
+                    day: 'numeric',
+                    month: 'short',
+                    year: 'numeric'
+                });
+            }
+
+            /* Initialisation des écouteurs sur les onglets de filtrage */
+            initFilters() {
+                const filterTabs = document.querySelectorAll('.filter-tab');
+                filterTabs.forEach(tab => {
+                    tab.addEventListener('click', () => {
+                        filterTabs.forEach(t => t.classList.remove('active'));
+                        tab.classList.add('active');
+                        const filter = tab.getAttribute('data-filter');
+                        this.renderFavorites(filter);
+                    });
+                });
+            }
+
+            /* Suppression d'un favori spécifique */
+            removeFavorite(id) {
+                this.favorites = this.favorites.filter(fav => fav.id !== id);
+                localStorage.setItem('user_favorites', JSON.stringify(this.favorites));
+                this.updateStats();
+                this.renderFavorites();
+                if (typeof showToast === 'function') showToast('Favori supprimé', 'success');
+            }
+
+            /* Suppression de l'intégralité des favoris après confirmation */
+            clearAll() {
+                if (confirm('Êtes-vous sûr de vouloir supprimer tous vos favoris ?')) {
+                    this.favorites = [];
+                    localStorage.setItem('user_favorites', JSON.stringify(this.favorites));
+                    this.updateStats();
+                    this.renderFavorites();
+                    if (typeof showToast === 'function') showToast('Tous les favoris ont été supprimés', 'success');
+                }
+            }
+
+            /* Exportation des favoris au format JSON pour sauvegarde locale */
+            export() {
+                const data = {
+                    favorites: this.favorites,
+                    exportDate: new Date().toISOString(),
+                    totalCount: this.favorites.length
+                };
+
+                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `mes-favoris-${new Date().toISOString().split('T')[0]}.json`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+
+                if (typeof showToast === 'function') showToast('Favoris exportés avec succès !', 'success');
+            }
+        }
+
+        // Instanciation globale du gestionnaire
+        const favoritesManager = new FavoritesManager();
+
+        // Exposition des fonctions pour les événements 'onclick' du HTML
+        window.removeFavorite = (id) => favoritesManager.removeFavorite(id);
+        window.clearAllFavorites = () => favoritesManager.clearAll();
+        window.exportFavorites = () => favoritesManager.export();
+
+        /* Fonction de partage utilisant l'API Web Share ou le presse-papiers */
+        window.shareFavorite = (id) => {
+            const favorite = favoritesManager.favorites.find(fav => fav.id === id);
+            if (favorite && navigator.share) {
+                navigator.share({
+                    title: favorite.title,
+                    text: favorite.description,
+                    url: favorite.url
+                });
+            } else {
+                // Secours : Copie de l'URL dans le presse-papiers
+                navigator.clipboard.writeText(favorite.url);
+                if (typeof showToast === 'function') showToast('Lien copié dans le presse-papiers', 'success');
+            }
+        };
+    </script>
+</body>
+
+</html> <!-- Fin du document favoris -->

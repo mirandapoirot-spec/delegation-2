@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Espace | MINJEC Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .client-container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        .welcome-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4rem;
+            padding: 3rem;
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+            backdrop-filter: blur(20px);
+            box-shadow: var(--glass-shadow);
+        }
+
+        .project-card-client {
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 2rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .project-card-client:hover {
+            transform: translateY(-10px);
+            border-color: var(--accent-primary);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .status-pill {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+    </style>
+    <link rel="stylesheet" href="assets/css/spacing-fix.css">
+</head>
+
+<body>
+    <div class="particles" id="particles"></div>
+
+
+    <div class="client-container">
+        <!-- Dashboard Header -->
+        <header class="welcome-header reveal">
+            <div style="display: flex; align-items: center; gap: 2rem;">
+                <!-- Theme Toggle -->
+                <button class="theme-toggle" id="themeToggle" title="Changer de mode">
+                    <i class="fa-solid fa-moon"></i>
+                    <i class="fa-solid fa-sun"></i>
+                </button>
+
+                <!-- Language Toggle -->
+                <div class="lang-toggle">
+                    <div class="lang-btn active" data-lang="fr">FR</div>
+                    <div class="lang-btn" data-lang="en">EN</div>
+                </div>
+                <div>
+                    <h1 class="animated-gradient-text" style="font-size: 2rem; margin-bottom: 0.5rem;"
+                        data-t="dashboard_title">Mon Espace Personnel</h1>
+                    <p style="color: var(--text-muted);">Suivez l'état de vos dossiers en temps réel.</p>
+                </div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 1.5rem;">
+                <!-- Notification Bell -->
+                <div class="notif-wrapper" id="notifWrapper">
+                    <i class="fa-solid fa-bell" style="font-size: 1.4rem; color: var(--text-muted);"></i>
+                    <div class="notif-badge-dot active" id="notifBadge"></div>
+
+                    <div class="notif-dropdown" id="notifDropdown">
+                        <div class="notif-header">
+                            <span style="font-weight: 600;">Notifications</span>
+                            <span style="font-size: 0.8rem; color: var(--accent-primary); cursor: pointer;">Tout marquer
+                                lu</span>
+                        </div>
+                        <div class="notif-list" id="notifList">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <div style="text-align: right;">
+                    <div id="userName" style="font-weight: 600;">Utilisateur</div>
+                    <div id="userEmail" style="font-size: 0.8rem; color: var(--accent-primary);">Chargement...</div>
+                </div>
+                <div style="position: relative; cursor: pointer;" id="avatarContainer"
+                    title="Cliquer pour changer la photo">
+                    <img id="userAvatar" src="" alt="Avatar"
+                        style="width: 50px; height: 50px; border-radius: 50%; border: 2px solid var(--accent-primary); object-fit: cover;">
+                    <div
+                        style="position: absolute; bottom: -2px; right: -2px; background: var(--accent-primary); width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid var(--bg-dark);">
+                        <i class="fa-solid fa-camera" style="font-size: 0.6rem; color: white;"></i>
+                    </div>
+                    <input type="file" id="avatarInput" accept="image/*" style="display: none;">
+                </div>
+                <button onclick="logout()" class="btn-secondary"
+                    style="padding: 0.8rem; aspect-ratio: 1; border-radius: 12px;" title="Déconnexion">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Project Tracker Section -->
+        <section class="glass-card reveal" style="margin-bottom: 3rem;">
+            <h3 style="margin-bottom: 2rem; display: flex; align-items: center; gap: 10px;">
+                <i class="fa-solid fa-magnifying-glass-chart" style="color: var(--accent-primary);"></i>
+                Tracker de Progrès - Projet Prioritaire
+            </h3>
+
+            <div class="tracker-container">
+                <div class="tracker-steps">
+                    <div class="tracker-progress-bar" style="width: 66%;"></div>
+
+                    <div class="t-step completed">
+                        <div class="t-dot"><i class="fa-solid fa-file-arrow-up"></i></div>
+                        <span style="font-size: 0.8rem; font-weight: 600;">Dépôt Dossier</span>
+                    </div>
+
+                    <div class="t-step completed">
+                        <div class="t-dot"><i class="fa-solid fa-microchip"></i></div>
+                        <span style="font-size: 0.8rem; font-weight: 600;">Analyse Technique</span>
+                    </div>
+
+                    <div class="t-step active">
+                        <div class="t-dot"><i class="fa-solid fa-stamp"></i></div>
+                        <span style="font-size: 0.8rem; font-weight: 600;">Approbation</span>
+                    </div>
+
+                    <div class="t-step">
+                        <div class="t-dot"><i class="fa-solid fa-hand-holding-dollar"></i></div>
+                        <span style="font-size: 0.8rem; font-weight: 600;">Financement</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Gamification & Document Vault Row -->
+        <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 1.5rem; margin-bottom: 3rem;" class="reveal">
+            <!-- Points Card -->
+            <div class="glass-card points-card">
+                <h3 style="margin-bottom: 2rem;">Points Citoyens</h3>
+                <div class="circular-progress">
+                    <div class="points-value">850</div>
+                </div>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">Niveau : <strong>Argent</strong></p>
+                <div class="badge-grid">
+                    <div class="badge-icon earned" title="Formations terminées"><i
+                            class="fa-solid fa-graduation-cap"></i></div>
+                    <div class="badge-icon earned" title="Dossier complet"><i class="fa-solid fa-check-double"></i>
+                    </div>
+                    <div class="badge-icon" title="Mentor actif"><i class="fa-solid fa-handshake"></i></div>
+                </div>
+            </div>
+
+            <!-- Vault Section -->
+            <div class="glass-card">
+                <h3 style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 10px;">
+                    <i class="fa-solid fa-vault" style="color: var(--accent-primary);"></i>
+                    Coffre-Fort Numérique
+                </h3>
+                <div class="vault-dropzone" id="vaultDropzone" style="position: relative;">
+                    <div class="scan-line"></div>
+                    <i class="fa-solid fa-cloud-arrow-up"
+                        style="font-size: 3rem; color: var(--border-color); margin-bottom: 1rem;"></i>
+                    <h4>Déposez vos documents officiels</h4>
+                    <p style="color: var(--text-muted); font-size: 0.85rem;">CNI, Diplômes, Certificats d'origine</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mentorship & Learning Hub -->
+        <div style="display: grid; grid-template-columns: 2fr 1.5fr; gap: 1.5rem; margin-bottom: 3rem;" class="reveal">
+            <!-- Learning Stream -->
+            <div class="glass-card">
+                <h3 style="margin-bottom: 1.5rem;">Micro-Learning Stream</h3>
+                <div class="learning-carousel">
+                    <div class="video-thumb" data-title="Pitcher son projet">
+                        <img src="https://images.unsplash.com/photo-1558403194-611308249627?auto=format&fit=crop&w=300"
+                            alt="Video">
+                        <div class="play-btn-overlay"><i class="fa-solid fa-play"></i></div>
+                    </div>
+                    <div class="video-thumb" data-title="Gestion de Budget">
+                        <img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=300"
+                            alt="Video">
+                        <div class="play-btn-overlay"><i class="fa-solid fa-play"></i></div>
+                    </div>
+                    <div class="video-thumb" data-title="Marketing Digital">
+                        <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=300"
+                            alt="Video">
+                        <div class="play-btn-overlay"><i class="fa-solid fa-play"></i></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mentorship Matches -->
+            <div class="glass-card">
+                <h3 style="margin-bottom: 1.5rem;">Coup de pouce (Mentorat)</h3>
+                <div style="display: flex; flex-direction: column; gap: 1rem;">
+                    <div class="mentor-card">
+                        <img src="https://ui-avatars.com/api/?name=Dr+Fosso&background=38bdf8&color=fff"
+                            class="mentor-avatar" alt="Mentor">
+                        <div>
+                            <div style="font-weight: 600;">Dr. Fosso</div>
+                            <div style="font-size: 0.8rem; color: var(--accent-primary);">Expert Agro-Business</div>
+                            <button class="btn-primary"
+                                style="padding: 0.4rem 0.8rem; font-size: 0.75rem; margin-top: 8px;">Contacter</button>
+                        </div>
+                    </div>
+                    <div class="mentor-card">
+                        <img src="https://ui-avatars.com/api/?name=Ing+Kameni&background=818cf8&color=fff"
+                            class="mentor-avatar" alt="Mentor">
+                        <div>
+                            <div style="font-weight: 600;">Ing. Kameni</div>
+                            <div style="font-size: 0.8rem; color: var(--accent-secondary);">Spécialiste Start-up IT
+                            </div>
+                            <button class="btn-primary"
+                                style="padding: 0.4rem 0.8rem; font-size: 0.75rem; margin-top: 8px;">Contacter</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content (Submission list) -->
+        <main class="reveal">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                <h2 style="font-size: 1.5rem;">Mes Projets Soumis</h2>
+                <a href="projects-new.html" class="btn-primary" style="width: auto; padding: 0.75rem 1.5rem;">
+                    <i class="fa-solid fa-plus"></i> Nouveau Projet
+                </a>
+            </div>
+
+            <div id="projectsGrid"
+                style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 1.5rem;">
+                <!-- Projects will be loaded here -->
+            </div>
+
+            <div id="emptyState" style="text-align: center; padding: 5rem; display: none;" class="glass-card">
+                <i class="fa-solid fa-folder-open"
+                    style="font-size: 4rem; color: var(--border-color); margin-bottom: 1.5rem;"></i>
+                <h3>Aucun projet trouvé</h3>
+                <p style="color: var(--text-muted); margin-bottom: 2rem;">Vous n'avez pas encore soumis de dossier à la
+                    délégation.</p>
+                <a href="projects-new.html" class="btn-primary"
+                    style="display: inline-block; width: auto; padding: 1rem 2rem; text-decoration: none;">
+                    Lancer mon premier projet
+                </a>
+            </div>
+        </main>
+    </div>
+
+    <!-- AI Assistant UI -->
+    <div class="ai-assistant-btn" id="aiAssistantBtn">
+        <i class="fa-solid fa-robot"></i>
+    </div>
+
+    <div class="ai-chat-window" id="aiChatWindow">
+        <div class="ai-chat-header">
+            <div class="ai-status"></div>
+            <div>
+                <div style="font-weight: 600;">Assistant Jeunesse AI</div>
+                <div style="font-size: 0.75rem; color: var(--text-muted);">En ligne - Prêt à vous aider</div>
+            </div>
+        </div>
+        <div class="ai-chat-messages" id="aiChatMessages">
+            <div class="msg msg-bot">
+                Bonjour ! Je suis votre assistant virtuel. Comment puis-je vous aider dans votre espace personnel ?
+            </div>
+        </div>
+        <div class="ai-chat-input">
+            <input type="text" id="aiChatInput" placeholder="Posez votre question...">
+            <button id="aiSendBtn"
+                style="background: var(--accent-primary); border: none; width: 40px; height: 40px; border-radius: 50%; color: white; cursor: pointer;">
+                <i class="fa-solid fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script src="assets/js/data-loader.js"></script>
+
+    <script src="assets/js/main.js"></script>
+    <script>
+        function logout() {
+            localStorage.removeItem('currentUser');
+            window.location.href = 'login.html';
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const userJson = localStorage.getItem('currentUser');
+            if (!userJson) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const currentUser = JSON.parse(userJson);
+            document.getElementById('userName').innerText = currentUser.name;
+            document.getElementById('userEmail').innerText = currentUser.email;
+            document.getElementById('userAvatar').src = currentUser.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUser.name)}&size=100&background=38bdf8&color=fff`;
+
+            // Avatar upload functionality
+            const avatarContainer = document.getElementById('avatarContainer');
+            const avatarInput = document.getElementById('avatarInput');
+            const userAvatar = document.getElementById('userAvatar');
+
+            avatarContainer.addEventListener('click', () => {
+                avatarInput.click();
+            });
+
+            avatarInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    if (file.size > 5 * 1024 * 1024) { // 5MB max
+                        showToast('La taille de l\'image ne doit pas dépasser 5MB', 'error');
+                        return;
+                    }
+
+                    if (!file.type.startsWith('image/')) {
+                        showToast('Veuillez sélectionner une image valide', 'error');
+                        return;
+                    }
+
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        const imageData = event.target.result;
+
+                        // Update avatar in UI
+                        userAvatar.src = imageData;
+
+                        // Save to localStorage
+                        currentUser.avatar = imageData;
+                        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+
+                        // Update in users list
+                        const users = JSON.parse(localStorage.getItem('delegation_users') || '[]');
+                        const userIndex = users.findIndex(u => u.email === currentUser.email);
+                        if (userIndex !== -1) {
+                            users[userIndex].avatar = imageData;
+                            localStorage.setItem('delegation_users', JSON.stringify(users));
+                        }
+
+                        showToast('Photo de profil mise à jour avec succès!', 'success');
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            loadClientProjects(currentUser.id);
+        });
+
+        function loadClientProjects(userId) {
+            const projects = JSON.parse(localStorage.getItem('delegation_projects')) || [];
+            const myProjects = projects.filter(p => p.userId === userId);
+
+            const grid = document.getElementById('projectsGrid');
+            const emptyState = document.getElementById('emptyState');
+
+            if (myProjects.length === 0) {
+                grid.style.display = 'none';
+                emptyState.style.display = 'block';
+                return;
+            }
+
+            grid.style.display = 'grid';
+            emptyState.style.display = 'none';
+            grid.innerHTML = '';
+
+            myProjects.forEach(p => {
+                const card = document.createElement('div');
+                card.className = 'project-card-client';
+
+                let statusColor = '#94a3b8';
+                let statusBg = 'rgba(148, 163, 184, 0.1)';
+                let statusLabel = 'En attente';
+
+                if (p.status === 'valide') {
+                    statusColor = '#10b981';
+                    statusBg = 'rgba(16, 185, 129, 0.1)';
+                    statusLabel = 'Validé';
+                } else if (p.status === 'refuse') {
+                    statusColor = '#ef4444';
+                    statusBg = 'rgba(239, 68, 68, 0.1)';
+                    statusLabel = 'Refusé';
+                }
+
+                card.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1.5rem;">
+                        <span style="font-size: 0.8rem; background: rgba(56, 189, 248, 0.1); color: var(--accent-primary); padding: 4px 10px; border-radius: 6px;">${p.category}</span>
+                        <span class="status-pill" style="color: ${statusColor}; background: ${statusBg}; border: 1px solid ${statusColor}44;">${statusLabel}</span>
+                    </div>
+                    <h3 style="margin-bottom: 1rem;">${p.title}</h3>
+                    <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.5rem; flex-grow: 1;">
+                        ${p.description}
+                    </p>
+                    <div style="display: flex; justify-content: space-between; border-top: 1px solid var(--border-color); padding-top: 1rem; color: var(--text-muted); font-size: 0.85rem;">
+                        <span><i class="fa-regular fa-calendar"></i> ${p.date}</span>
+                        <span><i class="fa-solid fa-coins"></i> ${p.budget ? p.budget + ' FCFA' : 'N/A'}</span>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+    </script>
+</body>
+
+</html>

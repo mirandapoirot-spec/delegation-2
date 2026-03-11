@@ -1,0 +1,178 @@
+<!DOCTYPE html> <!-- Déclaration du type de document HTML5 -->
+<html lang="fr"> <!-- Balise racine avec la langue définie sur le français -->
+
+<head> <!-- Section des métadonnées et des ressources externes -->
+    <meta charset="UTF-8"> <!-- Encodage des caractères en UTF-8 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Adaptation responsive pour mobile -->
+    <title>FAQ | Aide | Délégation Jeunesse</title> <!-- Titre de la page pour le navigateur -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css"> <!-- Liaison avec la feuille de style principale -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Styles spécifiques internes pour la mise en page de la FAQ */
+        .faq-container { max-width: 900px; margin: 0 auto; padding: 2rem; }
+        .faq-search { margin-bottom: 3rem; text-align: center; }
+        .search-box { max-width: 500px; margin: 0 auto; position: relative; }
+        .search-input { width: 100%; padding: 1rem 1rem 1rem 3rem; border: 1px solid var(--border-color); border-radius: 25px; background: var(--bg-card); color: var(--text-primary); font-size: 1rem; }
+        .search-icon { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
+        .faq-categories { display: flex; justify-content: center; gap: 1rem; margin-bottom: 3rem; flex-wrap: wrap; }
+        .category-btn { padding: 0.5rem 1.5rem; border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-secondary); border-radius: 25px; cursor: pointer; transition: all 0.3s; }
+        .category-btn:hover, .category-btn.active { background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary)); color: white; border-color: transparent; }
+        .faq-item { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; margin-bottom: 1rem; overflow: hidden; transition: all 0.3s; }
+        .faq-question { padding: 1.5rem; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-weight: 600; }
+        .faq-answer { padding: 0 1.5rem 1.5rem; color: var(--text-muted); line-height: 1.6; display: none; }
+        .faq-item.active .faq-answer { display: block; }
+        .faq-item.active .fa-chevron-down { transform: rotate(180deg); }
+        .faq-item:hover { border-color: var(--accent-primary); }
+        .faq-icon { margin-right: 1rem; color: var(--accent-primary); }
+        .contact-help { text-align: center; margin-top: 4rem; padding: 2rem; background: var(--bg-card); border-radius: 20px; border: 1px solid var(--border-color); }
+    </style>
+    <link rel="stylesheet" href="assets/css/spacing-fix.css">
+</head>
+
+<body> <!-- Début du contenu visible -->
+    <div class="particles" id="particles"></div> <!-- Fond animé avec des particules géré par JS -->
+
+    <nav class="navbar scrolled" id="navbar"> <!-- Barre de navigation fixée -->
+        <div class="container nav-container">
+            <a href="index.html" class="nav-logo floating-slow"> <!-- Logo avec flottement -->
+                <i class="fa-solid fa-layer-group rotate-slow"></i> MINJEC
+            </a>
+            <ul class="nav-links" style="display: flex; align-items: center; gap: 1.2rem;"> <!-- Liens centraux -->
+                <li><a href="index.html" class="link-underline">Accueil</a></li>
+                <li><a href="missions-organigramme.html" class="link-underline">Missions</a></li>
+                <li><a href="programmes.html" class="link-underline">Programmes</a></li>
+                <li><a href="projets.html" class="link-underline">Projets</a></li>
+                <li><a href="galerie.html" class="link-underline">Galerie</a></li>
+                <li><a href="agora.html" class="link-underline" data-t="agora">Agora</a></li>
+                <li><a href="actualites.html" class="link-underline">Actualités</a></li>
+                <li>
+                    <a href="#" class="link-underline active">Plus <i class="fa-solid fa-chevron-down" style="font-size: 0.7rem; margin-left: 3px;"></i></a>
+                    <div class="dropdown-menu"> <!-- Menu déroulant Plus -->
+                        <a href="about.html" class="dropdown-item"><i class="fa-solid fa-info-circle"></i> À propos</a>
+                        <a href="associations.html" class="dropdown-item"><i class="fa-solid fa-users"></i> Associations</a>
+                        <a href="ressources.html" class="dropdown-item"><i class="fa-solid fa-book"></i> Ressources</a>
+                        <a href="evenements.html" class="dropdown-item"><i class="fa-solid fa-calendar-days"></i> Événements</a>
+                        <a href="faq.html" class="dropdown-item active"><i class="fa-solid fa-circle-question"></i> FAQ</a>
+                        <a href="contact.html" class="dropdown-item"><i class="fa-solid fa-envelope"></i> Contact</a>
+                        <a href="archives.html" class="dropdown-item"><i class="fa-solid fa-box-archive"></i> Archives</a>
+                    </div>
+                </li>
+            </ul>
+            <div style="display: flex; align-items: center; gap: 1.5rem;"> <!-- Groupe d'actions à droite -->
+                <button class="theme-toggle" id="themeToggle" title="Changer de mode"><i class="fa-solid fa-moon"></i><i class="fa-solid fa-sun"></i></button>
+                <a href="login.html" class="btn-primary"><i class="fa-solid fa-user-lock"></i> Connexion</a>
+            </div>
+            <button class="mobile-menu-toggle" id="mobileMenuToggle"> <!-- Hamburger mobile -->
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <div class="faq-container" style="margin-top: 6rem;"> <!-- Contenu principal FAQ -->
+        <div class="page-header reveal"> <!-- Entête -->
+            <h1><i class="fa-solid fa-circle-question"></i> Questions Fréquentes</h1>
+            <p>Trouvez rapidement les réponses à vos questions les plus courantes</p>
+        </div>
+
+        <div class="faq-search reveal"> <!-- Recherche -->
+            <div class="search-box">
+                <i class="fa-solid fa-search search-icon"></i>
+                <input type="text" class="search-input" id="faqSearch" placeholder="Rechercher une question...">
+            </div>
+        </div>
+
+        <div class="faq-categories reveal"> <!-- Filtres catégories -->
+            <button class="category-btn active" data-category="all">Toutes</button>
+            <button class="category-btn" data-category="projets">Projets</button>
+            <button class="category-btn" data-category="financement">Financement</button>
+            <button class="category-btn" data-category="compte">Compte</button>
+            <button class="category-btn" data-category="technique">Technique</button>
+        </div>
+
+        <div class="faq-list reveal stagger-children"> <!-- Liste de questions -->
+            <div class="faq-item" data-category="projets"> <!-- Question Projet 1 -->
+                <div class="faq-question"><div><i class="fa-solid fa-lightbulb faq-icon"></i> Comment soumettre un projet ?</div><i class="fa-solid fa-chevron-down"></i></div>
+                <div class="faq-answer">Pour soumettre un projet, vous devez d'abord créer un compte sur la plateforme. Une fois connecté, rendez-vous dans votre dashboard et cliquez sur "Nouveau Projet". Remplissez le formulaire avec les détails de votre projet : titre, description, budget, durée, et catégorie. Votre projet sera ensuite examiné par notre équipe dans un délai de 5 à 10 jours ouvrables.</div>
+            </div>
+
+            <div class="faq-item" data-category="projets"> <!-- Question Projet 2 -->
+                <div class="faq-question"><div><i class="fa-solid fa-clock faq-icon"></i> Combien de temps pour une réponse ?</div><i class="fa-solid fa-chevron-down"></i></div>
+                <div class="faq-answer">Le délai d'examen des projets varie selon leur complexité. En général, comptez 5 à 10 jours ouvrables pour une première réponse. Les projets nécessitant une expertise technique particulière peuvent prendre jusqu'à 15 jours.</div>
+            </div>
+
+            <div class="faq-item" data-category="financement"> <!-- Question Financement 1 -->
+                <div class="faq-question"><div><i class="fa-solid fa-money-bill-wave faq-icon"></i> Quels sont les montants de financement ?</div><i class="fa-solid fa-chevron-down"></i></div>
+                <div class="faq-answer">Le programme PTS-JEUNES offre des financements allant de 500 000 FCFA à 10 000 000 FCFA selon la nature et l'envergure de votre projet.</div>
+            </div>
+
+            <div class="faq-item" data-category="compte"> <!-- Question Compte 1 -->
+                <div class="faq-question"><div><i class="fa-solid fa-user-plus faq-icon"></i> Comment créer un compte ?</div><i class="fa-solid fa-chevron-down"></i></div>
+                <div class="faq-answer">Cliquez sur "Connexion" puis "Créer un compte". Saisissez vos infos et vous recevrez un mail de confirmation sous 24h.</div>
+            </div>
+
+            <div class="faq-item" data-category="technique"> <!-- Question Technique 1 -->
+                <div class="faq-question"><div><i class="fa-solid fa-mobile-screen faq-icon"></i> Est-ce accessible sur mobile ?</div><i class="fa-solid fa-chevron-down"></i></div>
+                <div class="faq-answer">Oui, la plateforme est entièrement responsive et optimisée pour tous les appareils.</div>
+            </div>
+        </div>
+
+        <div class="contact-help reveal"> <!-- Aide contact -->
+            <h3><i class="fa-solid fa-headset"></i> Pas de réponse ?</h3>
+            <p>Notre équipe support est là pour vous aider.</p>
+            <div style="display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap;">
+                <a href="contact.html" class="btn-primary">Nous écrire</a>
+                <a href="tel:+237600000000" class="btn-secondary">+237 600 00 00 00</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div> <!-- Toasts notifications -->
+
+    <script src="assets/js/data-loader.js"></script> <!-- JS loader -->
+    <script src="assets/js/main.js"></script> <!-- JS global logic -->
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const faqItems = document.querySelectorAll('.faq-item');
+            faqItems.forEach(item => {
+                const question = item.querySelector('.faq-question');
+                question.addEventListener('click', () => {
+                    const isActive = item.classList.contains('active');
+                    faqItems.forEach(oi => oi.classList.remove('active'));
+                    if (!isActive) item.classList.add('active');
+                });
+            });
+
+            const categoryBtns = document.querySelectorAll('.category-btn');
+            categoryBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    categoryBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    const cat = btn.getAttribute('data-category');
+                    faqItems.forEach(item => {
+                        const itemCat = item.getAttribute('data-category');
+                        if (cat === 'all' || cat === itemCat) item.style.display = 'block';
+                        else { item.style.display = 'none'; item.classList.remove('active'); }
+                    });
+                });
+            });
+
+            const searchInput = document.getElementById('faqSearch');
+            searchInput.addEventListener('input', (e) => {
+                const term = e.target.value.toLowerCase();
+                faqItems.forEach(item => {
+                    const q = item.querySelector('.faq-question div').textContent.toLowerCase();
+                    const a = item.querySelector('.faq-answer').textContent.toLowerCase();
+                    if (q.includes(term) || a.includes(term)) item.style.display = 'block';
+                    else { item.style.display = 'none'; item.classList.remove('active'); }
+                });
+                if (term) {
+                    categoryBtns.forEach(b => b.classList.remove('active'));
+                    document.querySelector('[data-category="all"]').classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html> <!-- Fin FAQ -->

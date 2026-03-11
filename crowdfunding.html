@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crowdfunding | MINJEC Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background: var(--bg-dark);
+            background-image: var(--bg-gradient);
+            min-height: 100vh;
+        }
+
+        .crowdfunding-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .hero-section {
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 3rem 2rem;
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .project-card {
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--accent-primary);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .project-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #10b981, #38bdf8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: white;
+            position: relative;
+        }
+
+        .project-status {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.3rem 0.8rem;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .project-content {
+            padding: 1.5rem;
+        }
+
+        .project-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 0.8rem;
+            line-height: 1.4;
+        }
+
+        .project-description {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+
+        .funding-progress {
+            margin-bottom: 1rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 0.8rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981, #38bdf8);
+            border-radius: 10px;
+            transition: width 1s ease;
+        }
+
+        .funding-stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+        }
+
+        .amount-raised {
+            font-weight: 700;
+            color: var(--accent-primary);
+        }
+
+        .amount-goal {
+            color: var(--text-muted);
+        }
+
+        .project-meta {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .project-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="crowdfunding-container">
+        <header style="margin-bottom: 2rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h1 class="animated-gradient-text" style="font-size: 2.5rem; margin-bottom: 0.5rem;">
+                        <i class="fa-solid fa-hand-holding-dollar"></i> Crowdfunding
+                    </h1>
+                    <p style="color: var(--text-muted);">Financez et soutenez les projets innovants de la jeunesse</p>
+                </div>
+                <div style="display: flex; gap: 1rem;">
+                    <button class="btn-primary" onclick="openCreateProjectModal()">
+                        <i class="fa-solid fa-plus"></i> Créer un projet
+                    </button>
+                    <a href="index.html" class="btn-secondary">
+                        <i class="fa-solid fa-home"></i> Accueil
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <!-- Hero Section -->
+        <div class="hero-section">
+            <h2 style="font-size: 2rem; margin-bottom: 1rem; color: var(--text-main);">
+                Ensemble, finançons l'avenir
+            </h2>
+            <p style="color: var(--text-muted); font-size: 1.1rem; margin-bottom: 2rem;">
+                Découvrez des projets innovants portés par des jeunes entrepreneurs du Ndé et contribuez à leur réussite
+            </p>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; max-width: 600px; margin: 0 auto;">
+                <div>
+                    <div style="font-size: 2rem; font-weight: 700; color: var(--accent-primary);" id="totalProjects">0</div>
+                    <div style="color: var(--text-muted); font-size: 0.9rem;">Projets actifs</div>
+                </div>
+                <div>
+                    <div style="font-size: 2rem; font-weight: 700; color: var(--accent-primary);" id="totalRaised">0 FCFA</div>
+                    <div style="color: var(--text-muted); font-size: 0.9rem;">Collectés</div>
+                </div>
+                <div>
+                    <div style="font-size: 2rem; font-weight: 700; color: var(--accent-primary);" id="totalBackers">0</div>
+                    <div style="color: var(--text-muted); font-size: 0.9rem;">Contributeurs</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Projects Grid -->
+        <div class="projects-grid" id="projectsGrid">
+            <!-- Projets chargés dynamiquement -->
+        </div>
+    </div>
+
+    <script src="assets/js/main.js"></script>
+    <script>
+        let projects = [];
+        let currentUser = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (!currentUser) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            loadProjects();
+            renderProjects();
+            updateStats();
+        });
+
+        function loadProjects() {
+            projects = JSON.parse(localStorage.getItem('crowdfunding_projects')) || [];
+            
+            if (projects.length === 0) {
+                createSampleProjects();
+            }
+        }
+
+        function createSampleProjects() {
+            const sampleProjects = [
+                {
+                    id: 'cf_1',
+                    title: 'Ferme Aquaponique Innovante',
+                    description: 'Système d\'aquaponie moderne combinant élevage de poissons et culture de légumes pour une agriculture durable.',
+                    creator: 'Marie Kamga',
+                    creatorEmail: 'marie@example.com',
+                    goal: 5000000,
+                    raised: 3200000,
+                    backers: 45,
+                    daysLeft: 15,
+                    category: 'Agriculture',
+                    status: 'active',
+                    image: 'fa-seedling',
+                    rewards: [
+                        { amount: 10000, title: 'Supporter', description: 'Remerciements publics' },
+                        { amount: 50000, title: 'Légumes bio', description: 'Panier de légumes pendant 1 mois' },
+                        { amount: 100000, title: 'Visite guidée', description: 'Visite de la ferme + formation' }
+                    ],
+                    createdAt: Date.now() - 2592000000 // 30 jours
+                },
+                {
+                    id: 'cf_2',
+                    title: 'App Mobile de Livraison Locale',
+                    description: 'Application mobile pour connecter les producteurs locaux aux consommateurs avec livraison rapide.',
+                    creator: 'Samuel Fotso',
+                    creatorEmail: 'samuel@example.com',
+                    goal: 3000000,
+                    raised: 1800000,
+                    backers: 32,
+                    daysLeft: 22,
+                    category: 'Technologie',
+                    status: 'active',
+                    image: 'fa-mobile-alt',
+                    rewards: [
+                        { amount: 5000, title: 'Early Access', description: 'Accès anticipé à l\'app' },
+                        { amount: 25000, title: 'Premium', description: 'Compte premium 6 mois' },
+                        { amount: 75000, title: 'Partenaire', description: 'Devenir partenaire privilégié' }
+                    ],
+                    createdAt: Date.now() - 1728000000 // 20 jours
+                }
+            ];
+
+            projects = sampleProjects;
+            localStorage.setItem('crowdfunding_projects', JSON.stringify(projects));
+        }
+
+        function renderProjects() {
+            const grid = document.getElementById('projectsGrid');
+            
+            if (projects.length === 0) {
+                grid.innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 4rem; color: var(--text-muted);">
+                        <i class="fa-solid fa-hand-holding-dollar" style="font-size: 4rem; margin-bottom: 1rem; opacity: 0.3;"></i>
+                        <h3>Aucun projet pour le moment</h3>
+                        <p>Soyez le premier à créer un projet de crowdfunding!</p>
+                        <button class="btn-primary" onclick="openCreateProjectModal()" style="margin-top: 1rem;">
+                            <i class="fa-solid fa-plus"></i> Créer un projet
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+
+            const html = projects.map(project => {
+                const percentage = Math.min((project.raised / project.goal) * 100, 100);
+                const timeLeft = project.daysLeft > 0 ? `${project.daysLeft} jours restants` : 'Terminé';
+                
+                return `
+                    <div class="project-card" onclick="viewProject('${project.id}')">
+                        <div class="project-image">
+                            <i class="fa-solid ${project.image}"></i>
+                            <div class="project-status">${project.status === 'active' ? 'Actif' : 'Terminé'}</div>
+                        </div>
+                        <div class="project-content">
+                            <h3 class="project-title">${project.title}</h3>
+                            <p class="project-description">${project.description}</p>
+                            
+                            <div class="funding-progress">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: ${percentage}%;"></div>
+                                </div>
+                                <div class="funding-stats">
+                                    <span class="amount-raised">${formatAmount(project.raised)} FCFA</span>
+                                    <span class="amount-goal">sur ${formatAmount(project.goal)} FCFA</span>
+                                </div>
+                                <div style="margin-top: 0.5rem; font-size: 0.85rem; color: var(--text-muted);">
+                                    ${Math.round(percentage)}% financé
+                                </div>
+                            </div>
+                            
+                            <div class="project-meta">
+                                <div class="meta-item">
+                                    <i class="fa-solid fa-users"></i>
+                                    <span>${project.backers} contributeurs</span>
+                                </div>
+                                <div class="meta-item">
+                                    <i class="fa-solid fa-clock"></i>
+                                    <span>${timeLeft}</span>
+                                </div>
+                                <div class="meta-item">
+                                    <i class="fa-solid fa-user"></i>
+                                    <span>${project.creator}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="project-actions">
+                                <button class="btn-primary" onclick="event.stopPropagation(); contributeToProject('${project.id}')" style="flex: 1;">
+                                    <i class="fa-solid fa-heart"></i> Contribuer
+                                </button>
+                                <button class="btn-secondary" onclick="event.stopPropagation(); shareProject('${project.id}')">
+                                    <i class="fa-solid fa-share"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            grid.innerHTML = html;
+        }
+
+        function updateStats() {
+            const totalRaised = projects.reduce((sum, p) => sum + p.raised, 0);
+            const totalBackers = projects.reduce((sum, p) => sum + p.backers, 0);
+
+            document.getElementById('totalProjects').textContent = projects.length;
+            document.getElementById('totalRaised').textContent = formatAmount(totalRaised);
+            document.getElementById('totalBackers').textContent = totalBackers;
+        }
+
+        function viewProject(projectId) {
+            alert(`Voir le projet: ${projectId}`);
+        }
+
+        function contributeToProject(projectId) {
+            const project = projects.find(p => p.id === projectId);
+            const amount = prompt(`Montant de votre contribution pour "${project.title}" (FCFA):`);
+            
+            if (amount && !isNaN(amount) && parseInt(amount) > 0) {
+                project.raised += parseInt(amount);
+                project.backers += 1;
+                
+                localStorage.setItem('crowdfunding_projects', JSON.stringify(projects));
+                renderProjects();
+                updateStats();
+                
+                showToast(`Merci pour votre contribution de ${formatAmount(amount)} FCFA!`, 'success');
+            }
+        }
+
+        function shareProject(projectId) {
+            const project = projects.find(p => p.id === projectId);
+            if (navigator.share) {
+                navigator.share({
+                    title: project.title,
+                    text: project.description,
+                    url: window.location.href
+                });
+            } else {
+                navigator.clipboard.writeText(window.location.href);
+                showToast('Lien copié dans le presse-papiers', 'success');
+            }
+        }
+
+        function openCreateProjectModal() {
+            alert('Fonctionnalité de création de projet à venir!');
+        }
+
+        function formatAmount(amount) {
+            return new Intl.NumberFormat('fr-FR').format(amount);
+        }
+
+        function showToast(message, type) {
+            if (window.showToast) {
+                window.showToast(message, type);
+            } else {
+                alert(message);
+            }
+        }
+    </script>
+</body>
+</html>

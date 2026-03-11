@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Learning | MINJEC Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background: var(--bg-dark);
+            background-image: var(--bg-gradient);
+            min-height: 100vh;
+        }
+
+        .elearning-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .course-card {
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .course-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--accent-primary);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .course-thumbnail {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #10b981, #38bdf8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: white;
+            position: relative;
+        }
+
+        .course-level {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.3rem 0.8rem;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .course-content {
+            padding: 1.5rem;
+        }
+
+        .course-category {
+            color: var(--accent-primary);
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        .course-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 0.8rem;
+            line-height: 1.4;
+        }
+
+        .course-description {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+
+        .course-meta {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .course-progress {
+            margin-bottom: 1rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981, #38bdf8);
+            border-radius: 10px;
+            transition: width 1s ease;
+        }
+
+        .progress-text {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .course-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .filter-section {
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .filter-row {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .filter-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-main);
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .filter-group select,
+        .filter-group input {
+            width: 100%;
+            padding: 0.6rem 0.8rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-main);
+            font-size: 0.85rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #10b981, #38bdf8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            margin: 0 auto 1rem;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 0.3rem;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            overflow-y: auto;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 2rem;
+            max-width: 900px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideUp 0.3s ease;
+        }
+
+        .course-player {
+            background: #000;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            position: relative;
+            aspect-ratio: 16/9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .play-button {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: rgba(56, 189, 248, 0.9);
+            border: none;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .play-button:hover {
+            background: var(--accent-primary);
+            transform: scale(1.1);
+        }
+
+        .lesson-list {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1rem;
+        }
+
+        .lesson-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .lesson-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .lesson-item.completed {
+            opacity: 0.7;
+        }
+
+        .lesson-item.current {
+            background: rgba(56, 189, 248, 0.1);
+            border-left: 4px solid var(--accent-primary);
+        }
+
+        .lesson-number {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .lesson-number.completed {
+            background: #10b981;
+            color: white;
+        }
+
+        .lesson-info {
+            flex: 1;
+        }
+
+        .lesson-title {
+            font-weight: 500;
+            color: var(--text-main);
+            margin-bottom: 0.3rem;
+        }
+
+        .lesson-duration {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .quiz-section {
+            background: rgba(251, 191, 36, 0.1);
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .quiz-question {
+            margin-bottom: 1.5rem;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .quiz-option {
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .quiz-option:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--accent-primary);
+        }
+
+        .quiz-option.selected {
+            background: rgba(56, 189, 248, 0.1);
+            border-color: var(--accent-primary);
+        }
+
+        .certificate-badge {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="elearning-container">
+        <header style="margin-bottom: 2rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h1 class="animated-gradient-text" style="font-size: 2.5rem; margin-bottom: 0.5rem;">
+                        <i class="fa-solid fa-graduation-cap"></i> E-Learning
+                    </h1>
+                    <p style="color: var(--text-muted);">Développez vos compétences avec nos formations en ligne</p>
+                </div>
+                <a href="index.html" class="btn-secondary">
+                    <i class="fa-solid fa-home"></i> Accueil
+                </a>
+            </div>
+        </header>
+
+        <!-- Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fa-solid fa-book"></i>
+                </div>
+                <div class="stat-value" id="totalCourses">0</div>
+                <div class="stat-label">Cours disponibles</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fa-solid fa-play-circle"></i>
+                </div>
+                <div class="stat-value" id="enrolledCourses">0</div>
+                <div class="stat-label">Cours suivis</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fa-solid fa-certificate"></i>
+                </div>
+                <div class="stat-value" id="completedCourses">0</div>
+                <div class="stat-label">Certifications</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fa-solid fa-clock"></i>
+                </div>
+                <div class="stat-value" id="totalHours">0h</div>
+                <div class="stat-label">Temps d'apprentissage</div>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="filter-section">
+            <h3 style="color: var(--text-main); margin-bottom: 1rem;">
+                <i class="fa-solid fa-filter"></i> Filtres
+            </h3>
+            <div class="filter-row">
+                <div class="filter-group">
+                    <label>Catégorie</label>
+                    <select id="categoryFilter" onchange="filterCourses()">
+                        <option value="">Toutes les catégories</option>
+                        <option value="business">Business & Entrepreneuriat</option>
+                        <option value="tech">Technologie</option>
+                        <option value="marketing">Marketing</option>
+                        <option value="finance">Finance</option>
+                        <option value="leadership">Leadership</option>
+                        <option value="agriculture">Agriculture</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Niveau</label>
+                    <select id="levelFilter" onchange="filterCourses()">
+                        <option value="">Tous les niveaux</option>
+                        <option value="beginner">Débutant</option>
+                        <option value="intermediate">Intermédiaire</option>
+                        <option value="advanced">Avancé</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Durée</label>
+                    <select id="durationFilter" onchange="filterCourses()">
+                        <option value="">Toutes les durées</option>
+                        <option value="short">Moins de 2h</option>
+                        <option value="medium">2-5h</option>
+                        <option value="long">Plus de 5h</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Recherche</label>
+                    <input type="text" id="searchInput" placeholder="Rechercher un cours..." oninput="filterCourses()">
+                </div>
+            </div>
+        </div>
+
+        <!-- Courses Grid -->
+        <div class="courses-grid" id="coursesGrid">
+            <!-- Cours chargés dynamiquement -->
+        </div>
+    </div>
+
+    <!-- Modal Cours -->
+    <div class="modal" id="courseModal">
+        <div class="modal-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                <h3 style="color: var(--text-main);" id="modalCourseTitle">Titre du cours</h3>
+                <button class="btn-secondary" onclick="closeCourseModal()" style="padding: 0.5rem 1rem;">
+                    <i class="fa-solid fa-times"></i>
+                </button>
+            </div>
+
+            <!-- Video Player -->
+            <div class="course-player" id="coursePlayer">
+                <button class="play-button" onclick="playVideo()">
+                    <i class="fa-solid fa-play"></i>
+                </button>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem;">
+                <!-- Course Content -->
+                <div>
+                    <div id="courseDescription" style="color: var(--text-muted); line-height: 1.6; margin-bottom: 2rem;">
+                        Description du cours...
+                    </div>
+
+                    <!-- Quiz Section -->
+                    <div class="quiz-section" id="quizSection" style="display: none;">
+                        <h4 style="color: var(--text-main); margin-bottom: 1rem;">
+                            <i class="fa-solid fa-question-circle"></i> Quiz de validation
+                        </h4>
+                        <div class="quiz-question">
+                            <p style="color: var(--text-main); font-weight: 500; margin-bottom: 1rem;" id="quizQuestion">
+                                Question du quiz...
+                            </p>
+                            <div class="quiz-options" id="quizOptions">
+                                <!-- Options du quiz -->
+                            </div>
+                        </div>
+                        <button class="btn-primary" onclick="submitQuiz()" id="submitQuizBtn">
+                            <i class="fa-solid fa-check"></i> Valider la réponse
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Lessons List -->
+                <div>
+                    <h4 style="color: var(--text-main); margin-bottom: 1rem;">
+                        <i class="fa-solid fa-list"></i> Contenu du cours
+                    </h4>
+                    <div class="lesson-list" id="lessonsList">
+                        <!-- Leçons chargées dynamiquement -->
+                    </div>
+
+                    <div style="margin-top: 2rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                            <span style="color: var(--text-main); font-weight: 500;">Progression</span>
+                            <span style="color: var(--accent-primary); font-weight: 600;" id="courseProgressText">0%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="courseProgressBar" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/main.js"></script>
+    <script>
+        let courses = [];
+        let enrollments = [];
+        let currentUser = null;
+        let currentCourse = null;
+        let currentLesson = 0;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (!currentUser) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            loadCourses();
+            loadEnrollments();
+            renderCourses();
+            updateStats();
+        });
+
+        function loadCourses() {
+            courses = JSON.parse(localStorage.getItem('elearning_courses')) || [];
+            
+            if (courses.length === 0) {
+                createSampleCourses();
+            }
+        }
+
+        function createSampleCourses() {
+            const sampleCourses = [
+                {
+                    id: 'course_1',
+                    title: 'Entrepreneuriat pour Débutants',
+                    description: 'Apprenez les bases de l\'entrepreneuriat et comment créer votre première entreprise.',
+                    category: 'business',
+                    level: 'beginner',
+                    duration: 180, // minutes
+                    instructor: 'Dr. Marie Kamga',
+                    rating: 4.8,
+                    students: 245,
+                    price: 0,
+                    thumbnail: 'fa-rocket',
+                    lessons: [
+                        { title: 'Introduction à l\'entrepreneuriat', duration: 15, completed: false },
+                        { title: 'Identifier une opportunité', duration: 20, completed: false },
+                        { title: 'Étude de marché', duration: 25, completed: false },
+                        { title: 'Business plan', duration: 30, completed: false },
+                        { title: 'Financement', duration: 25, completed: false },
+                        { title: 'Lancement', duration: 20, completed: false }
+                    ],
+                    quiz: {
+                        question: 'Quelle est la première étape pour créer une entreprise?',
+                        options: [
+                            'Trouver des investisseurs',
+                            'Identifier une opportunité de marché',
+                            'Créer un site web',
+                            'Embaucher des employés'
+                        ],
+                        correct: 1
+                    }
+                },
+                {
+                    id: 'course_2',
+                    title: 'Marketing Digital Avancé',
+                    description: 'Maîtrisez les stratégies de marketing digital pour développer votre business en ligne.',
+                    category: 'marketing',
+                    level: 'intermediate',
+                    duration: 240,
+                    instructor: 'Samuel Fotso',
+                    rating: 4.9,
+                    students: 189,
+                    price: 25000,
+                    thumbnail: 'fa-bullhorn',
+                    lessons: [
+                        { title: 'Stratégie de contenu', duration: 30, completed: false },
+                        { title: 'SEO et référencement', duration: 35, completed: false },
+                        { title: 'Publicité Facebook', duration: 40, completed: false },
+                        { title: 'Email marketing', duration: 25, completed: false },
+                        { title: 'Analytics et mesure', duration: 30, completed: false }
+                    ],
+                    quiz: {
+                        question: 'Que signifie SEO?',
+                        options: [
+                            'Social Engine Optimization',
+                            'Search Engine Optimization',
+                            'Sales Enhancement Online',
+                            'Strategic Email Operations'
+                        ],
+                        correct: 1
+                    }
+                },
+                {
+                    id: 'course_3',
+                    title: 'Agriculture Moderne et Durable',
+                    description: 'Techniques modernes d\'agriculture durable et rentable pour les jeunes agriculteurs.',
+                    category: 'agriculture',
+                    level: 'intermediate',
+                    duration: 300,
+                    instructor: 'Ing. Paul Nkomo',
+                    rating: 4.7,
+                    students: 156,
+                    price: 15000,
+                    thumbnail: 'fa-seedling',
+                    lessons: [
+                        { title: 'Agriculture biologique', duration: 40, completed: false },
+                        { title: 'Irrigation moderne', duration: 35, completed: false },
+                        { title: 'Gestion des sols', duration: 45, completed: false },
+                        { title: 'Marketing agricole', duration: 30, completed: false },
+                        { title: 'Coopératives agricoles', duration: 25, completed: false }
+                    ],
+                    quiz: {
+                        question: 'Quel est l\'avantage principal de l\'agriculture biologique?',
+                        options: [
+                            'Coût réduit',
+                            'Respect de l\'environnement',
+                            'Rendement plus élevé',
+                            'Moins de travail'
+                        ],
+                        correct: 1
+                    }
+                },
+                {
+                    id: 'course_4',
+                    title: 'Leadership et Management',
+                    description: 'Développez vos compétences de leadership pour diriger efficacement une équipe.',
+                    category: 'leadership',
+                    level: 'advanced',
+                    duration: 200,
+                    instructor: 'Dr. Françoise Mballa',
+                    rating: 4.9,
+                    students: 98,
+                    price: 30000,
+                    thumbnail: 'fa-users',
+                    lessons: [
+                        { title: 'Styles de leadership', duration: 25, completed: false },
+                        { title: 'Communication efficace', duration: 30, completed: false },
+                        { title: 'Gestion des conflits', duration: 35, completed: false },
+                        { title: 'Motivation d\'équipe', duration: 25, completed: false },
+                        { title: 'Prise de décision', duration: 30, completed: false }
+                    ],
+                    quiz: {
+                        question: 'Quel est le style de leadership le plus efficace?',
+                        options: [
+                            'Autoritaire',
+                            'Démocratique',
+                            'Laissez-faire',
+                            'Cela dépend de la situation'
+                        ],
+                        correct: 3
+                    }
+                }
+            ];
+
+            courses = sampleCourses;
+            localStorage.setItem('elearning_courses', JSON.stringify(courses));
+        }
+
+        function loadEnrollments() {
+            enrollments = JSON.parse(localStorage.getItem('course_enrollments')) || [];
+        }
+
+        function renderCourses() {
+            let filteredCourses = courses;
+
+            // Appliquer les filtres
+            const category = document.getElementById('categoryFilter').value;
+            const level = document.getElementById('levelFilter').value;
+            const duration = document.getElementById('durationFilter').value;
+            const search = document.getElementById('searchInput').value.toLowerCase();
+
+            if (category) filteredCourses = filteredCourses.filter(c => c.category === category);
+            if (level) filteredCourses = filteredCourses.filter(c => c.level === level);
+            if (search) filteredCourses = filteredCourses.filter(c => 
+                c.title.toLowerCase().includes(search) || 
+                c.description.toLowerCase().includes(search)
+            );
+
+            if (duration) {
+                filteredCourses = filteredCourses.filter(c => {
+                    if (duration === 'short') return c.duration < 120;
+                    if (duration === 'medium') return c.duration >= 120 && c.duration <= 300;
+                    if (duration === 'long') return c.duration > 300;
+                    return true;
+                });
+            }
+
+            const html = filteredCourses.map(course => {
+                const enrollment = enrollments.find(e => e.courseId === course.id && e.userId === currentUser.email);
+                const progress = enrollment ? enrollment.progress : 0;
+                const isEnrolled = !!enrollment;
+                const isCompleted = progress >= 100;
+
+                const hours = Math.floor(course.duration / 60);
+                const minutes = course.duration % 60;
+                const durationText = hours > 0 ? `${hours}h ${minutes}min` : `${minutes}min`;
+
+                return `
+                    <div class="course-card">
+                        ${isCompleted ? '<div class="certificate-badge"><i class="fa-solid fa-certificate"></i> Certifié</div>' : ''}
+                        <div class="course-thumbnail">
+                            <i class="fa-solid ${course.thumbnail}"></i>
+                            <div class="course-level">${course.level === 'beginner' ? 'Débutant' : course.level === 'intermediate' ? 'Intermédiaire' : 'Avancé'}</div>
+                        </div>
+                        <div class="course-content">
+                            <div class="course-category">${getCategoryName(course.category)}</div>
+                            <h3 class="course-title">${course.title}</h3>
+                            <p class="course-description">${course.description}</p>
+                            
+                            <div class="course-meta">
+                                <div class="meta-item">
+                                    <i class="fa-solid fa-clock"></i>
+                                    <span>${durationText}</span>
+                                </div>
+                                <div class="meta-item">
+                                    <i class="fa-solid fa-star"></i>
+                                    <span>${course.rating}</span>
+                                </div>
+                                <div class="meta-item">
+                                    <i class="fa-solid fa-users"></i>
+                                    <span>${course.students}</span>
+                                </div>
+                            </div>
+
+                            ${isEnrolled ? `
+                                <div class="course-progress">
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: ${progress}%;"></div>
+                                    </div>
+                                    <div class="progress-text">${progress}% terminé</div>
+                                </div>
+                            ` : ''}
+
+                            <div class="course-actions">
+                                ${isEnrolled ? `
+                                    <button class="btn-primary" onclick="openCourse('${course.id}')" style="flex: 1;">
+                                        <i class="fa-solid fa-play"></i> ${progress > 0 ? 'Continuer' : 'Commencer'}
+                                    </button>
+                                ` : `
+                                    <button class="btn-primary" onclick="enrollCourse('${course.id}')" style="flex: 1;">
+                                        <i class="fa-solid fa-plus"></i> ${course.price > 0 ? `S'inscrire - ${course.price} FCFA` : 'S\'inscrire gratuitement'}
+                                    </button>
+                                `}
+                                <button class="btn-secondary" onclick="previewCourse('${course.id}')">
+                                    <i class="fa-solid fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            document.getElementById('coursesGrid').innerHTML = html;
+        }
+
+        function getCategoryName(category) {
+            const names = {
+                business: 'Business',
+                tech: 'Technologie',
+                marketing: 'Marketing',
+                finance: 'Finance',
+                leadership: 'Leadership',
+                agriculture: 'Agriculture'
+            };
+            return names[category] || category;
+        }
+
+        function filterCourses() {
+            renderCourses();
+        }
+
+        function enrollCourse(courseId) {
+            const course = courses.find(c => c.id === courseId);
+            
+            if (course.price > 0) {
+                if (!confirm(`Ce cours coûte ${course.price} FCFA. Voulez-vous vous inscrire?`)) {
+                    return;
+                }
+            }
+
+            const enrollment = {
+                id: `enrollment_${Date.now()}`,
+                userId: currentUser.email,
+                courseId: courseId,
+                enrolledAt: Date.now(),
+                progress: 0,
+                completedLessons: [],
+                quizCompleted: false
+            };
+
+            enrollments.push(enrollment);
+            localStorage.setItem('course_enrollments', JSON.stringify(enrollments));
+
+            renderCourses();
+            updateStats();
+            showToast('Inscription réussie!', 'success');
+        }
+
+        function openCourse(courseId) {
+            currentCourse = courses.find(c => c.id === courseId);
+            const enrollment = enrollments.find(e => e.courseId === courseId && e.userId === currentUser.email);
+            
+            document.getElementById('modalCourseTitle').textContent = currentCourse.title;
+            document.getElementById('courseDescription').textContent = currentCourse.description;
+            
+            renderLessons(enrollment);
+            updateCourseProgress(enrollment);
+            
+            document.getElementById('courseModal').classList.add('active');
+        }
+
+        function renderLessons(enrollment) {
+            const completedLessons = enrollment ? enrollment.completedLessons : [];
+            
+            const html = currentCourse.lessons.map((lesson, index) => {
+                const isCompleted = completedLessons.includes(index);
+                const isCurrent = index === currentLesson;
+                
+                return `
+                    <div class="lesson-item ${isCompleted ? 'completed' : ''} ${isCurrent ? 'current' : ''}" 
+                         onclick="selectLesson(${index})">
+                        <div class="lesson-number ${isCompleted ? 'completed' : ''}">
+                            ${isCompleted ? '<i class="fa-solid fa-check"></i>' : index + 1}
+                        </div>
+                        <div class="lesson-info">
+                            <div class="lesson-title">${lesson.title}</div>
+                            <div class="lesson-duration">${lesson.duration} min</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            document.getElementById('lessonsList').innerHTML = html;
+        }
+
+        function selectLesson(lessonIndex) {
+            currentLesson = lessonIndex;
+            renderLessons(enrollments.find(e => e.courseId === currentCourse.id && e.userId === currentUser.email));
+            
+            // Simuler le chargement de la leçon
+            document.getElementById('coursePlayer').innerHTML = `
+                <div style="color: white; text-align: center;">
+                    <h3>${currentCourse.lessons[lessonIndex].title}</h3>
+                    <p>Durée: ${currentCourse.lessons[lessonIndex].duration} minutes</p>
+                    <button class="play-button" onclick="playVideo()">
+                        <i class="fa-solid fa-play"></i>
+                    </button>
+                </div>
+            `;
+        }
+
+        function playVideo() {
+            // Simuler la lecture vidéo
+            document.getElementById('coursePlayer').innerHTML = `
+                <div style="color: white; text-align: center; padding: 2rem;">
+                    <i class="fa-solid fa-play-circle" style="font-size: 4rem; margin-bottom: 1rem;"></i>
+                    <p>Vidéo en cours de lecture...</p>
+                    <button class="btn-primary" onclick="completeLesson()" style="margin-top: 1rem;">
+                        <i class="fa-solid fa-check"></i> Marquer comme terminé
+                    </button>
+                </div>
+            `;
+        }
+
+        function completeLesson() {
+            const enrollment = enrollments.find(e => e.courseId === currentCourse.id && e.userId === currentUser.email);
+            
+            if (!enrollment.completedLessons.includes(currentLesson)) {
+                enrollment.completedLessons.push(currentLesson);
+                
+                // Calculer le nouveau progrès
+                const progress = Math.round((enrollment.completedLessons.length / currentCourse.lessons.length) * 100);
+                enrollment.progress = progress;
+                
+                localStorage.setItem('course_enrollments', JSON.stringify(enrollments));
+                
+                renderLessons(enrollment);
+                updateCourseProgress(enrollment);
+                
+                // Afficher le quiz si toutes les leçons sont terminées
+                if (progress >= 100 && !enrollment.quizCompleted) {
+                    showQuiz();
+                }
+                
+                showToast('Leçon terminée!', 'success');
+            }
+        }
+
+        function showQuiz() {
+            document.getElementById('quizSection').style.display = 'block';
+            document.getElementById('quizQuestion').textContent = currentCourse.quiz.question;
+            
+            const optionsHtml = currentCourse.quiz.options.map((option, index) => `
+                <div class="quiz-option" onclick="selectQuizOption(${index})">
+                    ${option}
+                </div>
+            `).join('');
+            
+            document.getElementById('quizOptions').innerHTML = optionsHtml;
+        }
+
+        function selectQuizOption(optionIndex) {
+            document.querySelectorAll('.quiz-option').forEach(opt => opt.classList.remove('selected'));
+            document.querySelectorAll('.quiz-option')[optionIndex].classList.add('selected');
+            window.selectedQuizOption = optionIndex;
+        }
+
+        function submitQuiz() {
+            if (window.selectedQuizOption === undefined) {
+                showToast('Veuillez sélectionner une réponse', 'error');
+                return;
+            }
+            
+            const isCorrect = window.selectedQuizOption === currentCourse.quiz.correct;
+            const enrollment = enrollments.find(e => e.courseId === currentCourse.id && e.userId === currentUser.email);
+            
+            if (isCorrect) {
+                enrollment.quizCompleted = true;
+                localStorage.setItem('course_enrollments', JSON.stringify(enrollments));
+                
+                showToast('Félicitations! Quiz réussi. Certificat débloqué!', 'success');
+                document.getElementById('quizSection').innerHTML = `
+                    <div style="text-align: center; padding: 2rem;">
+                        <i class="fa-solid fa-certificate" style="font-size: 3rem; color: #fbbf24; margin-bottom: 1rem;"></i>
+                        <h3 style="color: var(--text-main);">Certificat obtenu!</h3>
+                        <p style="color: var(--text-muted);">Vous avez terminé ce cours avec succès.</p>
+                        <button class="btn-primary" onclick="downloadCertificate()" style="margin-top: 1rem;">
+                            <i class="fa-solid fa-download"></i> Télécharger le certificat
+                        </button>
+                    </div>
+                `;
+            } else {
+                showToast('Réponse incorrecte. Essayez encore!', 'error');
+            }
+            
+            updateStats();
+            renderCourses();
+        }
+
+        function downloadCertificate() {
+            showToast('Certificat téléchargé!', 'success');
+        }
+
+        function updateCourseProgress(enrollment) {
+            const progress = enrollment ? enrollment.progress : 0;
+            document.getElementById('courseProgressText').textContent = `${progress}%`;
+            document.getElementById('courseProgressBar').style.width = `${progress}%`;
+        }
+
+        function closeCourseModal() {
+            document.getElementById('courseModal').classList.remove('active');
+            document.getElementById('quizSection').style.display = 'none';
+            currentCourse = null;
+            currentLesson = 0;
+        }
+
+        function previewCourse(courseId) {
+            const course = courses.find(c => c.id === courseId);
+            alert(`Aperçu du cours: ${course.title}\n\nInstructeur: ${course.instructor}\nDurée: ${Math.floor(course.duration/60)}h ${course.duration%60}min\nNiveau: ${course.level}\n\n${course.description}`);
+        }
+
+        function updateStats() {
+            const userEnrollments = enrollments.filter(e => e.userId === currentUser.email);
+            const completedCourses = userEnrollments.filter(e => e.progress >= 100 && e.quizCompleted);
+            const totalHours = userEnrollments.reduce((sum, e) => {
+                const course = courses.find(c => c.id === e.courseId);
+                return sum + (course ? Math.floor(course.duration / 60) : 0);
+            }, 0);
+
+            document.getElementById('totalCourses').textContent = courses.length;
+            document.getElementById('enrolledCourses').textContent = userEnrollments.length;
+            document.getElementById('completedCourses').textContent = completedCourses.length;
+            document.getElementById('totalHours').textContent = `${totalHours}h`;
+        }
+
+        function showToast(message, type) {
+            if (window.showToast) {
+                window.showToast(message, type);
+            } else {
+                alert(message);
+            }
+        }
+    </script>
+</body>
+</html>

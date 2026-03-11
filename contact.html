@@ -1,0 +1,330 @@
+<!DOCTYPE html> <!-- Déclaration du type de document standard HTML5 -->
+<html lang="fr"> <!-- Balise racine pour le contenu en français -->
+
+<head> <!-- Section en-tête pour les métadonnées et styles -->
+    <meta charset="UTF-8"> <!-- Encodage universel des caractères -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Support de l'affichage mobile -->
+    <title>Contact | MINJEC Portal</title> <!-- Titre de la page dans l'onglet -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Police Outfit via Google Fonts -->
+    <link rel="stylesheet" href="assets/css/style.css"> <!-- Styles globaux Aurora Portal -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Librairie d'icônes Font Awesome -->
+    <link rel="stylesheet" href="assets/css/spacing-fix.css">
+</head>
+
+<body> <!-- Début du corps de page -->
+
+    <div class="particles" id="particles"></div> <!-- Arrière-plan de particules animé -->
+    <div class="toast-container" id="toastContainer"></div> <!-- Conteneur pour les notifications flottantes -->
+
+    <!-- Navbar (Barre de navigation fixe) -->
+    <nav class="navbar scrolled" id="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="nav-logo floating-slow"> <!-- Logo MINJEC flottant -->
+                <i class="fa-solid fa-layer-group rotate-slow"></i> MINJEC
+            </a>
+            <ul class="nav-links" style="display: flex; align-items: center; gap: 1.2rem;">
+                <!-- Liste des liens principaux -->
+                <li><a href="index.html" class="link-underline" data-t="accueil">Accueil</a></li>
+                <li><a href="missions-organigramme.html" class="link-underline" data-t="missions">Missions</a></li>
+                <li><a href="programmes.html" class="link-underline" data-t="programmes">Programmes</a></li>
+                <li><a href="projets.html" class="link-underline">Projets</a></li>
+                <li><a href="galerie.html" class="link-underline">Galerie</a></li>
+                <li><a href="agora.html" class="link-underline" data-t="agora">Agora</a></li>
+                <li><a href="actualites.html" class="link-underline" data-t="actualites">Actualités</a></li>
+                <li>
+                    <a href="#" class="link-underline active">Plus <i class="fa-solid fa-chevron-down"
+                            style="font-size: 0.7rem; margin-left: 3px;"></i></a> <!-- Sélecteur 'Plus' -->
+                    <div class="dropdown-menu"> <!-- Menu déroulant partagé -->
+                        <a href="about.html" class="dropdown-item"><i class="fa-solid fa-info-circle"></i> À propos</a>
+                        <a href="associations.html" class="dropdown-item"><i class="fa-solid fa-users"></i>
+                            Associations</a>
+                        <a href="ressources.html" class="dropdown-item"><i class="fa-solid fa-book"></i> Ressources</a>
+                        <a href="evenements.html" class="dropdown-item"><i class="fa-solid fa-calendar-days"></i>
+                            Événements</a>
+                        <a href="faq.html" class="dropdown-item"><i class="fa-solid fa-circle-question"></i> FAQ</a>
+                        <a href="contact.html" class="dropdown-item active"><i class="fa-solid fa-envelope"></i>
+                            Contact</a>
+                        <a href="archives.html" class="dropdown-item"><i class="fa-solid fa-box-archive"></i>
+                            Archives</a>
+                    </div>
+                </li>
+            </ul>
+            <div style="display: flex; align-items: center; gap: 1.5rem;"> <!-- Actions droite navbar -->
+                <!-- Theme Toggle (Nuit/Jour) -->
+                <button class="theme-toggle" id="themeToggle" title="Changer de mode">
+                    <i class="fa-solid fa-moon"></i>
+                    <i class="fa-solid fa-sun"></i>
+                </button>
+
+                <!-- Language Toggle (FR/EN) -->
+                <div class="lang-toggle">
+                    <div class="lang-btn active" data-lang="fr">FR</div>
+                    <div class="lang-btn" data-lang="en">EN</div>
+                </div>
+
+                <!-- Notification Bell (Gère les messages système) -->
+                <div class="notif-wrapper" id="notifWrapper">
+                    <i class="fa-solid fa-bell" style="font-size: 1.2rem; color: var(--text-muted);"></i>
+                    <div class="notif-badge-dot" id="notifBadge"></div>
+
+                    <div class="notif-dropdown" id="notifDropdown">
+                        <div class="notif-header">
+                            <span style="font-weight: 600;">Notifications</span>
+                            <span style="font-size: 0.8rem; color: var(--accent-primary); cursor: pointer;">Tout marquer
+                                lu</span>
+                        </div>
+                        <div class="notif-list" id="notifList">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <a href="login.html" class="btn-primary btn-ripple pulse-glow"
+                    style="padding: 0.5rem 1.2rem; font-size: 0.9rem;"> <!-- Bouton de connexion -->
+                    <i class="fa-solid fa-user-lock"></i> Connexion
+                </a>
+            </div>
+            <button class="mobile-menu-toggle" id="mobileMenuToggle"> <!-- Hamburger mobile -->
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <div class="mobile-menu" id="mobileMenu"> <!-- Panneau de navigation mobile -->
+        <a href="index.html">Accueil</a>
+        <a href="missions-organigramme.html">Missions</a>
+        <a href="programmes.html">Programmes</a>
+        <a href="projets.html">Projets</a>
+        <a href="galerie.html">Galerie</a>
+        <a href="actualites.html">Actualités</a>
+        <a href="associations.html">Associations</a>
+        <a href="ressources.html">Ressources</a>
+        <a href="evenements.html">Événements</a>
+        <a href="faq.html">FAQ</a>
+        <a href="contact.html">Contact</a>
+        <a href="archives.html">Archives</a>
+        <a href="login.html" class="btn-primary" style="margin-top: 1rem;">Connexion</a>
+    </div>
+    <div class="mobile-overlay" id="mobileOverlay"></div> <!-- Voile sombre sous menu mobile -->
+
+    <div class="container" style="padding-top: 8rem; padding-bottom: 4rem;"> <!-- Conteneur principal -->
+        <section class="reveal" style="text-align: center; margin-bottom: 4rem;"> <!-- Entête section contact -->
+            <h1 class="animated-gradient-text" style="font-size: 3rem; margin-bottom: 1rem;">Contactez-nous</h1>
+            <!-- Titre stylisé -->
+            <p style="color: var(--text-muted); max-width: 700px; margin: 0 auto; font-size: 1.1rem;">
+                Une question ? Un projet ? N'hésitez pas à nous écrire. <!-- Slogan -->
+            </p>
+        </section>
+
+        <div class="contact-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start;">
+            <!-- Grille Formulaire vs Infos -->
+            <!-- Bloc Formulaire de contact (Formulaire interactif) -->
+            <div class="glass-card reveal-left">
+                <h2 style="margin-bottom: 2rem; font-size: 1.8rem;">Envoyez-nous un message</h2>
+                <form id="contactForm"> <!-- Formulaire ID pour gestion JS -->
+                    <div class="form-group">
+                        <label class="form-label">Nom complet <span style="color: #ef4444">*</span></label>
+                        <input type="text" id="contactName" class="form-control" placeholder="Votre nom" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email <span style="color: #ef4444">*</span></label>
+                        <input type="email" id="contactEmail" class="form-control" placeholder="votre@email.com"
+                            required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Téléphone</label>
+                        <input type="tel" id="contactPhone" class="form-control" placeholder="+237 6XX XXX XXX">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Sujet <span style="color: #ef4444">*</span></label>
+                        <select id="contactSubject" class="form-control" required>
+                            <!-- Sélecteur de motif de contact -->
+                            <option value="">Sélectionnez un sujet</option>
+                            <option value="projet">Soumission de projet</option>
+                            <option value="info">Demande d'information</option>
+                            <option value="partenariat">Partenariat</option>
+                            <option value="autre">Autre</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Message <span style="color: #ef4444">*</span></label>
+                        <textarea id="contactMessage" class="form-control" placeholder="Votre message..."
+                            required></textarea>
+                    </div>
+                    <button type="submit" class="btn-primary btn-ripple" style="width: 100%;">
+                        <!-- Bouton validation Aurora -->
+                        <i class="fa-solid fa-paper-plane"></i> Envoyer le message
+                    </button>
+                </form>
+            </div>
+
+            <!-- Bloc Coordonnées (Informations physiques et temporelles) -->
+            <div class="reveal-right">
+                <div class="glass-card" style="margin-bottom: 2rem;"> <!-- Carte Adresse -->
+                    <h3 style="margin-bottom: 1.5rem; font-size: 1.5rem;">
+                        <i class="fa-solid fa-location-dot" style="color: var(--accent-primary);"></i> Adresse
+                    </h3>
+                    <p style="color: var(--text-muted); line-height: 1.8;">
+                        Délégation Départementale du Ndé<br>
+                        Quartier Administratif<br>
+                        Bangangté, Cameroun
+                    </p>
+                </div>
+
+                <div class="glass-card" style="margin-bottom: 2rem;"> <!-- Carte Téléphone -->
+                    <h3 style="margin-bottom: 1.5rem; font-size: 1.5rem;">
+                        <i class="fa-solid fa-phone" style="color: var(--accent-primary);"></i> Téléphone
+                    </h3>
+                    <p style="color: var(--text-muted); line-height: 1.8;">
+                        Standard : +237 600 00 00 00<br>
+                        Urgences : +237 600 00 00 01
+                    </p>
+                </div>
+
+                <div class="glass-card"> <!-- Carte Horaires -->
+                    <h3 style="margin-bottom: 1.5rem; font-size: 1.5rem;">
+                        <i class="fa-solid fa-clock" style="color: var(--accent-primary);"></i> Horaires
+                    </h3>
+                    <p style="color: var(--text-muted); line-height: 1.8;">
+                        Lundi - Vendredi : 8h00 - 16h00<br>
+                        Samedi : 8h00 - 12h00<br>
+                        Dimanche : Fermé
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section Google Maps (Localisation géographique interactive) -->
+        <section class="reveal" style="margin-top: 4rem;">
+            <h2 class="section-title"><span class="animated-gradient-text">Notre Localisation</span></h2>
+            <div class="glass-card map-container"> <!-- Conteneur de l'Iframe map -->
+                <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d127195.54393632247!2d10.415892!3d5.143892!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1061371abf693437%3A0x9c2d0f3e16eac42d!2sBangangt%C3%A9%2C%20Cameroon!5e0!3m2!1sen!2sus!4v1234567890123!5m2!1sen!2sus"
+                    width="100%" height="450" style="border:0; border-radius: 12px;" allowfullscreen="" loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade"> <!-- Source de la carte intégrée -->
+                </iframe>
+                <div style="margin-top: 1.5rem; text-align: center;"> <!-- Instructions Maps -->
+                    <p style="color: var(--text-muted); margin-bottom: 1rem;">
+                        <i class="fa-solid fa-map-marker-alt"
+                            style="color: var(--accent-primary); margin-right: 8px;"></i>
+                        Quartier Administratif, Bangangté, Région de l'Ouest, Cameroun
+                    </p>
+                    <a href="https://maps.google.com/?q=Bangangté,Cameroon" target="_blank"
+                        class="btn-primary btn-ripple"> <!-- Lien externe vers Google Maps -->
+                        <i class="fa-solid fa-route"></i> Obtenir l'itinéraire
+                    </a>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer id="contact" class="reveal"> <!-- Pied de page (Footer) -->
+        <div class="container">
+            <div class="footer-grid stagger-children"> <!-- Grille organisationnelle footer -->
+                <div class="footer-col reveal-left"> <!-- Colonne Identité Footer -->
+                    <h3 style="font-size: 1.5rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 10px;">
+                        <i class="fa-solid fa-layer-group rotate-slow" style="color: var(--accent-primary);"></i> MINJEC
+                    </h3>
+                    <p style="color: var(--text-muted); line-height: 1.6;">
+                        Délégation Départementale de la Jeunesse et de l'Éducation Civique du Ndé.
+                    </p>
+                </div>
+                <div class="footer-col"> <!-- Liens Rapides -->
+                    <h4>Liens Rapides</h4>
+                    <ul>
+                        <li><a href="index.html" class="link-underline">Accueil</a></li>
+                        <li><a href="missions-organigramme.html" class="link-underline">Missions & Organigramme</a></li>
+                        <li><a href="programmes.html" class="link-underline">Programmes Jeunesse</a></li>
+                        <li><a href="projets.html" class="link-underline">Projets & Succès</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col"> <!-- Liens Découverte -->
+                    <h4>Découvrir</h4>
+                    <ul>
+                        <li><a href="evenements.html" class="link-underline">Événements à venir</a></li>
+                        <li><a href="archives.html" class="link-underline">Archives</a></li>
+                        <li><a href="galerie.html" class="link-underline">Galerie Média</a></li>
+                <li><a href="agora.html" class="link-underline" data-t="agora">Agora</a></li>
+                        <li><a href="actualites.html" class="link-underline">Actualités / Blog</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col"> <!-- Infos Contact -->
+                    <h4>Contact</h4>
+                    <ul>
+                        <li><i class="fa-solid fa-location-dot" style="width: 20px; color: var(--accent-primary);"></i>
+                            Bangangté, Cameroun</li>
+                        <li><i class="fa-solid fa-phone" style="width: 20px; color: var(--accent-primary);"></i> +237
+                            600 00 00 00</li>
+                        <li><i class="fa-solid fa-envelope" style="width: 20px; color: var(--accent-primary);"></i>
+                            contact@minjec-nde.cm</li>
+                    </ul>
+                </div>
+                <div class="footer-col reveal-right"> <!-- Newsletter & Réseaux Sociaux -->
+                    <h4>Newsletter</h4>
+                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">Restez informé de tous
+                        les nouveaux appels à projets.</p>
+                    <form class="newsletter-form"> <!-- Formulaire rapide newsletter -->
+                        <input type="email" placeholder="votre@email.com" class="footer-input">
+                        <button type="submit" class="footer-btn-send"><i class="fa-solid fa-paper-plane"></i></button>
+                    </form>
+                    <h4 style="margin-top: 2rem;">Réseaux Sociaux</h4>
+                    <div style="display: flex; gap: 1rem;"> <!-- Barres d'icônes sociales -->
+                        <a href="#" class="icon-bounce"
+                            style="font-size: 1.5rem; transition: color 0.3s; color: var(--text-muted);"><i
+                                class="fa-brands fa-facebook"></i></a>
+                        <a href="#" class="icon-bounce"
+                            style="font-size: 1.5rem; transition: color 0.3s; color: var(--text-muted);"><i
+                                class="fa-brands fa-twitter"></i></a>
+                        <a href="#" class="icon-bounce"
+                            style="font-size: 1.5rem; transition: color 0.3s; color: var(--text-muted);"><i
+                                class="fa-brands fa-whatsapp"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div
+                style="text-align: center; color: var(--text-muted); border-top: 1px solid rgba(255,255,255,0.05); padding-top: 2rem; font-size: 0.9rem;">
+                &copy; 2026 Délégation Jeunesse Ndé. Tous droits réservés. <!-- Mentions copyright -->
+            </div>
+        </div>
+    </footer>
+
+
+    <script src="assets/js/main.js"></script> <!-- Inclusion du noyau JavaScript global -->
+    <script>
+        /* Script spécifique pour la gestion du formulaire de contact */
+        document.getElementById('contactForm').addEventListener('submit', function (e) {
+            e.preventDefault(); // Empêcher le rechargement de la page
+
+            const btn = this.querySelector('button[type="submit"]');
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Envoi...'; // Feedback visuel chargement
+            btn.disabled = true; // Désactiver pour éviter les doubles envois
+
+            // Simulation d'un envoi réseau (AJAX)
+            setTimeout(() => {
+                showToast('Message envoyé avec succès ! Nous vous répondrons sous peu.', 'success'); // Notification succès
+                this.reset(); // Réinitialiser le formulaire
+                btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Envoyer le message'; // Restaurer bouton
+                btn.disabled = false;
+            }, 1500);
+        });
+
+        /* Fonction utilitaire pour afficher des notifications (Toast) locales à la page */
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            let icon = type === 'success' ? 'fa-check-circle' : 'fa-info-circle';
+            toast.innerHTML = `<i class="fa-solid ${icon}"></i><span>${message}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => toast.classList.add('show'), 10); // Déclencher l'animation CSS d'entrée
+            setTimeout(() => {
+                toast.classList.remove('show'); // Déclencher l'animation de sortie
+                setTimeout(() => toast.remove(), 300); // Supprimer du DOM après animation
+            }, 4000);
+        }
+    </script>
+</body>
+
+</html> <!-- Fin du document contact -->

@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forum Communautaire | MINJEC Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background: var(--bg-dark);
+            background-image: var(--bg-gradient);
+            min-height: 100vh;
+        }
+
+        .forum-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .forum-grid {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .sidebar-card {
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2rem;
+            height: fit-content;
+            position: sticky;
+            top: 2rem;
+        }
+
+        .categories-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .category-item {
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .category-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--accent-primary);
+            transform: translateX(5px);
+        }
+
+        .category-item.active {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(14, 165, 233, 0.1));
+            border-color: var(--accent-primary);
+        }
+
+        .category-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(56, 189, 248, 0.1);
+            color: var(--accent-primary);
+        }
+
+        .category-info {
+            flex: 1;
+        }
+
+        .category-name {
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 0.3rem;
+        }
+
+        .category-count {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .main-content {
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2rem;
+        }
+
+        .forum-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .search-bar {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex: 1;
+            max-width: 400px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 0.8rem 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            color: var(--text-main);
+        }
+
+        .sort-select {
+            padding: 0.8rem 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            color: var(--text-main);
+        }
+
+        .topics-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .topic-item {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .topic-item:hover {
+            border-color: var(--accent-primary);
+            transform: translateX(5px);
+        }
+
+        .topic-header {
+            display: flex;
+            justify-content: between;
+            align-items: start;
+            margin-bottom: 1rem;
+        }
+
+        .topic-info {
+            flex: 1;
+        }
+
+        .topic-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+        }
+
+        .topic-preview {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+
+        .topic-meta {
+            display: flex;
+            gap: 2rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .topic-stats {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .topic-author {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .author-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .topic-tags {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .tag {
+            padding: 0.3rem 0.8rem;
+            background: rgba(56, 189, 248, 0.1);
+            color: var(--accent-primary);
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            overflow-y: auto;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 2rem;
+            max-width: 700px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideUp 0.3s ease;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-main);
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            color: var(--text-main);
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .tags-input {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            padding: 0.8rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            min-height: 50px;
+        }
+
+        .tag-input {
+            border: none;
+            background: none;
+            color: var(--text-main);
+            outline: none;
+            flex: 1;
+            min-width: 100px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-muted);
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.3;
+        }
+
+        .pinned-topic {
+            border-left: 4px solid var(--accent-primary);
+            background: rgba(56, 189, 248, 0.05);
+        }
+
+        .locked-topic {
+            opacity: 0.7;
+        }
+
+        .locked-topic .topic-title::after {
+            content: " 🔒";
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .vote-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            align-items: center;
+            margin-right: 1rem;
+        }
+
+        .vote-btn {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .vote-btn:hover {
+            background: var(--accent-primary);
+            color: white;
+        }
+
+        .vote-btn.voted {
+            background: var(--accent-primary);
+            color: white;
+        }
+
+        .vote-count {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+    </style>
+</head>
+<body>
+    <div class="forum-container">
+        <header style="margin-bottom: 2rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h1 class="animated-gradient-text" style="font-size: 2.5rem; margin-bottom: 0.5rem;">
+                        <i class="fa-solid fa-comments"></i> Forum Communautaire
+                    </h1>
+                    <p style="color: var(--text-muted);">Échangez, partagez et collaborez avec la communauté</p>
+                </div>
+                <div style="display: flex; gap: 1rem;">
+                    <button class="btn-primary" onclick="openNewTopicModal()">
+                        <i class="fa-solid fa-plus"></i> Nouveau Sujet
+                    </button>
+                    <a href="index.html" class="btn-secondary">
+                        <i class="fa-solid fa-home"></i> Accueil
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <div class="forum-grid">
+            <!-- Sidebar -->
+            <aside>
+                <div class="sidebar-card">
+                    <h3 style="color: var(--text-main); margin-bottom: 1.5rem;">
+                        <i class="fa-solid fa-layer-group"></i> Catégories
+                    </h3>
+                    <div class="categories-list" id="categoriesList">
+                        <!-- Catégories chargées dynamiquement -->
+                    </div>
+                </div>
+
+                <div class="sidebar-card" style="margin-top: 1.5rem;">
+                    <h4 style="color: var(--text-main); margin-bottom: 1rem;">
+                        <i class="fa-solid fa-fire"></i> Sujets Populaires
+                    </h4>
+                    <div id="popularTopics">
+                        <!-- Sujets populaires -->
+                    </div>
+                </div>
+
+                <div class="sidebar-card" style="margin-top: 1.5rem;">
+                    <h4 style="color: var(--text-main); margin-bottom: 1rem;">
+                        <i class="fa-solid fa-chart-simple"></i> Statistiques
+                    </h4>
+                    <div style="display: flex; flex-direction: column; gap: 0.8rem;">
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="color: var(--text-muted); font-size: 0.85rem;">Sujets</span>
+                            <span style="color: var(--accent-primary); font-weight: 600;" id="totalTopics">0</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="color: var(--text-muted); font-size: 0.85rem;">Messages</span>
+                            <span style="color: var(--accent-primary); font-weight: 600;" id="totalMessages">0</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="color: var(--text-muted); font-size: 0.85rem;">Membres actifs</span>
+                            <span style="color: var(--accent-primary); font-weight: 600;" id="activeMembers">0</span>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Main Content -->
+            <main>
+                <div class="main-content">
+                    <div class="forum-header">
+                        <div class="search-bar">
+                            <input type="text" class="search-input" placeholder="Rechercher dans le forum..." id="searchInput">
+                            <button class="btn-secondary" onclick="searchTopics()">
+                                <i class="fa-solid fa-search"></i>
+                            </button>
+                        </div>
+                        <select class="sort-select" id="sortSelect" onchange="sortTopics()">
+                            <option value="recent">Plus récents</option>
+                            <option value="popular">Plus populaires</option>
+                            <option value="replies">Plus de réponses</option>
+                            <option value="votes">Plus votés</option>
+                        </select>
+                    </div>
+
+                    <div class="topics-list" id="topicsList">
+                        <!-- Sujets chargés dynamiquement -->
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Modal Nouveau Sujet -->
+    <div class="modal" id="newTopicModal">
+        <div class="modal-content">
+            <h3 style="color: var(--text-main); margin-bottom: 1.5rem;">
+                <i class="fa-solid fa-plus"></i> Créer un Nouveau Sujet
+            </h3>
+            
+            <form id="topicForm">
+                <div class="form-group">
+                    <label>Catégorie</label>
+                    <select id="topicCategory" required>
+                        <option value="">Sélectionner une catégorie</option>
+                        <option value="general">Discussions générales</option>
+                        <option value="projects">Projets et idées</option>
+                        <option value="help">Aide et support</option>
+                        <option value="announcements">Annonces</option>
+                        <option value="events">Événements</option>
+                        <option value="jobs">Emplois et stages</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Titre du sujet</label>
+                    <input type="text" id="topicTitle" placeholder="Un titre accrocheur pour votre sujet" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Contenu</label>
+                    <textarea id="topicContent" placeholder="Décrivez votre sujet en détail..." required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Tags (optionnel)</label>
+                    <div class="tags-input" id="tagsInput">
+                        <input type="text" class="tag-input" placeholder="Appuyez sur Entrée pour ajouter un tag" onkeypress="addTag(event)">
+                    </div>
+                    <small style="color: var(--text-muted);">Ajoutez des mots-clés pour faciliter la recherche</small>
+                </div>
+
+                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                    <button type="button" class="btn-secondary" onclick="closeNewTopicModal()" style="flex: 1;">
+                        Annuler
+                    </button>
+                    <button type="submit" class="btn-primary" style="flex: 1;">
+                        <i class="fa-solid fa-paper-plane"></i> Publier
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="assets/js/main.js"></script>
+    <script>
+        let topics = [];
+        let categories = [];
+        let currentUser = null;
+        let currentCategory = 'all';
+        let currentSort = 'recent';
+        let topicTags = [];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (!currentUser) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            initializeCategories();
+            loadTopics();
+            renderCategories();
+            renderTopics();
+            updateStats();
+
+            document.getElementById('topicForm').addEventListener('submit', createTopic);
+            document.getElementById('searchInput').addEventListener('input', searchTopics);
+        });
+
+        function initializeCategories() {
+            categories = [
+                { id: 'all', name: 'Toutes les catégories', icon: 'fa-layer-group', count: 0 },
+                { id: 'general', name: 'Discussions générales', icon: 'fa-comments', count: 0 },
+                { id: 'projects', name: 'Projets et idées', icon: 'fa-lightbulb', count: 0 },
+                { id: 'help', name: 'Aide et support', icon: 'fa-question-circle', count: 0 },
+                { id: 'announcements', name: 'Annonces', icon: 'fa-bullhorn', count: 0 },
+                { id: 'events', name: 'Événements', icon: 'fa-calendar', count: 0 },
+                { id: 'jobs', name: 'Emplois et stages', icon: 'fa-briefcase', count: 0 }
+            ];
+        }
+
+        function loadTopics() {
+            topics = JSON.parse(localStorage.getItem('forum_topics')) || [];
+            
+            // Créer des sujets d'exemple si vide
+            if (topics.length === 0) {
+                createSampleTopics();
+            }
+
+            // Mettre à jour les compteurs de catégories
+            categories.forEach(cat => {
+                if (cat.id === 'all') {
+                    cat.count = topics.length;
+                } else {
+                    cat.count = topics.filter(t => t.category === cat.id).length;
+                }
+            });
+        }
+
+        function createSampleTopics() {
+            const sampleTopics = [
+                {
+                    id: `topic_${Date.now()}_1`,
+                    title: "Bienvenue sur le forum communautaire!",
+                    content: "Nous sommes ravis de vous accueillir sur notre nouveau forum. N'hésitez pas à vous présenter et à partager vos projets!",
+                    category: 'announcements',
+                    author: 'Admin MINJEC',
+                    authorEmail: 'admin@minjec.cm',
+                    createdAt: Date.now() - 86400000,
+                    replies: 12,
+                    views: 156,
+                    votes: 25,
+                    tags: ['bienvenue', 'communauté'],
+                    pinned: true,
+                    locked: false
+                },
+                {
+                    id: `topic_${Date.now()}_2`,
+                    title: "Recherche de partenaires pour projet agricole",
+                    content: "Je développe un projet d'agriculture urbaine et je cherche des partenaires motivés. Le projet vise à créer des jardins communautaires dans Bangangté.",
+                    category: 'projects',
+                    author: 'Marie Kamga',
+                    authorEmail: 'marie@example.com',
+                    createdAt: Date.now() - 43200000,
+                    replies: 8,
+                    views: 89,
+                    votes: 15,
+                    tags: ['agriculture', 'partenariat', 'bangangté'],
+                    pinned: false,
+                    locked: false
+                },
+                {
+                    id: `topic_${Date.now()}_3`,
+                    title: "Comment soumettre un projet PTS-JEUNES?",
+                    content: "Bonjour, je suis nouveau et j'aimerais savoir comment procéder pour soumettre mon projet dans le cadre du programme PTS-JEUNES. Merci!",
+                    category: 'help',
+                    author: 'Jean Fotso',
+                    authorEmail: 'jean@example.com',
+                    createdAt: Date.now() - 21600000,
+                    replies: 5,
+                    views: 67,
+                    votes: 8,
+                    tags: ['pts-jeunes', 'aide', 'procédure'],
+                    pinned: false,
+                    locked: false
+                }
+            ];
+
+            topics = sampleTopics;
+            localStorage.setItem('forum_topics', JSON.stringify(topics));
+        }
+
+        function renderCategories() {
+            const list = document.getElementById('categoriesList');
+            
+            const html = categories.map(cat => `
+                <div class="category-item ${currentCategory === cat.id ? 'active' : ''}" 
+                     onclick="selectCategory('${cat.id}')">
+                    <div class="category-icon">
+                        <i class="fa-solid ${cat.icon}"></i>
+                    </div>
+                    <div class="category-info">
+                        <div class="category-name">${cat.name}</div>
+                        <div class="category-count">${cat.count} sujet${cat.count > 1 ? 's' : ''}</div>
+                    </div>
+                </div>
+            `).join('');
+
+            list.innerHTML = html;
+        }
+
+        function renderTopics() {
+            let filteredTopics = topics;
+
+            // Filtrer par catégorie
+            if (currentCategory !== 'all') {
+                filteredTopics = topics.filter(t => t.category === currentCategory);
+            }
+
+            // Filtrer par recherche
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            if (searchTerm) {
+                filteredTopics = filteredTopics.filter(t => 
+                    t.title.toLowerCase().includes(searchTerm) ||
+                    t.content.toLowerCase().includes(searchTerm) ||
+                    t.tags.some(tag => tag.toLowerCase().includes(searchTerm))
+                );
+            }
+
+            // Trier
+            switch (currentSort) {
+                case 'popular':
+                    filteredTopics.sort((a, b) => b.views - a.views);
+                    break;
+                case 'replies':
+                    filteredTopics.sort((a, b) => b.replies - a.replies);
+                    break;
+                case 'votes':
+                    filteredTopics.sort((a, b) => b.votes - a.votes);
+                    break;
+                default: // recent
+                    filteredTopics.sort((a, b) => b.createdAt - a.createdAt);
+            }
+
+            // Séparer les sujets épinglés
+            const pinnedTopics = filteredTopics.filter(t => t.pinned);
+            const regularTopics = filteredTopics.filter(t => !t.pinned);
+
+            const allTopics = [...pinnedTopics, ...regularTopics];
+
+            if (allTopics.length === 0) {
+                document.getElementById('topicsList').innerHTML = `
+                    <div class="empty-state">
+                        <i class="fa-solid fa-comments"></i>
+                        <h3>Aucun sujet trouvé</h3>
+                        <p>Soyez le premier à créer un sujet dans cette catégorie!</p>
+                        <button class="btn-primary" onclick="openNewTopicModal()" style="margin-top: 1rem;">
+                            <i class="fa-solid fa-plus"></i> Créer un sujet
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+
+            const html = allTopics.map(topic => {
+                const timeAgo = formatTimeAgo(topic.createdAt);
+                const categoryInfo = categories.find(c => c.id === topic.category);
+                
+                return `
+                    <div class="topic-item ${topic.pinned ? 'pinned-topic' : ''} ${topic.locked ? 'locked-topic' : ''}" 
+                         onclick="viewTopic('${topic.id}')">
+                        <div class="topic-header">
+                            <div class="vote-buttons">
+                                <button class="vote-btn" onclick="event.stopPropagation(); voteTopic('${topic.id}', 'up')">
+                                    <i class="fa-solid fa-chevron-up"></i>
+                                </button>
+                                <div class="vote-count">${topic.votes}</div>
+                                <button class="vote-btn" onclick="event.stopPropagation(); voteTopic('${topic.id}', 'down')">
+                                    <i class="fa-solid fa-chevron-down"></i>
+                                </button>
+                            </div>
+                            <div class="topic-info">
+                                <div class="topic-title">
+                                    ${topic.pinned ? '<i class="fa-solid fa-thumbtack" style="color: var(--accent-primary); margin-right: 8px;"></i>' : ''}
+                                    ${topic.title}
+                                </div>
+                                <div class="topic-preview">${topic.content.substring(0, 150)}${topic.content.length > 150 ? '...' : ''}</div>
+                                <div class="topic-meta">
+                                    <div class="topic-author">
+                                        <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(topic.author)}&size=32&background=38bdf8&color=fff" 
+                                             alt="${topic.author}" class="author-avatar">
+                                        <span>${topic.author}</span>
+                                    </div>
+                                    <div class="topic-stats">
+                                        <div class="stat-item">
+                                            <i class="fa-solid fa-eye"></i>
+                                            <span>${topic.views}</span>
+                                        </div>
+                                        <div class="stat-item">
+                                            <i class="fa-solid fa-comments"></i>
+                                            <span>${topic.replies}</span>
+                                        </div>
+                                        <div class="stat-item">
+                                            <i class="fa-solid fa-clock"></i>
+                                            <span>${timeAgo}</span>
+                                        </div>
+                                        <div class="stat-item">
+                                            <i class="fa-solid ${categoryInfo.icon}"></i>
+                                            <span>${categoryInfo.name}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                ${topic.tags.length > 0 ? `
+                                    <div class="topic-tags">
+                                        ${topic.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                                    </div>
+                                ` : ''}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            document.getElementById('topicsList').innerHTML = html;
+        }
+
+        function selectCategory(categoryId) {
+            currentCategory = categoryId;
+            renderCategories();
+            renderTopics();
+        }
+
+        function sortTopics() {
+            currentSort = document.getElementById('sortSelect').value;
+            renderTopics();
+        }
+
+        function searchTopics() {
+            renderTopics();
+        }
+
+        function openNewTopicModal() {
+            document.getElementById('newTopicModal').classList.add('active');
+        }
+
+        function closeNewTopicModal() {
+            document.getElementById('newTopicModal').classList.remove('active');
+            document.getElementById('topicForm').reset();
+            topicTags = [];
+            renderTagsInput();
+        }
+
+        function addTag(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                const input = event.target;
+                const tag = input.value.trim();
+                
+                if (tag && !topicTags.includes(tag)) {
+                    topicTags.push(tag);
+                    input.value = '';
+                    renderTagsInput();
+                }
+            }
+        }
+
+        function renderTagsInput() {
+            const container = document.getElementById('tagsInput');
+            const input = container.querySelector('.tag-input');
+            
+            // Supprimer les tags existants
+            container.querySelectorAll('.tag').forEach(tag => tag.remove());
+            
+            // Ajouter les nouveaux tags
+            topicTags.forEach(tag => {
+                const tagElement = document.createElement('span');
+                tagElement.className = 'tag';
+                tagElement.innerHTML = `${tag} <i class="fa-solid fa-times" onclick="removeTag('${tag}')" style="cursor: pointer; margin-left: 5px;"></i>`;
+                container.insertBefore(tagElement, input);
+            });
+        }
+
+        function removeTag(tag) {
+            topicTags = topicTags.filter(t => t !== tag);
+            renderTagsInput();
+        }
+
+        function createTopic(e) {
+            e.preventDefault();
+
+            const topic = {
+                id: `topic_${Date.now()}`,
+                title: document.getElementById('topicTitle').value,
+                content: document.getElementById('topicContent').value,
+                category: document.getElementById('topicCategory').value,
+                author: currentUser.name,
+                authorEmail: currentUser.email,
+                createdAt: Date.now(),
+                replies: 0,
+                views: 0,
+                votes: 0,
+                tags: topicTags,
+                pinned: false,
+                locked: false
+            };
+
+            topics.unshift(topic);
+            localStorage.setItem('forum_topics', JSON.stringify(topics));
+
+            closeNewTopicModal();
+            loadTopics();
+            renderCategories();
+            renderTopics();
+            updateStats();
+            
+            showToast('Sujet créé avec succès!', 'success');
+        }
+
+        function voteTopic(topicId, direction) {
+            const topic = topics.find(t => t.id === topicId);
+            if (topic) {
+                if (direction === 'up') {
+                    topic.votes++;
+                } else {
+                    topic.votes = Math.max(0, topic.votes - 1);
+                }
+                localStorage.setItem('forum_topics', JSON.stringify(topics));
+                renderTopics();
+            }
+        }
+
+        function viewTopic(topicId) {
+            // Incrémenter les vues
+            const topic = topics.find(t => t.id === topicId);
+            if (topic) {
+                topic.views++;
+                localStorage.setItem('forum_topics', JSON.stringify(topics));
+            }
+            
+            // Rediriger vers la page de détail (à créer)
+            alert(`Ouverture du sujet: ${topicId}`);
+        }
+
+        function updateStats() {
+            document.getElementById('totalTopics').textContent = topics.length;
+            document.getElementById('totalMessages').textContent = topics.reduce((sum, t) => sum + t.replies, 0);
+            
+            const users = JSON.parse(localStorage.getItem('delegation_users')) || [];
+            document.getElementById('activeMembers').textContent = users.length;
+        }
+
+        function formatTimeAgo(timestamp) {
+            const now = Date.now();
+            const diff = now - timestamp;
+            const minutes = Math.floor(diff / 60000);
+            const hours = Math.floor(diff / 3600000);
+            const days = Math.floor(diff / 86400000);
+
+            if (minutes < 1) return 'À l\'instant';
+            if (minutes < 60) return `Il y a ${minutes} min`;
+            if (hours < 24) return `Il y a ${hours}h`;
+            if (days < 7) return `Il y a ${days}j`;
+            return new Date(timestamp).toLocaleDateString('fr-FR');
+        }
+
+        function showToast(message, type) {
+            if (window.showToast) {
+                window.showToast(message, type);
+            } else {
+                alert(message);
+            }
+        }
+    </script>
+</body>
+</html>

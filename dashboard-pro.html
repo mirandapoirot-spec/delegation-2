@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Pro | MINJEC</title>
+    
+    <!-- Meta Tags -->
+    <meta name="description" content="Tableau de bord professionnel pour l'analyse des projets et statistiques.">
+    <meta name="theme-color" content="#0f172a">
+
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="assets/css/style.css">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        :root {
+            --sidebar-width: 280px;
+            --header-height: 70px;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            overflow-x: hidden;
+        }
+
+        .dashboard-container {
+            display: grid;
+            grid-template-columns: var(--sidebar-width) 1fr;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            background: var(--bg-card);
+            border-right: 1px solid var(--border-color);
+            position: fixed;
+            height: 100vh;
+            width: var(--sidebar-width);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-text {
+            font-size: 1.25rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .sidebar-nav {
+            padding: 1.5rem;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .nav-section {
+            margin-bottom: 2rem;
+        }
+
+        .nav-section-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: rgba(56, 189, 248, 0.1);
+            color: var(--accent-primary);
+        }
+
+        .nav-item i {
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            padding: 2rem;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .header-title h1 {
+            font-size: 1.75rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .header-subtitle {
+            color: var(--text-muted);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .stat-icon.users { background: rgba(56, 189, 248, 0.1); color: #38bdf8; }
+        .stat-icon.projects { background: rgba(139, 92, 246, 0.1); color: #8b5cf6; }
+        .stat-icon.growth { background: rgba(16, 185, 129, 0.1); color: #10b981; }
+        .stat-icon.budget { background: rgba(245, 158, 11, 0.1); color: #f59e0b; }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .stat-trend {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .stat-trend.up { color: #10b981; }
+        .stat-trend.down { color: #ef4444; }
+
+        /* Charts Section */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 1rem;
+            padding: 1.5rem;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .chart-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .chart-container {
+            height: 300px;
+            position: relative;
+        }
+
+        /* Activity Feed */
+        .activity-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .activity-item {
+            display: flex;
+            gap: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .activity-icon-small {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--bg-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            flex-shrink: 0;
+        }
+
+        .activity-content h4 {
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .activity-meta {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-container {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .header-actions {
+                display: none;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="assets/css/spacing-fix.css">
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <i class="fa-solid fa-chart-pie fa-2x" style="color: var(--accent-primary)"></i>
+                <div class="logo-text">MINJEC PRO</div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Principal</div>
+                    <a href="#" class="nav-item active">
+                        <i class="fa-solid fa-gauge-high"></i>
+                        <span>Vue d'ensemble</span>
+                    </a>
+                    <a href="admin-dashboard.html" class="nav-item">
+                        <i class="fa-solid fa-arrow-left"></i>
+                        <span>Retour Admin</span>
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Analytique</div>
+                    <a href="#" class="nav-item">
+                        <i class="fa-solid fa-users"></i>
+                        <span>Utilisateurs</span>
+                    </a>
+                    <a href="#" class="nav-item">
+                        <i class="fa-solid fa-folder-open"></i>
+                        <span>Projets</span>
+                    </a>
+                    <a href="#" class="nav-item">
+                        <i class="fa-solid fa-money-bill-trend-up"></i>
+                        <span>Budget</span>
+                    </a>
+                    <a href="#" class="nav-item">
+                        <i class="fa-solid fa-file-invoice"></i>
+                        <span>Rapports</span>
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="dashboard-header">
+                <div class="header-title">
+                    <h1>Tableau de Bord Analytique</h1>
+                    <div class="header-subtitle">Statistiques et performances en temps réel</div>
+                </div>
+                <div class="header-actions">
+                    <button class="btn-secondary" onclick="exportData()">
+                        <i class="fa-solid fa-download"></i> Exporter
+                    </button>
+                    <div class="user-profile" id="userProfileDisplay">
+                        <!-- User info populated by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Toast Container -->
+            <div class="toast-container" id="toastContainer"></div>
+
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon users">
+                            <i class="fa-solid fa-users"></i>
+                        </div>
+                        <div class="stat-trend up">
+                            <i class="fa-solid fa-arrow-trend-up"></i> +12%
+                        </div>
+                    </div>
+                    <div class="stat-value" id="totalUsersStats">0</div>
+                    <div class="stat-label">Utilisateurs Totaux</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon projects">
+                            <i class="fa-solid fa-layer-group"></i>
+                        </div>
+                        <div class="stat-trend up">
+                            <i class="fa-solid fa-arrow-trend-up"></i> +5%
+                        </div>
+                    </div>
+                    <div class="stat-value" id="totalProjectsStats">0</div>
+                    <div class="stat-label">Projets Soumis</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon budget">
+                            <i class="fa-solid fa-wallet"></i>
+                        </div>
+                        <div class="stat-trend down">
+                            <i class="fa-solid fa-arrow-trend-down"></i> -2%
+                        </div>
+                    </div>
+                    <div class="stat-value">25M</div>
+                    <div class="stat-label">Budget Alloué (FCFA)</div>
+                </div>
+                
+                 <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon growth">
+                            <i class="fa-solid fa-check-circle"></i>
+                        </div>
+                        <div class="stat-trend up">
+                            <i class="fa-solid fa-arrow-trend-up"></i> +8%
+                        </div>
+                    </div>
+                    <div class="stat-value" id="successRate">0%</div>
+                    <div class="stat-label">Taux de Validation</div>
+                </div>
+            </div>
+
+            <!-- Charts Grid -->
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <div class="chart-title">Évolution des Projets</div>
+                        <select class="input-field" style="width: auto; padding: 0.5rem;">
+                            <option>Cette année</option>
+                            <option>Ce mois</option>
+                        </select>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="projectsChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <div class="chart-title">Répartition par Statut</div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="statusChart"></canvas>
+                    </div>
+                    <div class="activity-list" style="margin-top: 2rem;">
+                        <h4 style="margin-bottom: 1rem; font-size: 0.9rem; text-transform: uppercase; color: var(--text-muted);">Activité Récente</h4>
+                        <div class="activity-item">
+                            <div class="activity-icon-small" style="color: #10b981;">
+                                <i class="fa-solid fa-check"></i>
+                            </div>
+                            <div class="activity-content">
+                                <h4>Projet #124 validé</h4>
+                                <div class="activity-meta">Il y a 2 heures</div>
+                            </div>
+                        </div>
+                         <div class="activity-item">
+                            <div class="activity-icon-small" style="color: #38bdf8;">
+                                <i class="fa-solid fa-user-plus"></i>
+                            </div>
+                            <div class="activity-content">
+                                <h4>Nouvel utilisateur inscrit</h4>
+                                <div class="activity-meta">Il y a 4 heures</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="assets/js/data-loader.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script>
+        // Initialisation du Dashboard Pro
+        document.addEventListener('DOMContentLoaded', () => {
+            // Charger les données
+            const users = JSON.parse(localStorage.getItem('delegation_users')) || [];
+            const projects = JSON.parse(localStorage.getItem('delegation_projects')) || [];
+
+            // Mettre à jour les stats
+            animateValue('totalUsersStats', 0, users.length, 1000);
+            animateValue('totalProjectsStats', 0, projects.length, 1000);
+
+            const validatedProjects = projects.filter(p => p.status === 'validated').length;
+            const successRate = projects.length > 0 ? Math.round((validatedProjects / projects.length) * 100) : 0;
+            animateValue('successRate', 0, successRate, 1000, '%');
+
+            // Initialiser les graphiques
+            initCharts(projects);
+        });
+
+        // Fonction d'animation des nombres
+        function animateValue(id, start, end, duration, suffix = '') {
+            const obj = document.getElementById(id);
+            if (!obj) return;
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                obj.innerHTML = Math.floor(progress * (end - start) + start) + suffix;
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        // Initialisation des graphiques Chart.js
+        function initCharts(projects) {
+            // Chart 1: Évolution des Projets
+            const ctx1 = document.getElementById('projectsChart');
+            if (ctx1) {
+                new Chart(ctx1, {
+                    type: 'line',
+                    data: {
+                        labels: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Août', 'Sep', 'Oct', 'Nov', 'Déc'],
+                        datasets: [{
+                            label: 'Projets Soumis',
+                            data: [12, 19, 15, 25, 22, 30, projects.length], // Données simulées + réel
+                            borderColor: '#38bdf8',
+                            backgroundColor: 'rgba(56, 189, 248, 0.1)',
+                            borderWidth: 2,
+                            tension: 0.4,
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false }
+                        },
+                        scales: {
+                            y: { 
+                                grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                                ticks: { color: '#94a3b8' }
+                            },
+                            x: { 
+                                grid: { display: false },
+                                ticks: { color: '#94a3b8' }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Chart 2: Statut des Projets
+            const pending = projects.filter(p => p.status === 'pending' || p.status === 'en_attente').length;
+            const validated = projects.filter(p => p.status === 'validated').length;
+            const rejected = projects.filter(p => p.status === 'rejected').length;
+
+            const ctx2 = document.getElementById('statusChart');
+            if (ctx2) {
+                new Chart(ctx2, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['En attente', 'Validés', 'Rejetés'],
+                        datasets: [{
+                            data: [pending, validated, rejected],
+                            backgroundColor: ['#f59e0b', '#10b981', '#ef4444'],
+                            borderWidth: 0,
+                            hoverOffset: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { 
+                                position: 'bottom',
+                                labels: { color: '#94a3b8', usePointStyle: true }
+                            }
+                        },
+                        cutout: '70%'
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+</html>

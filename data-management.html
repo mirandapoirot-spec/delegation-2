@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Données | Administration</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .data-management-container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 2rem;
+        }
+
+        .data-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .data-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-item {
+            background: var(--bg-secondary);
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-action {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-export {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+
+        .btn-import {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+        }
+
+        .btn-reset {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+        }
+
+        .btn-back {
+            background: linear-gradient(135deg, #6b7280, #4b5563);
+            color: white;
+        }
+
+        .btn-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .data-preview {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-top: 1rem;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .data-preview pre {
+            margin: 0;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .warning-box {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 12px;
+            padding: 1rem;
+            margin: 1rem 0;
+            color: #ef4444;
+        }
+
+        .info-box {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 12px;
+            padding: 1rem;
+            margin: 1rem 0;
+            color: #3b82f6;
+        }
+    </style>
+    <link rel="stylesheet" href="assets/css/spacing-fix.css">
+</head>
+
+<body>
+    <div class="data-management-container">
+        <div class="page-header">
+            <h1><i class="fa-solid fa-database"></i> Gestion des Données</h1>
+            <p>Administration et sauvegarde des données de la plateforme</p>
+        </div>
+
+        <!-- Statistiques -->
+        <div class="data-card">
+            <h2><i class="fa-solid fa-chart-bar"></i> Statistiques des Données</h2>
+            <div class="data-stats" id="dataStats">
+                <div class="stat-item">
+                    <div class="stat-number" id="usersCount">0</div>
+                    <div>Utilisateurs</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="projectsCount">0</div>
+                    <div>Projets</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="pendingCount">0</div>
+                    <div>En attente</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="validatedCount">0</div>
+                    <div>Validés</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Actions de Sauvegarde -->
+        <div class="data-card">
+            <h2><i class="fa-solid fa-download"></i> Sauvegarde et Restauration</h2>
+            <div class="info-box">
+                <i class="fa-solid fa-info-circle"></i>
+                <strong>Information :</strong> Les données sont stockées localement dans votre navigateur. 
+                Utilisez ces outils pour sauvegarder ou restaurer vos données.
+            </div>
+            
+            <div class="action-buttons">
+                <button class="btn-action btn-export" onclick="exportData()">
+                    <i class="fa-solid fa-download"></i>
+                    Exporter les Données
+                </button>
+                
+                <button class="btn-action btn-import" onclick="document.getElementById('importFile').click()">
+                    <i class="fa-solid fa-upload"></i>
+                    Importer les Données
+                </button>
+                
+                <input type="file" id="importFile" class="file-input" accept=".json" onchange="importData(event)">
+            </div>
+        </div>
+
+        <!-- Réinitialisation -->
+        <div class="data-card">
+            <h2><i class="fa-solid fa-refresh"></i> Réinitialisation</h2>
+            <div class="warning-box">
+                <i class="fa-solid fa-exclamation-triangle"></i>
+                <strong>Attention :</strong> Cette action supprimera toutes les données actuelles et les remplacera par les données par défaut. Cette action est irréversible.
+            </div>
+            
+            <div class="action-buttons">
+                <button class="btn-action btn-reset" onclick="resetAllData()">
+                    <i class="fa-solid fa-refresh"></i>
+                    Réinitialiser toutes les Données
+                </button>
+            </div>
+        </div>
+
+        <!-- Aperçu des Données -->
+        <div class="data-card">
+            <h2><i class="fa-solid fa-eye"></i> Aperçu des Données</h2>
+            <div class="action-buttons">
+                <button class="btn-action btn-export" onclick="showDataPreview('users')">
+                    <i class="fa-solid fa-users"></i>
+                    Voir Utilisateurs
+                </button>
+                <button class="btn-action btn-export" onclick="showDataPreview('projects')">
+                    <i class="fa-solid fa-project-diagram"></i>
+                    Voir Projets
+                </button>
+            </div>
+            <div class="data-preview" id="dataPreview" style="display: none;">
+                <pre id="dataPreviewContent"></pre>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="data-card">
+            <div class="action-buttons">
+                <button class="btn-action btn-back" onclick="window.history.back()">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    Retour
+                </button>
+                <a href="admin-dashboard.html" class="btn-action btn-back" style="text-decoration: none;">
+                    <i class="fa-solid fa-dashboard"></i>
+                    Dashboard Admin
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script src="assets/js/data-loader.js"></script>
+    <script>
+        // Mettre à jour les statistiques
+        function updateStats() {
+            const users = JSON.parse(localStorage.getItem('delegation_users') || '[]');
+            const projects = JSON.parse(localStorage.getItem('delegation_projects') || '[]');
+            
+            document.getElementById('usersCount').textContent = users.length;
+            document.getElementById('projectsCount').textContent = projects.length;
+            document.getElementById('pendingCount').textContent = projects.filter(p => p.status === 'pending').length;
+            document.getElementById('validatedCount').textContent = projects.filter(p => p.status === 'validated').length;
+        }
+
+        // Afficher l'aperçu des données
+        function showDataPreview(type) {
+            const preview = document.getElementById('dataPreview');
+            const content = document.getElementById('dataPreviewContent');
+            
+            let data = [];
+            if (type === 'users') {
+                data = JSON.parse(localStorage.getItem('delegation_users') || '[]');
+            } else if (type === 'projects') {
+                data = JSON.parse(localStorage.getItem('delegation_projects') || '[]');
+            }
+            
+            content.textContent = JSON.stringify(data, null, 2);
+            preview.style.display = 'block';
+        }
+
+        // Fonction toast helper
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type} show`;
+            
+            let icon = 'fa-info-circle';
+            if (type === 'success') icon = 'fa-check-circle';
+            if (type === 'error') icon = 'fa-exclamation-circle';
+            
+            toast.innerHTML = `
+                <i class="fa-solid ${icon}"></i>
+                <span>${message}</span>
+            `;
+            
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
+        }
+
+        // Initialiser la page
+        document.addEventListener('DOMContentLoaded', () => {
+            updateStats();
+            
+            // Vérifier les permissions admin
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (!currentUser || (currentUser.role !== 'super_admin' && currentUser.role !== 'admin')) {
+                showToast('Accès non autorisé. Redirection...', 'error');
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 2000);
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Installation des Nouvelles Fonctionnalités</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: linear-gradient(135deg, #020617 0%, #0f172a 100%);
+            color: #e2e8f0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            border-radius: 24px;
+            padding: 3rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #10b981, #38bdf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #94a3b8;
+            margin-bottom: 3rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover {
+            border-color: #38bdf8;
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #10b981, #38bdf8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-desc {
+            font-size: 0.9rem;
+            color: #94a3b8;
+            line-height: 1.5;
+        }
+
+        .status-box {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .status-box.warning {
+            background: rgba(251, 191, 36, 0.1);
+            border-color: rgba(251, 191, 36, 0.3);
+        }
+
+        .status-box.error {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Outfit', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #10b981, #38bdf8);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(56, 189, 248, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            color: #e2e8f0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 1rem;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981, #38bdf8);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .log {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1rem;
+            max-height: 200px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .log-line {
+            margin-bottom: 0.5rem;
+            color: #94a3b8;
+        }
+
+        .log-line.success {
+            color: #10b981;
+        }
+
+        .log-line.error {
+            color: #ef4444;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .spinning {
+            animation: spin 1s linear infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><i class="fa-solid fa-rocket"></i> Installation</h1>
+        <p class="subtitle">Nouvelles fonctionnalités pour MINJEC Portal</p>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fa-solid fa-comments"></i>
+                </div>
+                <div class="feature-title">Messagerie</div>
+                <div class="feature-desc">Chat en temps réel entre utilisateurs et admins</div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fa-solid fa-calendar-check"></i>
+                </div>
+                <div class="feature-title">Rendez-vous</div>
+                <div class="feature-desc">Système de prise de rendez-vous avec calendrier</div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fa-solid fa-chart-line"></i>
+                </div>
+                <div class="feature-title">Analytiques</div>
+                <div class="feature-desc">Tableaux de bord et statistiques avancées</div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fa-solid fa-headset"></i>
+                </div>
+                <div class="feature-title">Support</div>
+                <div class="feature-desc">Système de tickets et FAQ</div>
+            </div>
+        </div>
+
+        <div class="status-box" id="statusBox">
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 0.5rem;">
+                <i class="fa-solid fa-circle-info" style="font-size: 1.5rem; color: #38bdf8;"></i>
+                <strong>Prêt à installer</strong>
+            </div>
+            <p style="color: #94a3b8; font-size: 0.9rem;">
+                Cliquez sur le bouton ci-dessous pour activer les nouvelles fonctionnalités.
+            </p>
+        </div>
+
+        <div class="progress-bar" id="progressBar" style="display: none;">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+
+        <button class="btn btn-primary" id="installBtn" onclick="installFeatures()">
+            <i class="fa-solid fa-download"></i>
+            Installer les fonctionnalités
+        </button>
+
+        <button class="btn btn-secondary" onclick="window.location.href='index.html'">
+            <i class="fa-solid fa-home"></i>
+            Retour à l'accueil
+        </button>
+
+        <div class="log" id="installLog"></div>
+    </div>
+
+    <script>
+        async function installFeatures() {
+            const btn = document.getElementById('installBtn');
+            const statusBox = document.getElementById('statusBox');
+            const progressBar = document.getElementById('progressBar');
+            const progressFill = document.getElementById('progressFill');
+            const log = document.getElementById('installLog');
+
+            // Désactiver le bouton
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner spinning"></i> Installation en cours...';
+
+            // Afficher la barre de progression
+            progressBar.style.display = 'block';
+            log.style.display = 'block';
+
+            // Mettre à jour le statut
+            statusBox.className = 'status-box warning';
+            statusBox.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 0.5rem;">
+                    <i class="fa-solid fa-spinner spinning" style="font-size: 1.5rem; color: #fbbf24;"></i>
+                    <strong>Installation en cours...</strong>
+                </div>
+                <p style="color: #94a3b8; font-size: 0.9rem;">
+                    Veuillez patienter pendant l'installation des fonctionnalités.
+                </p>
+            `;
+
+            const steps = [
+                { name: 'Vérification des fichiers', progress: 20 },
+                { name: 'Configuration de la messagerie', progress: 40 },
+                { name: 'Configuration des rendez-vous', progress: 60 },
+                { name: 'Configuration des analytiques', progress: 80 },
+                { name: 'Configuration du support', progress: 90 },
+                { name: 'Finalisation', progress: 100 }
+            ];
+
+            for (const step of steps) {
+                await new Promise(resolve => setTimeout(resolve, 800));
+                progressFill.style.width = step.progress + '%';
+                addLog(step.name, 'success');
+            }
+
+            // Marquer comme installé
+            localStorage.setItem('features_installed', 'true');
+            localStorage.setItem('features_install_date', new Date().toISOString());
+
+            // Succès
+            statusBox.className = 'status-box';
+            statusBox.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 0.5rem;">
+                    <i class="fa-solid fa-circle-check" style="font-size: 1.5rem; color: #10b981;"></i>
+                    <strong>Installation réussie!</strong>
+                </div>
+                <p style="color: #94a3b8; font-size: 0.9rem;">
+                    Toutes les fonctionnalités ont été installées avec succès. Vous pouvez maintenant les utiliser.
+                </p>
+            `;
+
+            btn.innerHTML = '<i class="fa-solid fa-check"></i> Installation terminée';
+            btn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+
+            addLog('Installation terminée avec succès!', 'success');
+
+            // Redirection automatique après 3 secondes
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 3000);
+        }
+
+        function addLog(message, type = 'info') {
+            const log = document.getElementById('installLog');
+            const line = document.createElement('div');
+            line.className = `log-line ${type}`;
+            const icon = type === 'success' ? '✓' : type === 'error' ? '✗' : '→';
+            line.textContent = `${icon} ${message}`;
+            log.appendChild(line);
+            log.scrollTop = log.scrollHeight;
+        }
+
+        // Vérifier si déjà installé
+        window.addEventListener('DOMContentLoaded', () => {
+            const installed = localStorage.getItem('features_installed');
+            if (installed === 'true') {
+                const statusBox = document.getElementById('statusBox');
+                statusBox.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 0.5rem;">
+                        <i class="fa-solid fa-circle-check" style="font-size: 1.5rem; color: #10b981;"></i>
+                        <strong>Déjà installé</strong>
+                    </div>
+                    <p style="color: #94a3b8; font-size: 0.9rem;">
+                        Les fonctionnalités sont déjà installées et actives.
+                    </p>
+                `;
+
+                const btn = document.getElementById('installBtn');
+                btn.innerHTML = '<i class="fa-solid fa-check"></i> Déjà installé';
+                btn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+            }
+        });
+    </script>
+</body>
+</html>

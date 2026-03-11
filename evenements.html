@@ -1,0 +1,669 @@
+<!DOCTYPE html> <!-- Déclaration du type de document standard HTML5 -->
+<html lang="fr"> <!-- Balise racine pour le contenu en français -->
+
+<head> <!-- Section en-tête pour les métadonnées et styles -->
+    <meta charset="UTF-8"> <!-- Encodage universel des caractères -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Support de l'affichage mobile -->
+    <title>Événements | Délégation Jeunesse</title> <!-- Titre de la page dans l'onglet -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Police Inter via Google Fonts -->
+    <link rel="stylesheet" href="assets/css/style.css"> <!-- Styles globaux Aurora Portal -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Librairie d'icônes Font Awesome -->
+    <style>
+        /* Styles CSS spécifiques pour la page Événements */
+        .events-container {
+            max-width: 1200px;
+            /* Largeur maximale du contenu */
+            margin: 0 auto;
+            /* Centrage horizontal */
+            padding: 2rem;
+            /* Espacement interne */
+        }
+
+        /* Vue Calendrier (actuellement carte de fond pour la section calendrier) */
+        .calendar-view {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        /* En-tête du calendrier (flexbox pour alignement) */
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        /* Navigation entre les mois */
+        .month-nav {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        /* Bouton de navigation circulaire */
+        .nav-btn {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        /* Effet au survol du bouton de navigation */
+        .nav-btn:hover {
+            background: var(--accent-primary);
+            color: white;
+            border-color: var(--accent-primary);
+        }
+
+        /* Grille des cartes d'événements */
+        .events-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            /* Grille adaptative */
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        /* Style de la carte d'événement individuelle */
+        .event-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        /* Animation au survol de la carte */
+        .event-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-primary);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Bloc pour l'affichage de la date sur la carte */
+        .event-date {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--accent-primary);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        /* Zone d'image/icône de l'événement */
+        .event-image {
+            height: 200px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+        }
+
+        /* Conteneur de texte de la carte */
+        .event-content {
+            padding: 2rem;
+        }
+
+        /* Titre de l'événement */
+        .event-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            line-height: 1.4;
+        }
+
+        /* Informations méta (lieu, heure, etc.) */
+        .event-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-muted);
+        }
+
+        /* Item méta individuel avec icône */
+        .event-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Description courte de l'événement */
+        .event-description {
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Groupe de boutons d'action sur la carte */
+        .event-actions {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .event-actions .btn-primary,
+        .event-actions .btn-secondary {
+            flex: 1;
+            min-width: 120px;
+            padding: 0.75rem 1rem;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            text-align: center;
+        }
+
+        /* Badge pour l'état de l'événement (terminé, en cours, etc.) */
+        .event-status {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        /* Couleur spécifique pour événement à venir */
+        .status-upcoming {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+        }
+
+        /* Couleur pour événement en cours */
+        .status-ongoing {
+            background: rgba(245, 158, 11, 0.1);
+            color: #f59e0b;
+        }
+
+        /* Couleur pour événement passé */
+        .status-past {
+            background: rgba(107, 114, 128, 0.1);
+            color: #6b7280;
+        }
+
+        /* Section des boutons de filtrage */
+        .filter-section {
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        /* Conteneur horizontal des filtres */
+        .filter-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        /* Bouton de filtre style pill */
+        .filter-btn {
+            padding: 0.5rem 1.5rem;
+            border: 1px solid var(--border-color);
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        /* État actif ou survol du filtre */
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: white;
+            border-color: transparent;
+        }
+
+        /* Bannière de mise en avant des prochains événements */
+        .upcoming-events {
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.1), rgba(129, 140, 248, 0.1));
+            border-radius: 20px;
+            padding: 3rem;
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        /* Règles d'adaptation pour tablettes et mobiles */
+        @media (max-width: 768px) {
+            .events-grid {
+                grid-template-columns: 1fr;
+                /* Passage en colonne simple */
+            }
+
+            .calendar-header {
+                flex-direction: column;
+                /* Alignement vertical */
+                gap: 1rem;
+            }
+
+            .event-actions {
+                flex-direction: column;
+                /* Boutons empilés */
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="assets/css/spacing-fix.css">
+</head>
+
+<body> <!-- Début du corps visible de la page -->
+    <div class="particles" id="particles"></div> <!-- Fond étoilé animé -->
+
+    <!-- Barre de navigation (Navbar) -->
+    <nav class="navbar scrolled" id="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="nav-logo floating-slow"> <!-- Logo MINJEC flottant -->
+                <i class="fa-solid fa-layer-group rotate-slow"></i> MINJEC
+            </a>
+            <ul class="nav-links" style="display: flex; align-items: center; gap: 1.2rem;"> <!-- Menu Desktop -->
+                <li><a href="index.html" class="link-underline">Accueil</a></li>
+                <li><a href="missions-organigramme.html" class="link-underline">Missions</a></li>
+                <li><a href="programmes.html" class="link-underline">Programmes</a></li>
+                <li><a href="projets.html" class="link-underline">Projets</a></li>
+                <li><a href="galerie.html" class="link-underline">Galerie</a></li>
+                <li><a href="agora.html" class="link-underline" data-t="agora">Agora</a></li>
+                <li><a href="actualites.html" class="link-underline">Actualités</a></li>
+                <li>
+                    <a href="#" class="link-underline active">Plus <i class="fa-solid fa-chevron-down"
+                            style="font-size: 0.7rem; margin-left: 3px;"></i></a>
+                    <div class="dropdown-menu"> <!-- Menu déroulant 'Plus' -->
+                        <a href="about.html" class="dropdown-item"><i class="fa-solid fa-info-circle"></i> À propos</a>
+                        <a href="associations.html" class="dropdown-item"><i class="fa-solid fa-users"></i>
+                            Associations</a>
+                        <a href="ressources.html" class="dropdown-item"><i class="fa-solid fa-book"></i> Ressources</a>
+                        <a href="evenements.html" class="dropdown-item active"><i class="fa-solid fa-calendar-days"></i>
+                            Événements</a>
+                        <a href="faq.html" class="dropdown-item"><i class="fa-solid fa-circle-question"></i> FAQ</a>
+                        <a href="contact.html" class="dropdown-item"><i class="fa-solid fa-envelope"></i> Contact</a>
+                        <a href="archives.html" class="dropdown-item"><i class="fa-solid fa-box-archive"></i>
+                            Archives</a>
+                    </div>
+                </li>
+            </ul>
+            <div style="display: flex; align-items: center; gap: 1.5rem;"> <!-- Actions de droite -->
+                <button class="theme-toggle" id="themeToggle" title="Changer de mode"> <!-- Toggle Thème -->
+                    <i class="fa-solid fa-moon"></i>
+                    <i class="fa-solid fa-sun"></i>
+                </button>
+                <a href="login.html" class="btn-primary"> <!-- Bouton Accès Compte -->
+                    <i class="fa-solid fa-user-lock"></i> Connexion
+                </a>
+            </div>
+            <button class="mobile-menu-toggle" id="mobileMenuToggle"> <!-- Déclencheur menu mobile -->
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <div class="events-container" style="margin-top: 6rem;"> <!-- Conteneur principal de la page -->
+        <!-- En-tête de la page -->
+        <div class="page-header reveal">
+            <h1><i class="fa-solid fa-calendar-days"></i> Événements & Activités</h1> <!-- Titre iconé -->
+            <p>Découvrez tous les événements organisés par la délégation et nos partenaires</p> <!-- Slogan -->
+        </div>
+
+        <!-- Section "À la une" (Highlight) avec compte à rebours -->
+        <div class="upcoming-events reveal">
+            <h2 class="animated-gradient-text">Prochainement</h2> <!-- Titre animé -->
+            <div style="display: flex; align-items: center; justify-content: center; gap: 2rem; margin: 2rem 0;">
+                <!-- Bloc Compteur -->
+                <div style="text-align: center;">
+                    <div style="font-size: 3rem; font-weight: 700; color: var(--accent-primary);" id="daysLeft">6</div>
+                    <!-- Valeur Jours -->
+                    <div style="color: var(--text-muted);">Jours</div>
+                </div>
+                <div style="font-size: 2rem; color: var(--text-muted);">:</div>
+                <div style="text-align: center;">
+                    <div style="font-size: 3rem; font-weight: 700; color: var(--accent-secondary);" id="hoursLeft">12
+                    </div> <!-- Valeur Heures -->
+                    <div style="color: var(--text-muted);">Heures</div>
+                </div>
+            </div>
+            <h3>Fête de la Jeunesse 2026</h3> <!-- Nom du Prochain Grand Event -->
+            <p style="color: var(--text-muted); margin-bottom: 2rem;">
+                35ème édition de la Fête Nationale de la Jeunesse - 11 Février 2026
+            </p>
+            <a href="javascript:void(0)" onclick="showToast('Programme détaillé bientôt disponible', 'info')"
+                class="btn-primary"> <!-- Action voir le détail -->
+                <i class="fa-solid fa-calendar-plus"></i> Voir le programme
+            </a>
+        </div>
+
+        <!-- Section de filtrage dynamique -->
+        <div class="filter-section reveal">
+            <div class="filter-buttons"> <!-- Liste des catégories cliquables -->
+                <button class="filter-btn active" data-filter="all">Tous</button>
+                <button class="filter-btn" data-filter="formation">Formations</button>
+                <button class="filter-btn" data-filter="celebration">Célébrations</button>
+                <button class="filter-btn" data-filter="competition">Concours</button>
+                <button class="filter-btn" data-filter="conference">Conférences</button>
+            </div>
+        </div>
+
+        <!-- Grille principale des Événements -->
+        <div class="events-grid reveal stagger-children">
+            <!-- Événement 1 : Fête Nationale -->
+            <div class="event-card" data-category="celebration">
+                <div class="event-status status-upcoming">À venir</div> <!-- Badge statut -->
+                <div class="event-date">11 FÉV</div> <!-- Pastille date -->
+                <div class="event-image">
+                    <i class="fa-solid fa-flag"></i> <!-- Icône type -->
+                </div>
+                <div class="event-content">
+                    <h3 class="event-title">Fête de la Jeunesse 2026</h3> <!-- Titre -->
+                    <div class="event-meta"> <!-- Détails pratiques -->
+                        <div class="event-meta-item">
+                            <i class="fa-solid fa-calendar"></i>
+                            <span>11 Février 2026</span>
+                        </div>
+                        <div class="event-meta-item">
+                            <i class="fa-solid fa-clock"></i>
+                            <span>08h00 - 18h00</span>
+                        </div>
+                        <div class="event-meta-item">
+                            <i class="fa-solid fa-location-dot"></i>
+                            <span>Stade Municipal de Bangangté</span>
+                        </div>
+                    </div>
+                    <p class="event-description"> <!-- Résumé -->
+                        Célébration de la 35ème édition de la Fête Nationale de la Jeunesse.
+                        Défilés, concours, remises de prix et animations culturelles.
+                    </p>
+                    <div class="event-actions"> <!-- Actions -->
+                        <button class="btn-primary" onclick="showToast('Inscription bientôt ouverte', 'info')">
+                            <i class="fa-solid fa-ticket"></i> S'inscrire
+                        </button>
+                        <button class="btn-secondary" onclick="showToast('Programme détaillé en préparation', 'info')">
+                            <i class="fa-solid fa-info-circle"></i> Détails
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Événement 2 : Atelier Tech -->
+            <div class="event-card" data-category="formation">
+                <div class="event-status status-upcoming">À venir</div>
+                <div class="event-date">15-19 FÉV</div>
+                <div class="event-image">
+                    <i class="fa-solid fa-laptop-code"></i>
+                </div>
+                <div class="event-content">
+                    <h3 class="event-title">Atelier Civic Tech</h3>
+                    <div class="event-meta">
+                        <div class="event-meta-item">
+                            <i class="fa-solid fa-calendar"></i>
+                            <span>15-19 Février 2026</span>
+                        </div>
+                        <div class="event-meta-item">
+                            <i class="fa-solid fa-clock"></i>
+                            <span>09h00 - 17h00</span>
+                        </div>
+                        <div class="event-meta-item">
+                            <i class="fa-solid fa-location-dot"></i>
+                            <span>Centre Multimédia Jeunesse</span>
+                        </div>
+                    </div>
+                    <p class="event-description">
+                        Formation intensive aux technologies civiques : développement d'applications,
+                        création de solutions numériques pour les citoyens.
+                    </p>
+                    <div class="event-actions">
+                        <a href="programmes.html" class="btn-primary">
+                            <i class="fa-solid fa-user-plus"></i> S'inscrire
+                        </a>
+                        <button class="btn-secondary" onclick="showToast('20 places disponibles', 'info')">
+                            <i class="fa-solid fa-users"></i> Places
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Événement 3 : Concours Économique -->
+            <div class="event-card" data-category="competition">
+                <div class="event-status status-ongoing">En cours</div>
+                <div class="event-date">1-28 FÉV</div>
+                <div class="event-image">
+                    <i class="fa-solid fa-lightbulb"></i>
+                </div>
+                <div class="event-content">
+                    <h3 class="event-title">Concours Innovation Jeunes</h3>
+                    <div class="event-meta">
+                        <div class="event-meta-item">
+                            <i class="fa-solid fa-calendar"></i>
+                            <span>1-28 Février 2026</span>
+                        </div>
+                        <div class="event-meta-item">
+                            <i class="fa-solid fa-trophy"></i>
+                            <span>Prix : 5 000 000 FCFA</span>
+                        </div>
+                        <div class="event-meta-item">
+                            <i class="fa-solid fa-users"></i>
+                            <span>18-35 ans</span>
+                        </div>
+                    </div>
+                    <p class="event-description">
+                        Concours national d'innovation pour les jeunes entrepreneurs.
+                        Soumettez vos projets innovants et gagnez des financements.
+                    </p>
+                    <div class="event-actions">
+                        <a href="login.html" class="btn-primary">
+                            <i class="fa-solid fa-paper-plane"></i> Participer
+                        </a>
+                        <button class="btn-secondary" onclick="showToast('Règlement disponible sur demande', 'info')">
+                            <i class="fa-solid fa-file-text"></i> Règlement
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Événement 4 : Conférence Thématique -->
+            <div class="event-card" data-category="conference">
+                <div class="event-status status-upcoming">À venir</div>
+                <div class="event-date">25 FÉV</div>
+                <div class="event-image">
+                    <i class="fa-solid fa-microphone"></i>
+                </div>
+                <div class="event-content">
+                    <h3 class="event-title">Conférence Entrepreneuriat Féminin</h3>
+                    <div class="event-meta">
+                        <div class="event-meta-item">
+                            <i class="fa-solid fa-calendar"></i>
+                            <span>25 Février 2026</span>
+                        </div>
+                        <div class="event-meta-item">
+                            <i class="fa-solid fa-clock"></i>
+                            <span>14h00 - 18h00</span>
+                        </div>
+                        <div class="event-meta-item">
+                            <i class="fa-solid fa-location-dot"></i>
+                            <span>Salle de Conférence MINJEC</span>
+                        </div>
+                    </div>
+                    <p class="event-description">
+                        Conférence dédiée à l'entrepreneuriat féminin avec des témoignages
+                        d'entrepreneuses à succès et des ateliers pratiques.
+                    </p>
+                    <div class="event-actions">
+                        <button class="btn-primary"
+                            onclick="showToast('Inscription gratuite mais obligatoire', 'info')">
+                            <i class="fa-solid fa-ticket"></i> Réserver
+                        </button>
+                        <button class="btn-secondary"
+                            onclick="showToast('Programme des intervenantes bientôt disponible', 'info')">
+                            <i class="fa-solid fa-users"></i> Intervenantes
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Événement 5 : Stage Agricole -->
+            <div class="event-card" data-category="formation">
+                <div class="event-status status-upcoming">À venir</div>
+                <div class="event-date">5-9 MAR</div>
+                <div class="event-image">
+                    <i class="fa-solid fa-seedling"></i>
+                </div>
+                <div class="event-content">
+                    <h3 class="event-title">Formation Agriculture Urbaine</h3>
+                    <div class="event-meta">
+                        <div class="event-meta-item">
+                            <i class="fa-solid fa-calendar"></i>
+                            <span>5-9 Mars 2026</span>
+                        </div>
+                        <div class="event-meta-item">
+                            <i class="fa-solid fa-clock"></i>
+                            <span>08h00 - 16h00</span>
+                        </div>
+                        <div class="event-meta-item">
+                            <i class="fa-solid fa-location-dot"></i>
+                            <span>Ferme Pilote Bangangté</span>
+                        </div>
+                    </div>
+                    <p class="event-description">
+                        Formation pratique aux techniques d'agriculture urbaine et verticale.
+                        Hydroponie, compostage et commercialisation des produits.
+                    </p>
+                    <div class="event-actions">
+                        <a href="programmes.html" class="btn-primary">
+                            <i class="fa-solid fa-leaf"></i> S'inscrire
+                        </a>
+                        <button class="btn-secondary"
+                            onclick="showToast('Matériel fourni, apporter des vêtements de travail', 'info')">
+                            <i class="fa-solid fa-info-circle"></i> Prérequis
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Événement 6 : Archivage Forum -->
+            <div class="event-card" data-category="conference">
+                <div class="event-status status-past">Terminé</div> <!-- Archivé -->
+                <div class="event-date">20 JAN</div>
+                <div class="event-image">
+                    <i class="fa-solid fa-handshake"></i>
+                </div>
+                <div class="event-content">
+                    <h3 class="event-title">Forum des Associations 2026</h3>
+                    <div class="event-meta">
+                        <div class="event-meta-item">
+                            <i class="fa-solid fa-calendar"></i>
+                            <span>20 Janvier 2026</span>
+                        </div>
+                        <div class="event-meta-item">
+                            <i class="fa-solid fa-users"></i>
+                            <span>150 participants</span>
+                        </div>
+                        <div class="event-meta-item">
+                            <i class="fa-solid fa-building"></i>
+                            <span>45 associations présentes</span>
+                        </div>
+                    </div>
+                    <p class="event-description">
+                        Rencontre annuelle des associations de jeunesse du département.
+                        Networking, échanges d'expériences et présentation des programmes 2026.
+                    </p>
+                    <div class="event-actions">
+                        <a href="associations.html" class="btn-secondary">
+                            <i class="fa-solid fa-users"></i> Voir les associations
+                        </a>
+                        <button class="btn-secondary"
+                            onclick="showToast('Compte-rendu disponible prochainement', 'info')">
+                            <i class="fa-solid fa-file-text"></i> Compte-rendu
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Appel à l'action final pour contributeurs externes -->
+        <div class="upcoming-events reveal">
+            <h3><i class="fa-solid fa-calendar-plus"></i> Proposer un événement</h3>
+            <p style="color: var(--text-muted); margin-bottom: 2rem;">
+                Vous organisez un événement jeunesse ? Faites-le connaître via notre plateforme
+            </p>
+            <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+                <a href="contact.html" class="btn-primary">
+                    <i class="fa-solid fa-plus"></i> Proposer un événement
+                </a>
+                <a href="login.html" class="btn-secondary">
+                    <i class="fa-solid fa-calendar"></i> Mon agenda
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Conteneur fixe pour les bulles de notification (Toasts) -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script src="assets/js/data-loader.js"></script> <!-- Chargement données -->
+    <script src="assets/js/main.js"></script> <!-- Logique globale UI -->
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Logique de filtrage des événements selon leur catégorie
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            const events = document.querySelectorAll('.event-card');
+
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // Mise à jour de l'état graphique des boutons
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+
+                    const filterValue = btn.getAttribute('data-filter');
+
+                    events.forEach(event => {
+                        const category = event.getAttribute('data-category');
+                        if (filterValue === 'all' || filterValue === category) {
+                            event.style.display = 'block'; // Afficher si match
+                            setTimeout(() => event.classList.add('active'), 10);
+                        } else {
+                            event.style.display = 'none'; // Cacher sinon
+                            event.classList.remove('active');
+                        }
+                    });
+                });
+            });
+
+            // Mise à jour dynamique du compte à rebours pour la Fête de la Jeunesse
+            function updateCountdown() {
+                const youthDay = new Date('February 11, 2026 08:00:00').getTime();
+                const now = new Date().getTime();
+                const diff = youthDay - now;
+
+                if (diff > 0) {
+                    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+
+                    document.getElementById('daysLeft').textContent = days;
+                    document.getElementById('hoursLeft').textContent = hours;
+                } else {
+                    document.getElementById('daysLeft').textContent = '0';
+                    document.getElementById('hoursLeft').textContent = '0';
+                }
+            }
+
+            updateCountdown(); // Exécution initiale
+            setInterval(updateCountdown, 3600000); // Mise à jour toutes les heures
+        });
+    </script>
+</body>
+
+</html> <!-- Fin du document événements -->

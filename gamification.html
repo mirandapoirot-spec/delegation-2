@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gamification | MINJEC Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background: var(--bg-dark);
+            background-image: var(--bg-gradient);
+            min-height: 100vh;
+        }
+
+        .gamification-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .profile-header {
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .profile-avatar {
+            position: relative;
+        }
+
+        .avatar-img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--accent-primary);
+        }
+
+        .level-badge {
+            position: absolute;
+            bottom: -10px;
+            right: -10px;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.1rem;
+            border: 3px solid var(--bg-dark);
+        }
+
+        .profile-info {
+            flex: 1;
+        }
+
+        .profile-name {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-title {
+            color: var(--accent-primary);
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+
+        .xp-bar {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            height: 12px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+
+        .xp-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981, #38bdf8);
+            border-radius: 20px;
+            transition: width 1s ease;
+        }
+
+        .xp-text {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-primary);
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #10b981, #38bdf8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            margin: 0 auto 1rem;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 0.3rem;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 2rem;
+        }
+
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .section-card {
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .badges-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 1rem;
+        }
+
+        .badge-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1rem;
+            text-align: center;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .badge-item.earned {
+            border-color: var(--accent-primary);
+            background: rgba(56, 189, 248, 0.1);
+        }
+
+        .badge-item.locked {
+            opacity: 0.4;
+        }
+
+        .badge-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .badge-name {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 0.3rem;
+        }
+
+        .badge-desc {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        .earned-date {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: #10b981;
+            color: white;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.6rem;
+        }
+
+        .leaderboard {
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2rem;
+        }
+
+        .leaderboard-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            border-radius: 12px;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s;
+        }
+
+        .leaderboard-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .leaderboard-item.current-user {
+            background: rgba(56, 189, 248, 0.1);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+        }
+
+        .rank-number {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--accent-primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .rank-number.gold {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+        }
+
+        .rank-number.silver {
+            background: linear-gradient(135deg, #9ca3af, #6b7280);
+        }
+
+        .rank-number.bronze {
+            background: linear-gradient(135deg, #d97706, #92400e);
+        }
+
+        .leaderboard-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .leaderboard-info {
+            flex: 1;
+        }
+
+        .leaderboard-name {
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 0.2rem;
+        }
+
+        .leaderboard-level {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .leaderboard-xp {
+            font-weight: 600;
+            color: var(--accent-primary);
+        }
+
+        .achievements-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .achievement-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .achievement-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #10b981, #38bdf8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .achievement-info {
+            flex: 1;
+        }
+
+        .achievement-title {
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 0.3rem;
+        }
+
+        .achievement-desc {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .achievement-xp {
+            color: var(--accent-primary);
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .progress-ring {
+            width: 60px;
+            height: 60px;
+            position: relative;
+        }
+
+        .progress-ring svg {
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg);
+        }
+
+        .progress-ring circle {
+            fill: none;
+            stroke-width: 4;
+        }
+
+        .progress-ring .bg {
+            stroke: rgba(255, 255, 255, 0.1);
+        }
+
+        .progress-ring .progress {
+            stroke: var(--accent-primary);
+            stroke-linecap: round;
+            transition: stroke-dashoffset 0.5s ease;
+        }
+
+        .progress-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .daily-challenges {
+            background: rgba(251, 191, 36, 0.1);
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .challenge-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+        }
+
+        .challenge-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .challenge-info {
+            flex: 1;
+        }
+
+        .challenge-title {
+            font-weight: 500;
+            color: var(--text-main);
+            margin-bottom: 0.3rem;
+        }
+
+        .challenge-reward {
+            font-size: 0.8rem;
+            color: var(--accent-primary);
+        }
+
+        .challenge-progress {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .notification-toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #10b981, #38bdf8);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transform: translateX(400px);
+            transition: all 0.3s;
+            z-index: 10000;
+        }
+
+        .notification-toast.show {
+            transform: translateX(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="gamification-container">
+        <header style="margin-bottom: 2rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h1 class="animated-gradient-text" style="font-size: 2.5rem; margin-bottom: 0.5rem;">
+                        <i class="fa-solid fa-trophy"></i> Gamification
+                    </h1>
+                    <p style="color: var(--text-muted);">Votre progression et réalisations sur la plateforme</p>
+                </div>
+                <a href="index.html" class="btn-secondary">
+                    <i class="fa-solid fa-home"></i> Accueil
+                </a>
+            </div>
+        </header>
+
+        <!-- Profil Header -->
+        <div class="profile-header">
+            <div class="profile-avatar">
+                <img id="userAvatar" src="" alt="Avatar" class="avatar-img">
+                <div class="level-badge" id="userLevel">1</div>
+            </div>
+            <div class="profile-info">
+                <div class="profile-name" id="userName">Utilisateur</div>
+                <div class="profile-title" id="userTitle">Entrepreneur Débutant</div>
+                <div class="xp-bar">
+                    <div class="xp-fill" id="xpBar" style="width: 0%;"></div>
+                </div>
+                <div class="xp-text">
+                    <span id="currentXP">0</span> / <span id="nextLevelXP">100</span> XP - 
+                    <span id="xpToNext">100</span> XP pour le niveau suivant
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fa-solid fa-star"></i>
+                </div>
+                <div class="stat-value" id="totalXP">0</div>
+                <div class="stat-label">XP Total</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fa-solid fa-medal"></i>
+                </div>
+                <div class="stat-value" id="totalBadges">0</div>
+                <div class="stat-label">Badges Obtenus</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fa-solid fa-fire"></i>
+                </div>
+                <div class="stat-value" id="currentStreak">0</div>
+                <div class="stat-label">Série Actuelle</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fa-solid fa-ranking-star"></i>
+                </div>
+                <div class="stat-value" id="globalRank">#-</div>
+                <div class="stat-label">Classement</div>
+            </div>
+        </div>
+
+        <!-- Daily Challenges -->
+        <div class="daily-challenges">
+            <h3 style="color: var(--text-main); margin-bottom: 1rem;">
+                <i class="fa-solid fa-calendar-day"></i> Défis Quotidiens
+            </h3>
+            <div id="dailyChallenges">
+                <!-- Défis chargés dynamiquement -->
+            </div>
+        </div>
+
+        <div class="content-grid">
+            <!-- Main Content -->
+            <div class="main-content">
+                <!-- Badges -->
+                <div class="section-card">
+                    <h3 class="section-title">
+                        <i class="fa-solid fa-medal"></i> Mes Badges
+                    </h3>
+                    <div class="badges-grid" id="badgesGrid">
+                        <!-- Badges chargés dynamiquement -->
+                    </div>
+                </div>
+
+                <!-- Achievements -->
+                <div class="section-card">
+                    <h3 class="section-title">
+                        <i class="fa-solid fa-trophy"></i> Réalisations Récentes
+                    </h3>
+                    <div class="achievements-list" id="achievementsList">
+                        <!-- Réalisations chargées dynamiquement -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <aside>
+                <div class="leaderboard">
+                    <h3 style="color: var(--text-main); margin-bottom: 1.5rem;">
+                        <i class="fa-solid fa-crown"></i> Classement
+                    </h3>
+                    <div id="leaderboardList">
+                        <!-- Classement chargé dynamiquement -->
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div class="notification-toast" id="notificationToast">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <i class="fa-solid fa-trophy" style="font-size: 1.5rem;"></i>
+            <div>
+                <div style="font-weight: 600;" id="toastTitle">Nouveau Badge!</div>
+                <div style="font-size: 0.85rem;" id="toastMessage">Vous avez débloqué un nouveau badge</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/main.js"></script>
+    <script>
+        let currentUser = null;
+        let userGameData = null;
+        let badges = [];
+        let leaderboard = [];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (!currentUser) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            initializeGameData();
+            loadBadges();
+            loadLeaderboard();
+            renderProfile();
+            renderBadges();
+            renderAchievements();
+            renderLeaderboard();
+            renderDailyChallenges();
+            updateStats();
+        });
+
+        function initializeGameData() {
+            const gameDataKey = `gameData_${currentUser.email}`;
+            userGameData = JSON.parse(localStorage.getItem(gameDataKey)) || {
+                xp: 0,
+                level: 1,
+                badges: [],
+                achievements: [],
+                streak: 0,
+                lastActivity: Date.now(),
+                dailyChallenges: generateDailyChallenges()
+            };
+
+            // Calculer le niveau basé sur l'XP
+            userGameData.level = calculateLevel(userGameData.xp);
+            
+            localStorage.setItem(gameDataKey, JSON.stringify(userGameData));
+        }
+
+        function loadBadges() {
+            badges = [
+                {
+                    id: 'first_login',
+                    name: 'Premier Pas',
+                    description: 'Première connexion',
+                    icon: '🎯',
+                    xp: 10,
+                    condition: 'login'
+                },
+                {
+                    id: 'first_project',
+                    name: 'Entrepreneur',
+                    description: 'Premier projet soumis',
+                    icon: '🚀',
+                    xp: 50,
+                    condition: 'project_submit'
+                },
+                {
+                    id: 'project_validated',
+                    name: 'Validé',
+                    description: 'Projet validé',
+                    icon: '✅',
+                    xp: 100,
+                    condition: 'project_validated'
+                },
+                {
+                    id: 'mentor_active',
+                    name: 'Mentor',
+                    description: 'Devenir mentor',
+                    icon: '🤝',
+                    xp: 75,
+                    condition: 'become_mentor'
+                },
+                {
+                    id: 'course_completed',
+                    name: 'Apprenant',
+                    description: 'Premier cours terminé',
+                    icon: '🎓',
+                    xp: 30,
+                    condition: 'course_complete'
+                },
+                {
+                    id: 'forum_active',
+                    name: 'Communautaire',
+                    description: '10 messages forum',
+                    icon: '💬',
+                    xp: 25,
+                    condition: 'forum_posts'
+                },
+                {
+                    id: 'streak_7',
+                    name: 'Assidu',
+                    description: '7 jours consécutifs',
+                    icon: '🔥',
+                    xp: 40,
+                    condition: 'streak_7'
+                },
+                {
+                    id: 'level_5',
+                    name: 'Expérimenté',
+                    description: 'Atteindre niveau 5',
+                    icon: '⭐',
+                    xp: 200,
+                    condition: 'level_5'
+                },
+                {
+                    id: 'helper',
+                    name: 'Aidant',
+                    description: '5 tickets résolus',
+                    icon: '🛟',
+                    xp: 60,
+                    condition: 'help_others'
+                },
+                {
+                    id: 'networker',
+                    name: 'Réseau',
+                    description: '20 connexions',
+                    icon: '🌐',
+                    xp: 80,
+                    condition: 'connections'
+                }
+            ];
+        }
+
+        function loadLeaderboard() {
+            // Simuler un classement
+            const users = JSON.parse(localStorage.getItem('delegation_users')) || [];
+            leaderboard = users.map(user => {
+                const gameData = JSON.parse(localStorage.getItem(`gameData_${user.email}`)) || { xp: 0, level: 1 };
+                return {
+                    name: user.name,
+                    email: user.email,
+                    xp: gameData.xp,
+                    level: gameData.level,
+                    avatar: user.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&size=100&background=38bdf8&color=fff`
+                };
+            }).sort((a, b) => b.xp - a.xp);
+        }
+
+        function renderProfile() {
+            document.getElementById('userName').textContent = currentUser.name;
+            document.getElementById('userLevel').textContent = userGameData.level;
+            document.getElementById('userAvatar').src = currentUser.avatar || 
+                `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUser.name)}&size=120&background=38bdf8&color=fff`;
+
+            // Titre basé sur le niveau
+            const titles = {
+                1: 'Entrepreneur Débutant',
+                2: 'Entrepreneur Motivé',
+                3: 'Entrepreneur Actif',
+                4: 'Entrepreneur Confirmé',
+                5: 'Entrepreneur Expert',
+                6: 'Leader Communautaire',
+                7: 'Mentor Reconnu',
+                8: 'Innovateur',
+                9: 'Visionnaire',
+                10: 'Légende'
+            };
+            document.getElementById('userTitle').textContent = titles[userGameData.level] || 'Entrepreneur Légendaire';
+
+            // Barre XP
+            const currentLevelXP = getLevelXP(userGameData.level);
+            const nextLevelXP = getLevelXP(userGameData.level + 1);
+            const progressXP = userGameData.xp - currentLevelXP;
+            const neededXP = nextLevelXP - currentLevelXP;
+            const percentage = (progressXP / neededXP) * 100;
+
+            document.getElementById('xpBar').style.width = `${percentage}%`;
+            document.getElementById('currentXP').textContent = progressXP;
+            document.getElementById('nextLevelXP').textContent = neededXP;
+            document.getElementById('xpToNext').textContent = neededXP - progressXP;
+        }
+
+        function renderBadges() {
+            const grid = document.getElementById('badgesGrid');
+            
+            const html = badges.map(badge => {
+                const earned = userGameData.badges.includes(badge.id);
+                const earnedDate = earned ? userGameData.achievements.find(a => a.badgeId === badge.id)?.date : null;
+                
+                return `
+                    <div class="badge-item ${earned ? 'earned' : 'locked'}">
+                        ${earned ? '<div class="earned-date"><i class="fa-solid fa-check"></i></div>' : ''}
+                        <div class="badge-icon">${badge.icon}</div>
+                        <div class="badge-name">${badge.name}</div>
+                        <div class="badge-desc">${badge.description}</div>
+                        ${earned ? `<div style="font-size: 0.7rem; color: var(--accent-primary); margin-top: 0.3rem;">+${badge.xp} XP</div>` : ''}
+                    </div>
+                `;
+            }).join('');
+
+            grid.innerHTML = html;
+        }
+
+        function renderAchievements() {
+            const list = document.getElementById('achievementsList');
+            const recentAchievements = userGameData.achievements.slice(-5).reverse();
+
+            if (recentAchievements.length === 0) {
+                list.innerHTML = `
+                    <div style="text-align: center; padding: 2rem; color: var(--text-muted);">
+                        <i class="fa-solid fa-trophy" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.3;"></i>
+                        <p>Aucune réalisation pour le moment</p>
+                        <p style="font-size: 0.85rem;">Commencez à utiliser la plateforme pour débloquer des réalisations!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const html = recentAchievements.map(achievement => {
+                const badge = badges.find(b => b.id === achievement.badgeId);
+                const timeAgo = formatTimeAgo(achievement.date);
+                
+                return `
+                    <div class="achievement-item">
+                        <div class="achievement-icon">${badge.icon}</div>
+                        <div class="achievement-info">
+                            <div class="achievement-title">${badge.name}</div>
+                            <div class="achievement-desc">${badge.description} • ${timeAgo}</div>
+                        </div>
+                        <div class="achievement-xp">+${badge.xp} XP</div>
+                    </div>
+                `;
+            }).join('');
+
+            list.innerHTML = html;
+        }
+
+        function renderLeaderboard() {
+            const list = document.getElementById('leaderboardList');
+            const top10 = leaderboard.slice(0, 10);
+
+            const html = top10.map((user, index) => {
+                const isCurrentUser = user.email === currentUser.email;
+                let rankClass = '';
+                if (index === 0) rankClass = 'gold';
+                else if (index === 1) rankClass = 'silver';
+                else if (index === 2) rankClass = 'bronze';
+
+                return `
+                    <div class="leaderboard-item ${isCurrentUser ? 'current-user' : ''}">
+                        <div class="rank-number ${rankClass}">${index + 1}</div>
+                        <img src="${user.avatar}" alt="${user.name}" class="leaderboard-avatar">
+                        <div class="leaderboard-info">
+                            <div class="leaderboard-name">${user.name} ${isCurrentUser ? '(Vous)' : ''}</div>
+                            <div class="leaderboard-level">Niveau ${user.level}</div>
+                        </div>
+                        <div class="leaderboard-xp">${user.xp} XP</div>
+                    </div>
+                `;
+            }).join('');
+
+            list.innerHTML = html;
+        }
+
+        function renderDailyChallenges() {
+            const container = document.getElementById('dailyChallenges');
+            
+            const html = userGameData.dailyChallenges.map(challenge => {
+                const progress = Math.min(challenge.current, challenge.target);
+                const percentage = (progress / challenge.target) * 100;
+                
+                return `
+                    <div class="challenge-item">
+                        <div class="challenge-info">
+                            <div class="challenge-title">${challenge.title}</div>
+                            <div class="challenge-reward">Récompense: ${challenge.xp} XP</div>
+                        </div>
+                        <div class="challenge-progress">
+                            <div class="progress-ring">
+                                <svg>
+                                    <circle class="bg" cx="30" cy="30" r="26"></circle>
+                                    <circle class="progress" cx="30" cy="30" r="26" 
+                                            stroke-dasharray="163.36" 
+                                            stroke-dashoffset="${163.36 - (163.36 * percentage / 100)}"></circle>
+                                </svg>
+                                <div class="progress-text">${progress}/${challenge.target}</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = html;
+        }
+
+        function updateStats() {
+            document.getElementById('totalXP').textContent = userGameData.xp;
+            document.getElementById('totalBadges').textContent = userGameData.badges.length;
+            document.getElementById('currentStreak').textContent = userGameData.streak;
+            
+            const userRank = leaderboard.findIndex(u => u.email === currentUser.email) + 1;
+            document.getElementById('globalRank').textContent = userRank > 0 ? `#${userRank}` : '#-';
+        }
+
+        function generateDailyChallenges() {
+            const challenges = [
+                { id: 'login', title: 'Se connecter', target: 1, current: 0, xp: 5 },
+                { id: 'forum_post', title: 'Poster sur le forum', target: 1, current: 0, xp: 10 },
+                { id: 'course_lesson', title: 'Suivre une leçon', target: 1, current: 0, xp: 15 },
+                { id: 'message_send', title: 'Envoyer un message', target: 3, current: 0, xp: 10 }
+            ];
+
+            return challenges.slice(0, 3); // 3 défis par jour
+        }
+
+        function calculateLevel(xp) {
+            if (xp < 100) return 1;
+            if (xp < 250) return 2;
+            if (xp < 500) return 3;
+            if (xp < 1000) return 4;
+            if (xp < 2000) return 5;
+            if (xp < 3500) return 6;
+            if (xp < 5500) return 7;
+            if (xp < 8000) return 8;
+            if (xp < 12000) return 9;
+            return 10;
+        }
+
+        function getLevelXP(level) {
+            const thresholds = [0, 100, 250, 500, 1000, 2000, 3500, 5500, 8000, 12000, 20000];
+            return thresholds[level - 1] || 0;
+        }
+
+        function addXP(amount, reason) {
+            userGameData.xp += amount;
+            const newLevel = calculateLevel(userGameData.xp);
+            
+            if (newLevel > userGameData.level) {
+                userGameData.level = newLevel;
+                showNotification('Niveau Supérieur!', `Vous êtes maintenant niveau ${newLevel}!`);
+            }
+
+            const gameDataKey = `gameData_${currentUser.email}`;
+            localStorage.setItem(gameDataKey, JSON.stringify(userGameData));
+            
+            renderProfile();
+            updateStats();
+            
+            showNotification('XP Gagné!', `+${amount} XP pour ${reason}`);
+        }
+
+        function unlockBadge(badgeId) {
+            if (userGameData.badges.includes(badgeId)) return;
+
+            const badge = badges.find(b => b.id === badgeId);
+            if (!badge) return;
+
+            userGameData.badges.push(badgeId);
+            userGameData.achievements.push({
+                badgeId: badgeId,
+                date: Date.now()
+            });
+
+            addXP(badge.xp, `Badge "${badge.name}"`);
+            
+            const gameDataKey = `gameData_${currentUser.email}`;
+            localStorage.setItem(gameDataKey, JSON.stringify(userGameData));
+            
+            renderBadges();
+            renderAchievements();
+            
+            showNotification('Nouveau Badge!', `Vous avez débloqué "${badge.name}"`);
+        }
+
+        function showNotification(title, message) {
+            const toast = document.getElementById('notificationToast');
+            document.getElementById('toastTitle').textContent = title;
+            document.getElementById('toastMessage').textContent = message;
+            
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        function formatTimeAgo(timestamp) {
+            const now = Date.now();
+            const diff = now - timestamp;
+            const minutes = Math.floor(diff / 60000);
+            const hours = Math.floor(diff / 3600000);
+            const days = Math.floor(diff / 86400000);
+
+            if (minutes < 1) return 'À l\'instant';
+            if (minutes < 60) return `Il y a ${minutes} min`;
+            if (hours < 24) return `Il y a ${hours}h`;
+            if (days < 7) return `Il y a ${days}j`;
+            return new Date(timestamp).toLocaleDateString('fr-FR');
+        }
+
+        // Simuler des actions pour tester
+        function simulateAction(action) {
+            switch(action) {
+                case 'login':
+                    unlockBadge('first_login');
+                    break;
+                case 'project':
+                    unlockBadge('first_project');
+                    break;
+                case 'mentor':
+                    unlockBadge('mentor_active');
+                    break;
+                case 'course':
+                    unlockBadge('course_completed');
+                    break;
+                case 'xp':
+                    addXP(50, 'Action test');
+                    break;
+            }
+        }
+
+        // Débloquer automatiquement le badge de première connexion
+        setTimeout(() => {
+            unlockBadge('first_login');
+        }, 1000);
+    </script>
+</body>
+</html>
