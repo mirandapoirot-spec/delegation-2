@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administration | MINJEC Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .dashboard-container {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            min-height: 100vh;
+            background: var(--bg-dark);
+            background-image: var(--bg-gradient);
+            background-attachment: fixed;
+        }
+
+        .sidebar {
+            background: rgba(2, 6, 23, 0.4);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border-right: 1px solid var(--glass-border);
+            padding: 2.5rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2.5rem;
+        }
+
+        .main-content {
+            padding: 3rem;
+            overflow-y: auto;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--accent-primary);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .stat-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            color: var(--accent-primary);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .nav-logo {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            font-size: 1.5rem;
+            color: var(--text-main);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-left: 10px;
+        }
+
+        .sidebar nav a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 1rem 1.2rem;
+            border-radius: 14px;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .sidebar nav a:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-main);
+            transform: translateX(5px);
+        }
+
+        .sidebar nav a.active {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(14, 165, 233, 0.1));
+            color: var(--accent-primary);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .admin-action-card {
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.4s;
+        }
+
+        .admin-action-card:hover {
+            border-color: var(--accent-secondary);
+            background: rgba(255, 255, 255, 0.05);
+            transform: scale(1.05);
+        }
+    </style>
+    <link rel="stylesheet" href="assets/css/spacing-fix.css">
+</head>
+
+<body>
+
+
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <a href="index.html" class="nav-logo">
+                <i class="fa-solid fa-layer-group" style="color: var(--accent-primary);"></i>
+                MINJEC
+            </a>
+
+            <nav style="display: flex; flex-direction: column; gap: 0.8rem; margin-top: 1.5rem;">
+                <a href="admin-dashboard.html" class="active">
+                    <i class="fa-solid fa-grid-2"></i> Dashboard
+                </a>
+                <a href="users-management.html">
+                    <i class="fa-solid fa-users"></i> Utilisateurs
+                </a>
+                <a href="projects-admin.html">
+                    <i class="fa-solid fa-rocket"></i> Projets
+                </a>
+                <a href="admin-events.html">
+                    <i class="fa-solid fa-calendar-days"></i> Événements
+                </a>
+                <a href="data-management.html">
+                    <i class="fa-solid fa-chart-pie"></i> Statistiques
+                </a>
+                <a href="admin-settings.html">
+                    <i class="fa-solid fa-gear"></i> Paramètres
+                </a>
+            </nav>
+
+
+            <div style="flex: 1;"></div>
+
+            <button onclick="logout()" class="btn-secondary" style="border-color: #ef4444; color: #ef4444;">
+                <i class="fa-solid fa-right-from-bracket"></i> <span data-t="deconnexion">Déconnexion</span>
+            </button>
+        </aside>
+
+        <!-- Main -->
+        <main class="main-content">
+            <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem;">
+                <div class="reveal">
+                    <h1 class="animated-gradient-text" style="font-size: 2rem; margin-bottom: 0.5rem;"
+                        data-t="admin_dashboard_title">Tableau de Bord
+                        Administrateur</h1>
+                    <p id="welcomeMsg" style="color: var(--text-muted);" data-t="welcome_admin">Bienvenue,
+                        Administrateur</p>
+                </div>
+                <div id="adminProfile" style="display: flex; align-items: center; gap: 1rem;" class="glass-card">
+                    <div style="text-align: right;">
+                        <div id="adminName" style="font-weight: 600;">Chargement...</div>
+                        <div id="adminRole" style="font-size: 0.8rem; color: var(--accent-primary);">Super Admin</div>
+                    </div>
+                    <div style="position: relative; cursor: pointer;" id="adminAvatarContainer"
+                        title="Cliquer pour changer la photo">
+                        <img id="adminAvatar" src="" alt="Avatar"
+                            style="width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent-primary);">
+                        <div
+                            style="position: absolute; bottom: -2px; right: -2px; background: var(--accent-primary); width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid var(--bg-dark);">
+                            <i class="fa-solid fa-camera" style="font-size: 0.5rem; color: white;"></i>
+                        </div>
+                        <input type="file" id="adminAvatarInput" accept="image/*" style="display: none;">
+                    </div>
+                </div>
+            </header>
+
+            <div class="stats-grid reveal stagger-children">
+                <div class="stat-card hover-lift">
+                    <div class="stat-icon"><i class="fa-solid fa-users"></i></div>
+                    <div>
+                        <div id="totalUsers" style="font-size: 1.5rem; font-weight: 700;">0</div>
+                        <div style="color: var(--text-muted); font-size: 0.9rem;">Utilisateurs</div>
+                    </div>
+                </div>
+                <div class="stat-card hover-lift">
+                    <div class="stat-icon" style="color: #818cf8; background: rgba(129, 140, 248, 0.1);"><i
+                            class="fa-solid fa-file-invoice"></i></div>
+                    <div>
+                        <div id="totalProjects" style="font-size: 1.5rem; font-weight: 700;">0</div>
+                        <div style="color: var(--text-muted); font-size: 0.9rem;">Projets Soumis</div>
+                    </div>
+                </div>
+                <div class="stat-card hover-lift">
+                    <div class="stat-icon" style="color: #10b981; background: rgba(16, 185, 129, 0.1);"><i
+                            class="fa-solid fa-clock-rotate-left"></i></div>
+                    <div>
+                        <div id="pendingProjects" style="font-size: 1.5rem; font-weight: 700;">0</div>
+                        <div style="color: var(--text-muted); font-size: 0.9rem;">En Attente</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Activity Feed Section & Action Cards Mix -->
+            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; margin-bottom: 3rem;" class="reveal">
+
+                <!-- Activity Feed -->
+                <div class="glass-card reveal-left"
+                    style="padding: 1.5rem; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 20px;">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.8rem;">
+                        <h3 style="font-size: 1.2rem; display: flex; align-items: center; gap: 10px;">
+                            <i class="fa-solid fa-bolt" style="color: var(--accent-primary);"></i> Activités Récentes
+                        </h3>
+                        <span
+                            style="font-size: 0.7rem; color: var(--accent-primary); background: rgba(56, 189, 248, 0.1); padding: 4px 12px; border-radius: 20px; font-weight: 600;">
+                            <i class="fa-solid fa-circle fa-beat-fade pulse-glow"
+                                style="font-size: 0.5rem; margin-right: 5px;"></i> LIVE
+                        </span>
+                    </div>
+                    <div id="admin-activity-feed" style="max-height: 350px; overflow-y: auto; padding-right: 5px;">
+                        <div style="text-align: center; color: var(--text-muted); padding: 3rem;">
+                            <i class="fa-solid fa-circle-notch fa-spin"
+                                style="font-size: 2rem; margin-bottom: 1rem; color: var(--accent-primary);"></i>
+                            <p>Initialisation du flux sécurisé...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vertical Quick Actions -->
+                <div style="display: flex; flex-direction: column; gap: 1rem;" class="reveal-right stagger-children">
+                    <a href="users-management.html" class="admin-action-card card-hover-lift"
+                        style="padding: 1rem; display: flex; flex-direction: column; align-items: center; text-decoration: none; color: inherit;">
+                        <i class="fa-solid fa-user-gear"
+                            style="font-size: 1.5rem; margin-bottom: 0.5rem; color: var(--accent-secondary); background: none; -webkit-text-fill-color: var(--accent-secondary);"></i>
+                        <h3 style="font-size: 0.9rem; margin: 0;">Gérer Utilisateurs</h3>
+                    </a>
+                    <a href="projects-admin.html" class="admin-action-card card-hover-lift"
+                        style="padding: 1rem; display: flex; flex-direction: column; align-items: center; text-decoration: none; color: inherit;">
+                        <i class="fa-solid fa-list-check"
+                            style="font-size: 1.5rem; margin-bottom: 0.5rem; color: #10b981; background: none; -webkit-text-fill-color: #10b981;"></i>
+                        <h3 style="font-size: 0.9rem; margin: 0;">Modération</h3>
+                    </a>
+                    <a href="#" class="admin-action-card card-hover-lift" onclick="generatePDFReport()"
+                        style="padding: 1rem; display: flex; flex-direction: column; align-items: center; text-decoration: none; color: inherit;">
+                        <i class="fa-solid fa-file-pdf"
+                            style="font-size: 1.5rem; margin-bottom: 0.5rem; color: #f43f5e; background: none; -webkit-text-fill-color: #f43f5e;"></i>
+                        <h3 style="font-size: 0.9rem; margin: 0;">Rapport PDF</h3>
+                    </a>
+                </div>
+
+            </div>
+
+    </div>
+    </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (!currentUser || (currentUser.role !== 'super_admin' && currentUser.role !== 'admin')) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // UI Update
+            document.getElementById('adminName').innerText = currentUser.name;
+            const adminAvatar = document.getElementById('adminAvatar');
+            adminAvatar.src = currentUser.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUser.name)}&size=100&background=38bdf8&color=fff`;
+            document.getElementById('adminRole').innerText = currentUser.role === 'super_admin' ? 'Super Administrateur' : 'Administrateur';
+            document.getElementById('welcomeMsg').innerText = `Ravi de vous revoir, ${currentUser.name.split(' ')[0]} !`;
+
+            // Avatar upload functionality
+            const adminAvatarContainer = document.getElementById('adminAvatarContainer');
+            const adminAvatarInput = document.getElementById('adminAvatarInput');
+
+            adminAvatarContainer.addEventListener('click', () => {
+                adminAvatarInput.click();
+            });
+
+            adminAvatarInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function (event) {
+                        const newAvatar = event.target.result;
+                        adminAvatar.src = newAvatar;
+                        currentUser.avatar = newAvatar;
+                        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+
+                        // Update in users list too
+                        const users = JSON.parse(localStorage.getItem('delegation_users')) || [];
+                        const userIdx = users.findIndex(u => u.email === currentUser.email);
+                        if (userIdx !== -1) {
+                            users[userIdx].avatar = newAvatar;
+                            localStorage.setItem('delegation_users', JSON.stringify(users));
+                        }
+                        showToast('Photo de profil mise à jour', 'success');
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // Stats & Activity Feed
+            updateDashboardStats();
+            populateActivityFeed();
+        });
+
+        function updateDashboardStats() {
+            const users = JSON.parse(localStorage.getItem('delegation_users')) || [];
+            const projects = JSON.parse(localStorage.getItem('delegation_projects')) || [];
+
+            document.getElementById('totalUsers').innerText = users.length;
+            document.getElementById('totalProjects').innerText = projects.length;
+            document.getElementById('pendingProjects').innerText = projects.filter(p => p.status === 'en_attente').length;
+        }
+
+        function populateActivityFeed() {
+            const feed = document.getElementById('admin-activity-feed');
+            const activities = [
+                { user: "Samuel T.", action: "a soumis un nouveau projet", time: "Il y a 10 min", icon: "fa-file-circle-plus" },
+                { user: "Système", action: "Nouveau compte client créé", time: "Il y a 1h", icon: "fa-user-plus" },
+                { user: "Marie L.", action: "a mis à jour son dossier", time: "Il y a 3h", icon: "fa-arrows-rotate" },
+                { user: "Admin", action: "Validation du projet #882", time: "Hier", icon: "fa-check-double" }
+            ];
+
+            feed.innerHTML = activities.map(act => `
+                <div style="display: flex; gap: 1rem; padding: 1rem; border-bottom: 1px solid var(--border-color); align-items: center;">
+                    <div style="width: 35px; height: 35px; border-radius: 50%; background: rgba(56, 189, 248, 0.1); display: flex; align-items: center; justify-content: center; color: var(--accent-primary);">
+                        <i class="fa-solid ${act.icon}"></i>
+                    </div>
+                    <div style="flex: 1;">
+                        <div style="font-size: 0.9rem;"><strong style="color: var(--text-main);">${act.user}</strong> ${act.action}</div>
+                        <div style="font-size: 0.75rem; color: var(--text-muted);">${act.time}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function logout() {
+            localStorage.removeItem('currentUser');
+            window.location.href = 'login.html';
+        }
+    </script>
+    <script src="assets/js/data-loader.js"></script>
+
+    <script src="assets/js/main.js"></script>
+</body>
+
+</html>

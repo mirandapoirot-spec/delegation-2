@@ -1,0 +1,331 @@
+<!DOCTYPE html> <!-- Déclaration du type de document HTML5 -->
+<html lang="fr"> <!-- Balise racine avec l'attribut langue défini sur français -->
+
+<head> <!-- Section d'en-tête contenant les métadonnées de la page -->
+    <meta charset="UTF-8"> <!-- Spécification de l'encodage de caractères universel -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Configuration de la fenêtre d'affichage pour les mobiles -->
+    <title>Actualités | MINJEC Portal</title> <!-- Titre de la page affiché dans l'onglet du navigateur -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet"> <!-- Chargement de la police 'Outfit' depuis Google Fonts -->
+    <link rel="stylesheet" href="assets/css/style.css"> <!-- Liaison vers la feuille de style globale du projet -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chargement de la bibliothèque d'icônes Font Awesome -->
+    <style>
+        /* Styles CSS internes spécifiques à cette page d'actualités */
+        .news-container {
+            max-width: 1300px;
+            /* Largeur maximale du conteneur central */
+            margin: 120px auto 60px;
+            /* Marges : haute pour la navbar, basse pour le footer, auto pour centrer */
+            padding: 0 2rem;
+            /* Espacement intérieur latéral */
+        }
+
+        .featured-post {
+            background: var(--bg-card);
+            /* Fond de carte thématique */
+            border-radius: 30px;
+            /* Coins arrondis modernes */
+            overflow: hidden;
+            /* Débordement masqué */
+            display: grid;
+            /* Grille pour la mise en page */
+            grid-template-columns: 1fr 1fr;
+            /* Deux colonnes égales */
+            border: 1px solid var(--glass-border);
+            /* Bordure style 'verre' */
+            margin-bottom: 5rem;
+            /* Espace important sous l'article principal */
+            backdrop-filter: blur(20px);
+            /* Effet Glassmorphism */
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            /* Animation fluide */
+        }
+
+        .featured-image-container {
+            position: relative;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            /* Dégradé Aurora */
+            display: flex;
+            /* Centrage icône */
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 5rem;
+            /* Taille icône image à la une */
+            min-height: 400px;
+            /* Hauteur minimale garantie */
+        }
+
+        .featured-content {
+            padding: 3rem;
+            /* Espacement intérieur texte */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            /* Centrage vertical */
+        }
+
+        .post-meta {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            /* Espacement métadonnées */
+            margin-bottom: 1.5rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            /* Texte atténué */
+            font-weight: 500;
+        }
+
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            /* Grille adaptative */
+            gap: 2.5rem;
+            /* Espace entre les cartes */
+        }
+
+        .post-card {
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .post-card:hover {
+            transform: translateY(-10px);
+            /* Élévation au survol */
+            border-color: var(--accent-primary);
+            /* Bordure émeraude au survol */
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            /* Ombre intense au survol */
+        }
+
+        .post-image-placeholder {
+            height: 220px;
+            /* Hauteur fixe espace image */
+            background: rgba(255, 255, 255, 0.03);
+            /* Fond léger */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: var(--accent-secondary);
+            /* Couleur azur */
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .post-content {
+            padding: 2rem;
+            flex: 1;
+            /* Étire le contenu */
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-section {
+            margin-bottom: 4rem;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            /* Passage à la ligne sur mobile */
+        }
+
+        .filter-btn {
+            padding: 0.6rem 1.8rem;
+            background: rgba(255, 255, 255, 0.05);
+            /* Fond transparent léger */
+            border: 1px solid var(--glass-border);
+            color: var(--text-muted);
+            border-radius: 30px;
+            /* Bouton ovale */
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .filter-btn.active,
+        .filter-btn:hover {
+            background: var(--accent-primary);
+            /* Fond émeraude à l'activation */
+            color: white;
+            border-color: var(--accent-primary);
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.2);
+            /* Halo lumineux */
+        }
+
+        /* Ajustements responsifs */
+        @media (max-width: 992px) {
+            .featured-post {
+                grid-template-columns: 1fr;
+                /* Une colonne sur tablette/mobile */
+            }
+
+            .featured-image-container {
+                min-height: 250px;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="assets/css/spacing-fix.css">
+</head>
+
+<body> <!-- Corps du document -->
+    <div class="particles" id="particles"></div> <!-- Arrière-plan de particules animé -->
+
+    <!-- Navbar (Barre de navigation principale) -->
+    <nav class="navbar scrolled" id="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="nav-logo">
+                <i class="fa-solid fa-layer-group" style="color: var(--accent-primary);"></i>
+                MINJEC
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html" class="link-underline">Accueil</a></li>
+                <li><a href="projets.html" class="link-underline">Projets</a></li>
+                <li><a href="agora.html" class="link-underline">Agora</a></li>
+                <li><a href="actualites.html" class="link-underline active">Actualités</a></li> <!-- Page active -->
+                <li><a href="contact.html" class="link-underline">Contact</a></li>
+            </ul>
+            <div style="display: flex; align-items: center; gap: 1.5rem;">
+                <button class="theme-toggle" id="themeToggle">
+                    <i class="fa-solid fa-moon"></i>
+                    <i class="fa-solid fa-sun"></i>
+                </button>
+                <a href="login.html" class="btn-primary" style="padding: 0.5rem 1.5rem; font-size: 0.9rem;">
+                    Connexion
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="news-container">
+        <!-- Article à la une (Featured Section) -->
+        <article class="featured-post reveal">
+            <div class="featured-image-container">
+                <i class="fa-solid fa-newspaper"></i> <!-- Icône journal illustrative -->
+            </div>
+            <div class="featured-content">
+                <div class="post-meta">
+                    <span style="color: var(--accent-primary);"><i class="fa-solid fa-star"></i> À LA UNE</span>
+                    <span><i class="fa-solid fa-calendar"></i> 15 Fév 2026</span>
+                </div>
+                <h1 style="font-size: 2.5rem; margin-bottom: 1.5rem; line-height: 1.2;">Lancement Officiel de
+                    l'Accélérateur Aurora</h1> <!-- Titre principal -->
+                <p style="color: var(--text-muted); line-height: 1.8; margin-bottom: 2rem; font-size: 1.1rem;">
+                    Une nouvelle ère s'ouvre pour l'entrepreneuriat jeunesse dans le Ndé. Découvrez comment ce nouveau
+                    dispositif
+                    va transformer vos idées en entreprises durables et profitables. <!-- Résumé introductif -->
+                </p>
+                <a href="#" class="btn-primary" style="width: fit-content; padding: 1rem 2rem;">Lire l'article
+                    complet</a>
+            </div>
+        </article>
+
+        <!-- Filtres de Catégories de News -->
+        <div class="filter-section reveal">
+            <button class="filter-btn active">Tout</button>
+            <button class="filter-btn">Événements</button>
+            <button class="filter-btn">Opportunités</button>
+            <button class="filter-btn">Success Stories</button>
+            <button class="filter-btn">Institutionnel</button>
+        </div>
+
+        <!-- Grille des articles récents -->
+        <div class="news-grid stagger-children">
+            <!-- Article 1 : Innovation Agricole -->
+            <article class="post-card reveal">
+                <div class="post-image-placeholder">
+                    <i class="fa-solid fa-seedling"></i>
+                </div>
+                <div class="post-content">
+                    <div class="post-meta">
+                        <span style="color: var(--accent-secondary);">Innovation</span>
+                        <span>12 Fév 2026</span>
+                    </div>
+                    <h2 style="font-size: 1.4rem; margin-bottom: 1rem;">L'Agri-Tech au cœur du développement rural</h2>
+                    <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.5rem;">
+                        Retour sur l'atelier de formation en agriculture connectée qui a réuni plus de 50 jeunes
+                        entrepreneurs
+                        locaux cette semaine. <!-- Accroche article -->
+                    </p>
+                    <a href="#" class="link-underline" style="margin-top: auto; color: var(--accent-primary);">En savoir
+                        plus <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+            </article>
+
+            <!-- Article 2 : Digitialisation -->
+            <article class="post-card reveal">
+                <div class="post-image-placeholder" style="color: #a855f7;">
+                    <i class="fa-solid fa-bolt"></i>
+                </div>
+                <div class="post-content">
+                    <div class="post-meta">
+                        <span style="color: #a855f7;">Digital</span>
+                        <span>10 Fév 2026</span>
+                    </div>
+                    <h2 style="font-size: 1.4rem; margin-bottom: 1rem;">Digitalisation des services de la Délégation
+                    </h2>
+                    <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.5rem;">
+                        Toutes vos démarches administratives sont désormais accessibles via votre espace citoyen.
+                        Plus besoin de vous déplacer pour vos dossiers. <!-- Accroche article -->
+                    </p>
+                    <a href="#" class="link-underline" style="margin-top: auto; color: var(--accent-primary);">Consulter
+                        le guide <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+            </article>
+
+            <!-- Article 3 : Financements -->
+            <article class="post-card reveal">
+                <div class="post-image-placeholder" style="color: #f59e0b;">
+                    <i class="fa-solid fa-piggy-bank"></i>
+                </div>
+                <div class="post-content">
+                    <div class="post-meta">
+                        <span style="color: #f59e0b;">Financement</span>
+                        <span>08 Fév 2026</span>
+                    </div>
+                    <h2 style="font-size: 1.4rem; margin-bottom: 1rem;">Bilan du fonds de soutien aux micro-initiatives
+                    </h2>
+                    <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.5rem;">
+                        Plus de 15 millions de FCFA ont été distribués ce mois-ci pour soutenir les petits projets
+                        porteurs
+                        dans l'arrondissement de Bangangté. <!-- Accroche article -->
+                    </p>
+                    <a href="#" class="link-underline" style="margin-top: auto; color: var(--accent-primary);">Voir les
+                        lauréats <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+            </article>
+        </div>
+
+        <!-- Pagination (Navigation entre pages d'actu) -->
+        <div style="margin: 5rem 0; display: flex; justify-content: center; gap: 0.8rem;" class="reveal">
+            <button class="filter-btn active">1</button> <!-- Page courante -->
+            <button class="filter-btn">2</button>
+            <button class="filter-btn">3</button>
+            <button class="filter-btn">Suivant <i class="fa-solid fa-chevron-right"></i></button>
+            <!-- Bouton page suivante -->
+        </div>
+    </div>
+
+    <!-- Pied de page (Footer simplifié) -->
+    <footer style="padding: 5rem 0; border-top: 1px solid var(--glass-border); text-align: center;">
+        <div class="container">
+            <p style="color: var(--text-muted); line-height: 1.6;">
+                &copy; 2026 Aurora Portal • Délégation Jeunesse & Éducation Civique du Ndé<br>
+                Une initiative pour l'innovation numérique et citoyenne.
+            </p>
+        </div>
+    </footer>
+
+    <script src="assets/js/main.js"></script> <!-- Chargement de la logique JS globale -->
+</body>
+
+</html> <!-- Fin du document actualites -->
