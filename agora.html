@@ -1,0 +1,272 @@
+<!DOCTYPE html> <!-- Déclaration du type de document standard HTML5 -->
+<html lang="fr"> <!-- Balise racine pour le contenu en français -->
+
+<head> <!-- Section en-tête pour les métadonnées et styles -->
+    <meta charset="UTF-8"> <!-- Encodage universel des caractères -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Support de l'affichage mobile -->
+    <title>Agora | Espace de Dialogue & Collaboration</title> <!-- Titre de la page dans l'onglet -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Police Outfit via Google Fonts -->
+    <link rel="stylesheet" href="assets/css/style.css"> <!-- Styles globaux Aurora Portal -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Librairie d'icônes Font Awesome -->
+    <style>
+        /* Styles CSS internes spécifiques à la page Agora */
+        .agora-container {
+            max-width: 1300px;
+            margin: 120px auto 60px;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            /* Grille principale : flux de discussions + barre latérale */
+            gap: 3rem;
+        }
+
+        .forum-header {
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            padding: 4rem 2rem;
+            text-align: center;
+            border-radius: 40px;
+            margin-bottom: 4rem;
+            backdrop-filter: blur(20px);
+            /* Effet de flou pour le glassmorphism */
+            box-shadow: var(--glass-shadow);
+        }
+
+        .post-card {
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .post-card:hover {
+            border-color: var(--accent-primary);
+            /* Bordure émeraude au survol */
+            transform: translateY(-8px);
+            /* Légère élévation au survol */
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            /* Ombre plus marquée au survol */
+        }
+
+        .user-meta {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 1.5rem;
+        }
+
+        .user-avatar-sm {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .post-stats {
+            display: flex;
+            gap: 2rem;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--glass-border);
+            /* Ligne de séparation pour les statistiques */
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .stat-btn {
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .stat-btn:hover {
+            color: var(--accent-primary);
+            /* Couleur émeraude au survol des stats */
+        }
+
+        .sidebar-card {
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            position: sticky;
+            /* Reste visible lors du défilement */
+            top: 120px;
+        }
+
+        .category-tag {
+            display: inline-block;
+            padding: 6px 14px;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-muted);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            font-size: 0.8rem;
+            margin-bottom: 0.8rem;
+            transition: all 0.3s;
+        }
+
+        .category-tag:hover {
+            background: var(--accent-primary);
+            /* Fond plein au survol */
+            color: white;
+            border-color: var(--accent-primary);
+        }
+
+        /* Styles responsifs pour les écrans de taille moyenne */
+        @media (max-width: 992px) {
+            .agora-container {
+                grid-template-columns: 1fr;
+                /* Passage sur une seule colonne */
+            }
+
+            .sidebar-card {
+                position: static;
+                /* Désactivation du sticky sur mobile */
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="assets/css/spacing-fix.css">
+</head>
+
+<body> <!-- Début du corps de page -->
+    <div class="particles" id="particles"></div> <!-- Arrière-plan de particules animé -->
+
+    <!-- Barre de navigation -->
+    <nav class="navbar scrolled" id="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="nav-logo">
+                <i class="fa-solid fa-layer-group" style="color: var(--accent-primary);"></i>
+                MINJEC
+            </a>
+            <ul class="nav-links"> <!-- Liens de navigation principaux -->
+                <li><a href="index.html" class="link-underline">Accueil</a></li>
+                <li><a href="projets.html" class="link-underline">Projets</a></li>
+                <li><a href="agora.html" class="link-underline active">Agora</a></li> <!-- Page active -->
+                <li><a href="actualites.html" class="link-underline">Actualités</a></li>
+                <li><a href="contact.html" class="link-underline">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container"> <!-- Conteneur principal flexible -->
+        <!-- En-tête de la page Agora -->
+        <header class="forum-header reveal">
+            <h1 class="animated-gradient-text" style="font-size: 3.5rem; margin-bottom: 1rem;">L'Agora Numérique</h1>
+            <!-- Titre animé -->
+            <p style="font-size: 1.2rem; color: var(--text-muted);">Espace de co-création et d'intelligence collective
+                pour les porteurs de projets.</p> <!-- Slogan descriptif -->
+        </header>
+
+        <div class="agora-container">
+            <!-- Flux de discussions (Main content) -->
+            <main>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem;"
+                    class="reveal">
+                    <h2 style="font-size: 1.8rem; font-weight: 700;">Discussions Stratégiques</h2>
+                    <!-- Sous-titre discussions -->
+                    <button class="btn-primary" onclick="openNewPostModal()"
+                        style="width: auto; margin: 0; padding: 0.8rem 1.5rem;">
+                        <i class="fa-solid fa-feather-pointed"></i> Proposer un sujet
+                    </button> <!-- Bouton pour proposer une nouvelle discussion -->
+                </div>
+
+                <!-- Discussion 1 (Exemple de post officiel) -->
+                <div class="post-card reveal">
+                    <div class="user-meta"> <!-- Métadonnées de l'auteur -->
+                        <img src="https://ui-avatars.com/api/?name=Stratege+Immo&background=10b981&color=fff"
+                            class="user-avatar-sm" alt="U">
+                        <div>
+                            <div style="font-weight: 700; color: var(--text-main);">Direction Technique d'Incubation
+                            </div>
+                            <div style="font-size: 0.8rem; color: var(--text-muted);">Officiel •
+                                <strong>#Accompagnement</strong>
+                            </div>
+                        </div>
+                    </div>
+                    <h2 style="font-size: 1.5rem; margin-bottom: 1.2rem; color: var(--text-main);">Nouveaux critères
+                        d'éligibilité pour le fonds PTS 2026</h2> <!-- Titre du post -->
+                    <p style="color: var(--text-muted); line-height: 1.8; font-size: 1.05rem;">
+                        Nous avons mis à jour les modalités de sélection pour favoriser les projets à fort impact
+                        technologique et environnemental. Consultez le guide complet ici. <!-- Contenu résumé -->
+                    </p>
+                    <div class="post-stats"> <!-- Statistiques d'interaction (Boutons fictifs) -->
+                        <div class="stat-btn"><i class="fa-solid fa-heart"></i> 128 mentions j'aime</div>
+                        <div class="stat-btn"><i class="fa-solid fa-comments"></i> 42 contributions</div>
+                        <div class="stat-btn"><i class="fa-solid fa-eye"></i> 15k vues</div>
+                    </div>
+                </div>
+
+                <!-- Discussion 2 (Exemple de post communautaire) -->
+                <div class="post-card reveal" style="animation-delay: 0.1s;">
+                    <div class="user-meta">
+                        <img src="https://ui-avatars.com/api/?name=Success+Dev&background=0ea5e9&color=fff"
+                            class="user-avatar-sm" alt="U">
+                        <div>
+                            <div style="font-weight: 700; color: var(--text-main);">Cercle des Innovateurs</div>
+                            <div style="font-size: 0.8rem; color: var(--text-muted);">Communauté •
+                                <strong>#Synergie</strong>
+                            </div>
+                        </div>
+                    </div>
+                    <h2 style="font-size: 1.5rem; margin-bottom: 1.2rem; color: var(--text-main);">Retour d'expérience :
+                        Digitaliser une coopérative agricole</h2>
+                    <p style="color: var(--text-muted); line-height: 1.8; font-size: 1.05rem;">
+                        Comment nous avons réussi à augmenter la productivité de 30% en utilisant des solutions IoT
+                        locales à Bangangté.
+                    </p>
+                    <div class="post-stats">
+                        <div class="stat-btn"><i class="fa-solid fa-heart"></i> 85 mentions j'aime</div>
+                        <div class="stat-btn"><i class="fa-solid fa-comments"></i> 18 contributions</div>
+                        <div class="stat-btn"><i class="fa-solid fa-eye"></i> 8k vues</div>
+                    </div>
+                </div>
+            </main>
+
+            <!-- Barre latérale (Sidebar) -->
+            <aside class="reveal">
+                <!-- Bloc Thématiques -->
+                <div class="sidebar-card">
+                    <h3 style="margin-bottom: 1.5rem; font-size: 1.2rem; font-weight: 700;">Thématiques Phares</h3>
+                    <div style="display: flex; flex-wrap: wrap; gap: 0.6rem;"> <!-- Nuage de tags -->
+                        <span class="category-tag">Financement</span>
+                        <span class="category-tag">Agri-Tech</span>
+                        <span class="category-tag">Gouvernance</span>
+                        <span class="category-tag">Intelligence Artificielle</span>
+                        <span class="category-tag">Économie Verte</span>
+                    </div>
+                </div>
+
+                <!-- Bloc Experts -->
+                <div class="sidebar-card">
+                    <h3 style="margin-bottom: 1.5rem; font-size: 1.2rem; font-weight: 700;">Experts Reconnus</h3>
+                    <div style="display: flex; flex-direction: column; gap: 1.2rem;">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <img src="https://ui-avatars.com/api/?name=Dr+Innov&background=10b981"
+                                style="width: 32px; height: 32px; border-radius: 10px;">
+                            <div style="font-size: 0.9rem; font-weight: 600;">Dr. Innovation <span
+                                    style="color: var(--accent-primary); margin-left: auto">Elite</span></div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <script src="assets/js/main.js"></script> <!-- Inclusion de la logique interactive principale -->
+    <script>
+        /* Gestionnaire pour le bouton d'ajout de post (Démonstration/Simulation) */
+        function openNewPostModal() {
+            showToast("La soumission de nouveaux sujets est réservée aux profils vérifiés.", "warning");
+        }
+    </script>
+</body>
+
+</html> <!-- Fin du document agora -->

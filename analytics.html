@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytiques | MINJEC Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            background: var(--bg-dark);
+            background-image: var(--bg-gradient);
+            min-height: 100vh;
+        }
+
+        .analytics-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .stats-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-primary);
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .stat-info {
+            flex: 1;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 0.3rem;
+        }
+
+        .stat-change {
+            font-size: 0.75rem;
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .stat-change.positive {
+            color: #10b981;
+        }
+
+        .stat-change.negative {
+            color: #ef4444;
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-card {
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2rem;
+        }
+
+        .chart-card.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .chart-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 0.3rem;
+            border-radius: 12px;
+        }
+
+        .filter-tab {
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: var(--text-muted);
+        }
+
+        .filter-tab.active {
+            background: var(--accent-primary);
+            color: white;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table th {
+            text-align: left;
+            padding: 1rem;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .data-table td {
+            padding: 1rem;
+            color: var(--text-main);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .data-table tr:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+            border-radius: 10px;
+            transition: width 1s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="analytics-container">
+        <header style="margin-bottom: 2rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h1 class="animated-gradient-text" style="font-size: 2.5rem; margin-bottom: 0.5rem;">
+                        <i class="fa-solid fa-chart-line"></i> Analytiques
+                    </h1>
+                    <p style="color: var(--text-muted);">Visualisez les performances et l'impact de vos actions</p>
+                </div>
+                <div style="display: flex; gap: 1rem;">
+                    <button class="btn-secondary" onclick="exportData()">
+                        <i class="fa-solid fa-download"></i> Exporter
+                    </button>
+                    <a href="index.html" class="btn-secondary">
+                        <i class="fa-solid fa-home"></i> Accueil
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <!-- Stats Overview -->
+        <div class="stats-overview">
+            <div class="stat-card">
+                <div class="stat-icon" style="background: rgba(16, 185, 129, 0.1); color: #10b981;">
+                    <i class="fa-solid fa-users"></i>
+                </div>
+                <div class="stat-info">
+                    <div class="stat-value" id="totalUsers">0</div>
+                    <div class="stat-label">Utilisateurs actifs</div>
+                    <div class="stat-change positive">
+                        <i class="fa-solid fa-arrow-up"></i> +12% ce mois
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon" style="background: rgba(56, 189, 248, 0.1); color: #38bdf8;">
+                    <i class="fa-solid fa-rocket"></i>
+                </div>
+                <div class="stat-info">
+                    <div class="stat-value" id="totalProjects">0</div>
+                    <div class="stat-label">Projets soumis</div>
+                    <div class="stat-change positive">
+                        <i class="fa-solid fa-arrow-up"></i> +8% ce mois
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon" style="background: rgba(251, 191, 36, 0.1); color: #fbbf24;">
+                    <i class="fa-solid fa-check-circle"></i>
+                </div>
+                <div class="stat-info">
+                    <div class="stat-value" id="validatedProjects">0</div>
+                    <div class="stat-label">Projets validés</div>
+                    <div class="stat-change positive">
+                        <i class="fa-solid fa-arrow-up"></i> +15% ce mois
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon" style="background: rgba(139, 92, 246, 0.1); color: #8b5cf6;">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                </div>
+                <div class="stat-info">
+                    <div class="stat-value" id="trainedYouth">0</div>
+                    <div class="stat-label">Jeunes formés</div>
+                    <div class="stat-change positive">
+                        <i class="fa-solid fa-arrow-up"></i> +20% ce mois
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Grid -->
+        <div class="charts-grid">
+            <!-- Graphique des projets par mois -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3 class="chart-title">
+                        <i class="fa-solid fa-chart-bar"></i> Projets par mois
+                    </h3>
+                    <div class="filter-tabs">
+                        <div class="filter-tab active">6 mois</div>
+                        <div class="filter-tab">1 an</div>
+                    </div>
+                </div>
+                <canvas id="projectsChart" height="250"></canvas>
+            </div>
+
+            <!-- Graphique des statuts -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3 class="chart-title">
+                        <i class="fa-solid fa-chart-pie"></i> Statuts des projets
+                    </h3>
+                </div>
+                <canvas id="statusChart" height="250"></canvas>
+            </div>
+
+            <!-- Graphique des inscriptions -->
+            <div class="chart-card full-width">
+                <div class="chart-header">
+                    <h3 class="chart-title">
+                        <i class="fa-solid fa-chart-area"></i> Évolution des inscriptions
+                    </h3>
+                    <div class="filter-tabs">
+                        <div class="filter-tab active">Semaine</div>
+                        <div class="filter-tab">Mois</div>
+                        <div class="filter-tab">Année</div>
+                    </div>
+                </div>
+                <canvas id="registrationsChart" height="100"></canvas>
+            </div>
+        </div>
+
+        <!-- Top Projects Table -->
+        <div class="chart-card">
+            <div class="chart-header">
+                <h3 class="chart-title">
+                    <i class="fa-solid fa-trophy"></i> Top Projets par Région
+                </h3>
+            </div>
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Région</th>
+                            <th>Projets</th>
+                            <th>Taux de réussite</th>
+                            <th>Progression</th>
+                        </tr>
+                    </thead>
+                    <tbody id="regionsTable">
+                        <!-- Données chargées dynamiquement -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/main.js"></script>
+    <script>
+        let projectsChart, statusChart, registrationsChart;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (!currentUser) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            loadStats();
+            initCharts();
+            loadRegionsData();
+        });
+
+        function loadStats() {
+            const users = JSON.parse(localStorage.getItem('delegation_users')) || [];
+            const projects = JSON.parse(localStorage.getItem('delegation_projects')) || [];
+
+            document.getElementById('totalUsers').textContent = users.length;
+            document.getElementById('totalProjects').textContent = projects.length;
+            document.getElementById('validatedProjects').textContent = 
+                projects.filter(p => p.status === 'validated').length;
+            document.getElementById('trainedYouth').textContent = Math.floor(Math.random() * 500) + 200;
+        }
+
+        function initCharts() {
+            // Graphique des projets par mois
+            const ctx1 = document.getElementById('projectsChart').getContext('2d');
+            projectsChart = new Chart(ctx1, {
+                type: 'bar',
+                data: {
+                    labels: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin'],
+                    datasets: [{
+                        label: 'Projets soumis',
+                        data: [12, 19, 15, 25, 22, 30],
+                        backgroundColor: 'rgba(16, 185, 129, 0.5)',
+                        borderColor: 'rgba(16, 185, 129, 1)',
+                        borderWidth: 2,
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.05)'
+                            },
+                            ticks: {
+                                color: '#9ca3af'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                color: '#9ca3af'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Graphique des statuts
+            const ctx2 = document.getElementById('statusChart').getContext('2d');
+            const projects = JSON.parse(localStorage.getItem('delegation_projects')) || [];
+            const pending = projects.filter(p => p.status === 'pending' || p.status === 'en_attente').length;
+            const validated = projects.filter(p => p.status === 'validated').length;
+            const rejected = projects.filter(p => p.status === 'rejected').length;
+
+            statusChart = new Chart(ctx2, {
+                type: 'doughnut',
+                data: {
+                    labels: ['En attente', 'Validés', 'Refusés'],
+                    datasets: [{
+                        data: [pending, validated, rejected],
+                        backgroundColor: [
+                            'rgba(251, 191, 36, 0.8)',
+                            'rgba(16, 185, 129, 0.8)',
+                            'rgba(239, 68, 68, 0.8)'
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: '#9ca3af',
+                                padding: 15,
+                                font: {
+                                    size: 12
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Graphique des inscriptions
+            const ctx3 = document.getElementById('registrationsChart').getContext('2d');
+            registrationsChart = new Chart(ctx3, {
+                type: 'line',
+                data: {
+                    labels: ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'],
+                    datasets: [{
+                        label: 'Inscriptions',
+                        data: [5, 8, 12, 7, 15, 10, 6],
+                        borderColor: 'rgba(56, 189, 248, 1)',
+                        backgroundColor: 'rgba(56, 189, 248, 0.1)',
+                        fill: true,
+                        tension: 0.4,
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.05)'
+                            },
+                            ticks: {
+                                color: '#9ca3af'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                color: '#9ca3af'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function loadRegionsData() {
+            const regions = [
+                { name: 'Bangangté', projects: 45, success: 85 },
+                { name: 'Bazou', projects: 32, success: 78 },
+                { name: 'Tonga', projects: 28, success: 82 },
+                { name: 'Bafang', projects: 25, success: 75 },
+                { name: 'Bangou', projects: 18, success: 70 }
+            ];
+
+            const html = regions.map(region => `
+                <tr>
+                    <td style="font-weight: 600;">${region.name}</td>
+                    <td>${region.projects}</td>
+                    <td>${region.success}%</td>
+                    <td>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${region.success}%"></div>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+
+            document.getElementById('regionsTable').innerHTML = html;
+        }
+
+        function exportData() {
+            const data = {
+                users: JSON.parse(localStorage.getItem('delegation_users')) || [],
+                projects: JSON.parse(localStorage.getItem('delegation_projects')) || [],
+                exportDate: new Date().toISOString()
+            };
+
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `analytics_export_${Date.now()}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+
+            showToast('Données exportées avec succès', 'success');
+        }
+
+        function showToast(message, type) {
+            if (window.showToast) {
+                window.showToast(message, type);
+            } else {
+                alert(message);
+            }
+        }
+    </script>
+</body>
+</html>
