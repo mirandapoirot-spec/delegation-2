@@ -1,0 +1,90 @@
+{
+    "_comment_1": "Configuration globale du site",
+    "site": {
+        "_comment_2": "Informations d'identité du site",
+        "name": "Délégation Jeunesse Bangangté",
+        "shortName": "MINJEC",
+        "description": "Une plateforme unifiée pour promouvoir l'excellence et accompagner les initiatives jeunes.",
+        "logo": "fa-solid fa-layer-group",
+        "version": "1.0.0",
+        "lastUpdated": "2026-02-05"
+    },
+    "contact": {
+        "_comment_3": "Coordonnées de la délégation",
+        "address": "Centre-ville, Bangangté, Cameroun",
+        "phone": "+237 600 00 00 00",
+        "email": "contact@delegation-bangangte.cm",
+        "website": "https://delegation-bangangte.cm",
+        "socialMedia": {
+            "facebook": "https://facebook.com/delegation.bangangte",
+            "twitter": "https://twitter.com/delegation_bgte",
+            "instagram": "https://instagram.com/delegation.bangangte",
+            "linkedin": "https://linkedin.com/company/delegation-bangangte"
+        }
+    },
+    "features": {
+        "_comment_4": "Activation/Désactivation des modules système",
+        "enableRegistration": true,
+        "enableSocialLogin": true,
+        "enableNotifications": true,
+        "enableAIChat": true,
+        "enableThemeToggle": true,
+        "enableLanguageSwitch": true,
+        "maxProjectsPerUser": 5,
+        "maxFileUploadSize": "10MB",
+        "supportedLanguages": [
+            "fr",
+            "en"
+        ]
+    },
+    "programs": {
+        "_comment_5": "Détails des programmes officiels",
+        "ptsJeunes": {
+            "name": "PTS-JEUNES",
+            "description": "Plan Triennal Spécial Jeunes",
+            "maxBudget": 10000000,
+            "minAge": 18,
+            "maxAge": 35,
+            "sectors": [
+                "Technologie",
+                "Agriculture",
+                "Formation",
+                "Éducation",
+                "Environnement",
+                "Santé",
+                "Commerce"
+            ]
+        }
+    },
+    "statistics": {
+        "_comment_6": "Données statistiques globales (mises à jour auto)",
+        "totalUsers": 1250,
+        "totalProjects": 89,
+        "successfulProjects": 67,
+        "totalFunding": 450000000
+    },
+    "events": {
+        "_comment_7": "Calendrier des événements majeurs",
+        "youthDay": {
+            "name": "Fête de la Jeunesse",
+            "date": "2026-02-11",
+            "description": "Célébration annuelle de la jeunesse camerounaise"
+        }
+    },
+    "theme": {
+        "_comment_8": "Réglages de l'interface graphique",
+        "primaryColor": "#38bdf8",
+        "secondaryColor": "#818cf8",
+        "accentColor": "#f59e0b",
+        "darkMode": true,
+        "animations": true,
+        "particles": true
+    },
+    "security": {
+        "_comment_9": "Paramètres de sécurité et de session",
+        "sessionTimeout": 3600000,
+        "maxLoginAttempts": 5,
+        "passwordMinLength": 6,
+        "requireEmailVerification": false
+    }
+}

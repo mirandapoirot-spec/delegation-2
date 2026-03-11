@@ -1,0 +1,88 @@
+[
+    {
+        "_comment_1": "Identifiant utilisateur",
+        "id": "1",
+        "_comment_2": "Nom d'affichage",
+        "name": "Super Admin",
+        "_comment_3": "Identifiant de connexion",
+        "email": "admin@delegation.cm",
+        "_comment_4": "Mot de passe (en clair pour démo)",
+        "password": "admin",
+        "_comment_5": "Rôle système (super_admin, admin, client)",
+        "role": "super_admin",
+        "_comment_6": "Lien vers la photo de profil",
+        "avatar": "https://ui-avatars.com/api/?name=Super+Admin&background=38bdf8&color=fff",
+        "_comment_7": "Numéro de téléphone",
+        "phone": "+237 600 00 00 01",
+        "_comment_8": "Secteur de prédilection",
+        "sector": "Administration",
+        "_comment_9": "Date d'inscription",
+        "joinedAt": "2025-01-01T00:00:00Z"
+    },
+    {
+        "id": "2",
+        "name": "Jean Dupont",
+        "email": "client@delegation.cm",
+        "password": "client",
+        "role": "client",
+        "avatar": "https://ui-avatars.com/api/?name=Jean+Dupont&background=818cf8&color=fff",
+        "phone": "+237 600 00 00 02",
+        "sector": "Technologie",
+        "joinedAt": "2025-12-15T10:30:00Z"
+    },
+    {
+        "id": "3",
+        "name": "Marie Kamga",
+        "email": "marie.kamga@email.cm",
+        "password": "password123",
+        "role": "client",
+        "avatar": "https://ui-avatars.com/api/?name=Marie+Kamga&background=f59e0b&color=fff",
+        "phone": "+237 600 00 00 03",
+        "sector": "Formation",
+        "joinedAt": "2025-11-20T14:20:00Z"
+    },
+    {
+        "id": "4",
+        "name": "Paul Nkomo",
+        "email": "paul.nkomo@email.cm",
+        "password": "password123",
+        "role": "client",
+        "avatar": "https://ui-avatars.com/api/?name=Paul+Nkomo&background=10b981&color=fff",
+        "phone": "+237 600 00 00 04",
+        "sector": "Agriculture",
+        "joinedAt": "2025-10-05T16:45:00Z"
+    },
+    {
+        "id": "5",
+        "name": "Sylvie Fotso",
+        "email": "sylvie.fotso@email.cm",
+        "password": "password123",
+        "role": "client",
+        "avatar": "https://ui-avatars.com/api/?name=Sylvie+Fotso&background=8b5cf6&color=fff",
+        "phone": "+237 600 00 00 05",
+        "sector": "Éducation",
+        "joinedAt": "2025-09-12T08:15:00Z"
+    },
+    {
+        "id": "6",
+        "name": "Kevin Talla",
+        "email": "kevin.talla@email.cm",
+        "password": "password123",
+        "role": "client",
+        "avatar": "https://ui-avatars.com/api/?name=Kevin+Talla&background=ef4444&color=fff",
+        "phone": "+237 600 00 00 06",
+        "sector": "Environnement",
+        "joinedAt": "2025-08-30T13:20:00Z"
+    },
+    {
+        "id": "7",
+        "name": "Admin Régional",
+        "email": "admin.regional@delegation.cm",
+        "password": "admin123",
+        "role": "admin",
+        "avatar": "https://ui-avatars.com/api/?name=Admin+Regional&background=06b6d4&color=fff",
+        "phone": "+237 600 00 00 07",
+        "sector": "Administration",
+        "joinedAt": "2025-07-15T09:00:00Z"
+    }
+]
